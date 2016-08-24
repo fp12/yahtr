@@ -1,0 +1,12 @@
+{
+	"initiative" : "11",
+	"speed": "8",
+	"attack": "10",
+	"health": "13",
+	"color": [0, 0, 0],
+	"actions": 
+	{
+		"sword": "C",
+		"sword_slash": "C"
+	}
+}

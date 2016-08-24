@@ -1,0 +1,1 @@
+clear && kivy src/main.py --size=1280x800

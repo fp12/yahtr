@@ -1,0 +1,14 @@
+{
+	"hits" : 
+	[
+		{
+			"origin" : [0, 0],
+			"direction" : [1, 0]
+		},
+		{
+			"origin" : [0, 0],
+			"direction" : [-1, 1]
+		}
+	],
+	"endpos" : null
+}

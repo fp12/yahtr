@@ -1,0 +1,35 @@
+#:kivy 1.9.1
+#:import math math
+
+<Hexagon>:
+    canvas:
+        Color:
+            rgba: self.red, self.green, self.blue, self.alpha
+        Mesh:
+            vertices: (self.center_x + math.cos(math.pi/3 * 0) * self.radius, self.center_y + math.sin(math.pi/3 * 0) * self.radius, 0, 0, self.center_x + math.cos(math.pi/3 * 1) * self.radius, self.center_y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.center_x + math.cos(math.pi/3 * 2) * self.radius, self.center_y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.center_x + math.cos(math.pi/3 * 3) * self.radius, self.center_y + math.sin(math.pi/3 * 3) * self.radius, 0, 0, self.center_x + math.cos(math.pi/3 * 4) * self.radius, self.center_y + math.sin(math.pi/3 * 4) * self.radius, 0, 0, self.center_x + math.cos(math.pi/3 * 5) * self.radius, self.center_y + math.sin(math.pi/3 * 5) * self.radius, 0, 0)
+            indices: (0, 1, 2, 3, 4, 5)
+            mode: "triangle_fan"
+        #Color:
+        #    rgb: 0.5, 0.5, 0.5
+        #Mesh:
+        #    vertices: (self.center_x + math.cos(math.pi/3 * 1) * self.radius, self.center_y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.center_x + math.cos(math.pi/3 * 2) * self.radius, self.center_y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.center_x + math.cos(math.pi/3 * 2) * (self.radius - self.front_radius), self.center_y + math.sin(math.pi/3 * 2) * (self.radius - self.front_radius), 0, 0, self.center_x + math.cos(math.pi/3 * 1) * (self.radius - self.front_radius), self.center_y + math.sin(math.pi/3 * 1) * (self.radius - self.front_radius), 0, 0)
+        #    indices: (0, 1, 2, 3)
+        #    mode: "triangle_fan"
+
+<ActionArrow>:
+    canvas:
+        Color:
+            rgba: self.red, self.green, self.blue, self.alpha
+        Line:
+            points: [self.center_x, self.center_y-10, self.center_x, self.center_y+5, self.center_x-5, self.center_y, self.center_x+5, self.center_y, self.center_x, self.center_y+5]
+            joint: 'bevel'
+            cap: 'none'
+            width: 1
+            close: False
+    canvas.before:
+        PushMatrix
+        Rotate:
+            angle: self.angle
+            origin: self.center
+    canvas.after:
+        PopMatrix

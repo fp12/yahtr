@@ -1,0 +1,34 @@
+{
+	"hits" : 
+	[
+		{
+			"origin" : [0, 0],
+			"direction" : [1, 0]
+		},
+		{
+			"origin" : [0, 0],
+			"direction" : [0, 1]
+		},
+		{
+			"origin" : [0, 0],
+			"direction" : [-1, 1]
+		}
+	],
+	"endpos" : null,
+	"atk_value" :
+	{
+		"S": 6,
+		"A": 4,
+		"B": 3,
+		"C": 3,
+		"D": 2
+	},
+	"cooldown" :
+	{
+		"S": 3,
+		"A": 4,
+		"B": 4,
+		"C": 5,
+		"D": 5
+	}
+}
