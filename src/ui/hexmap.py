@@ -14,7 +14,7 @@ class HexMap(RelativeLayout):
     def __init__(self, **kwargs):
         super(HexMap, self).__init__(**kwargs)
         self._units_list = None
-        self._layout = Layout((0, 0), HexMap.hex_radius, game_instance.flat_layout)
+        self._layout = Layout(origin=(0, 0), size=HexMap.hex_radius, flat=game_instance.flat_layout, margin=2)
         self._unit = None
         Hexagon.radius = HexMap.hex_radius
 

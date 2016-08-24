@@ -110,10 +110,11 @@ class Layout:
     Pointy = Orientation(_SQRT3, _SQRT3div2, 0.0, 3 / 2, _SQRT3div3, -1.0 / 3.0, 0.0, 2.0 / 3.0, 0.5)
     Flat = Orientation(3.0 / 2.0, 0.0, _SQRT3div2, _SQRT3, 2.0 / 3.0, 0.0, -1.0 / 3.0, _SQRT3div3, 0.0)
 
-    def __init__(self, origin, size, flat=True):
+    def __init__(self, origin, size, flat=True, margin=0):
         self._origin = to_point(origin)
         self._size = size if type(size) == Point else Point(size, size)
         self._orientation = Layout.Flat if flat else Layout.Pointy
+        self._margin = margin
 
     @property
     def origin(self):
@@ -126,15 +127,19 @@ class Layout:
     @property
     def orientation(self):
         return self._orientation
+
+    @property
+    def margin(self):
+        return self._margin
     
     def hex_to_pixel(self, h):
-        x = (self._orientation.f0 * h.q + self._orientation.f1 * h.r) * self._size.x
-        y = (self._orientation.f2 * h.q + self._orientation.f3 * h.r) * self._size.y
+        x = (self._orientation.f0 * h.q + self._orientation.f1 * h.r) * (self._size.x + self._margin)
+        y = (self._orientation.f2 * h.q + self._orientation.f3 * h.r) * (self._size.y + self._margin)
         return Point(x + self._origin.x, y + self._origin.y)
 
     def pixel_to_hex(self, p):
         p = to_point(p)
-        pt = Point((p.x - self._origin.x) / self._size.x, (p.y - self._origin.y) / self._size.y)
+        pt = Point((p.x - self._origin.x) / (self._size.x + self._margin), (p.y - self._origin.y) / (self._size.y + self._margin))
         q = self._orientation.b0 * pt.x + self._orientation.b1 * pt.y
         r = self._orientation.b2 * pt.x + self._orientation.b3 * pt.y
         return Hex(q, r)

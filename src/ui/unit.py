@@ -1,6 +1,6 @@
 from kivy.core.window import Window
 
-from ui.hexagon import Hexagon, hex_to_pixel
+from ui.hexagon import Hexagon
 from ui.action_arrow import ActionArrow
 
 from game import game_instance
