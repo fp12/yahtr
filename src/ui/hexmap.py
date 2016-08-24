@@ -16,6 +16,8 @@ class HexMap(RelativeLayout):
         self._units_list = None
         self._layout = Layout(origin=(0, 0), size=HexMap.hex_radius, flat=game_instance.flat_layout, margin=2)
         self._unit = None
+        self._hex_list = []
+
         Hexagon.radius = HexMap.hex_radius
 
         map_radius = 6
@@ -25,6 +27,7 @@ class HexMap(RelativeLayout):
             for r in range(r1, r2+1):
                 hexagon = Hexagon(self._layout, q, r)
                 self.add_widget(hexagon)
+                self._hex_list.append(hexagon)
 
     def spawn_unit(self, unit):
         if self._unit:
@@ -33,3 +36,11 @@ class HexMap(RelativeLayout):
         self._unit = Unit(self._layout, game_instance.units[unit], 2, 2)
         self.add_widget(self._unit)
         self._unit.load()
+
+    def on_debug_key(self):
+        for x in self._hex_list:
+                x.toggle_debug_label()
+
+    def on_cycle_unit_action(self):
+        if self._unit:
+            self._unit.on_cycle_action()

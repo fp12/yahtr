@@ -1,5 +1,3 @@
-from kivy.core.window import Window
-
 from ui.hexagon import Hexagon
 from ui.action_arrow import ActionArrow
 
@@ -14,8 +12,6 @@ class Unit(Hexagon):
         self.color = template['color']
         self._actions = []
         self._displayed_action = None
-        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
-        self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
     def load(self):
         for action in self._template['actions'].keys():
@@ -28,19 +24,6 @@ class Unit(Hexagon):
             self.parent.remove_widget(a)
         self._actions = []
 
-    def _keyboard_closed(self):
-        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
-        self._keyboard = None
-
-    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        if keycode[1] == 'n':
-            for action in self._template['actions'].keys():
-                if action != self._displayed_action and action in game_instance.actions:
-                    self.clear()
-                    self._load_action(action)
-                    break
-        return True
-
     def _load_action(self, action):
         self._displayed_action = action
         for h in game_instance.actions[action]['hits']:
@@ -51,3 +34,10 @@ class Unit(Hexagon):
             arrow = ActionArrow(angle=angle, pos=(pos.x, pos.y))
             self._actions.append(arrow)
             self.parent.add_widget(arrow)
+
+    def on_cycle_action(self):
+        for action in self._template['actions'].keys():
+            if action != self._displayed_action and action in game_instance.actions:
+                self.clear()
+                self._load_action(action)
+                break
