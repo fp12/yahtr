@@ -1,6 +1,7 @@
 from math import sqrt
 
-from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.scatterlayout import ScatterLayout
+from kivy.uix.floatlayout import FloatLayout
 
 from hex_lib import Layout
 from game import game_instance
@@ -8,13 +9,13 @@ from ui.hexagon import Hexagon
 from ui.unit import Unit
 
 
-class HexMap(RelativeLayout):
+class HexMap(ScatterLayout):
     hex_radius = 30
 
     def __init__(self, **kwargs):
         super(HexMap, self).__init__(**kwargs)
         self._units_list = None
-        self._layout = Layout(origin=(0, 0), size=HexMap.hex_radius, flat=game_instance.flat_layout, margin=2)
+        self._layout = Layout(origin=(self.center_x, self.center_y), size=HexMap.hex_radius, flat=game_instance.flat_layout, margin=2)
         self._unit = None
         self._hex_list = []
 
@@ -25,7 +26,7 @@ class HexMap(RelativeLayout):
             r1 = max(-map_radius, -q - map_radius)
             r2 = min(map_radius, -q + map_radius)
             for r in range(r1, r2+1):
-                hexagon = Hexagon(self._layout, q, r)
+                hexagon = Hexagon(self._layout, q, r, size=(HexMap.hex_radius, HexMap.hex_radius))
                 self.add_widget(hexagon)
                 self._hex_list.append(hexagon)
 
@@ -33,13 +34,13 @@ class HexMap(RelativeLayout):
         if self._unit:
             self._unit.clear()
             self.remove_widget(self._unit)
-        self._unit = Unit(self._layout, game_instance.units[unit], 2, 2)
+        self._unit = Unit(self._layout, game_instance.units[unit], q=0, r=0)
         self.add_widget(self._unit)
         self._unit.load()
 
     def on_debug_key(self):
         for x in self._hex_list:
-                x.toggle_debug_label()
+            x.toggle_debug_label()
 
     def on_cycle_unit_action(self):
         if self._unit:

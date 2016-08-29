@@ -13,7 +13,7 @@ class Hexagon(ColoredWidget):
         self._layout = layout
         self._hex = Hex(q, r)
         self._color = [self.red, self.green, self.blue, self.alpha]
-        super(Hexagon, self).__init__(pos=layout.hex_to_pixel(self._hex), **kwargs)
+        super(Hexagon, self).__init__(center=layout.hex_to_pixel(self._hex), size_hint=(None, None), **kwargs)
 
     def toggle_debug_label(self):
     	if self.debug_label:

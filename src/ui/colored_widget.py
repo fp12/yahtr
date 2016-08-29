@@ -8,6 +8,11 @@ class ColoredWidget(Widget):
     blue = NumericProperty(1)
     alpha = NumericProperty(1)
 
+    def __init__(self, color=None, **kwargs):
+        if color:
+            self.color = color
+        super(ColoredWidget, self).__init__(**kwargs)
+
     @property
     def color(self):
         return self._color
