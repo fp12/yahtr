@@ -16,7 +16,7 @@ class Hexagon(ColoredWidget):
         super(Hexagon, self).__init__(center=layout.hex_to_pixel(self._hex), size_hint=(None, None), **kwargs)
 
     def toggle_debug_label(self):
-    	if self.debug_label:
-    		self.debug_label = ''
-    	else:
-    		self.debug_label = '{0}, {1}'.format(self._hex.q, self._hex.r)
+        if self.debug_label:
+            self.debug_label = ''
+        else:
+            self.debug_label = '{0}, {1}'.format(self._hex.q, self._hex.r)

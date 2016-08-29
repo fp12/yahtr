@@ -5,9 +5,9 @@ from ui.action_arrow import ActionArrow
 from ui.action_bubble import ActionBubble
 
 from game import game_instance
-from hex_lib import Hex, Point
+from hex_lib import Hex
 
-import traceback
+
 class Unit(Hexagon):
     def __init__(self, layout, template, q=0, r=0, **kwargs):
         super(Unit, self).__init__(layout, q, r, **kwargs)

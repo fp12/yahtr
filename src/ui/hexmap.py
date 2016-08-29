@@ -1,7 +1,4 @@
-from math import sqrt
-
 from kivy.uix.scatterlayout import ScatterLayout
-from kivy.uix.floatlayout import FloatLayout
 
 from hex_lib import Layout
 from game import game_instance
@@ -22,10 +19,10 @@ class HexMap(ScatterLayout):
         Hexagon.radius = HexMap.hex_radius
 
         map_radius = 6
-        for q in range(-map_radius, map_radius+1):
+        for q in range(-map_radius, map_radius + 1):
             r1 = max(-map_radius, -q - map_radius)
             r2 = min(map_radius, -q + map_radius)
-            for r in range(r1, r2+1):
+            for r in range(r1, r2 + 1):
                 hexagon = Hexagon(self._layout, q, r, size=(HexMap.hex_radius, HexMap.hex_radius))
                 self.add_widget(hexagon)
                 self._hex_list.append(hexagon)

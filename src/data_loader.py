@@ -1,6 +1,7 @@
 import json
 import os
 
+
 def simple_load(folder, ext):
     data = {}
     for file in os.listdir(folder):
