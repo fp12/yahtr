@@ -1,3 +1,4 @@
+from enum import Enum
 from math import sqrt, pi, cos, sin
 import collections
 
@@ -35,7 +36,7 @@ class Hex:
     @property
     def length(self):
         return (abs(self._q) + abs(self._r) + abs(self.s)) // 2
-
+    
     def __str__(self):
         return '<{0}, {1}, {2}>'.format(self._q, self._r, self.s)
 
@@ -71,10 +72,10 @@ class Hex:
         return self
 
     def distance(self, other):
-        return (self - other).length
+        return (self-other).length
 
     def get_neighbours(self):
-        return [self + Hex(qrs=x) for x in Hex.directions]
+        return [self+Hex(qrs=x) for x in Hex.directions]
 
     def angle_to_neighbour(self, other):
         neighbour = other - self
@@ -100,8 +101,6 @@ class Hex:
 
 
 Point = collections.namedtuple("Point", ["x", "y"])
-
-
 def to_point(x):
     return x if type(x) == Point else Point(x[0], x[1])
 
@@ -120,11 +119,11 @@ class Layout:
     @property
     def origin(self):
         return self._origin
-
+    
     @property
     def size(self):
         return self._size
-
+    
     @property
     def orientation(self):
         return self._orientation
@@ -132,7 +131,7 @@ class Layout:
     @property
     def margin(self):
         return self._margin
-
+    
     def hex_to_pixel(self, h):
         x = (self._orientation.f0 * h.q + self._orientation.f1 * h.r) * (self._size.x + self._margin)
         y = (self._orientation.f2 * h.q + self._orientation.f3 * h.r) * (self._size.y + self._margin)

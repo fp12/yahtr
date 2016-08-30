@@ -14,7 +14,7 @@ class Game():
     @property
     def actions(self):
         return self._actions
-
+    
     @property
     def units(self):
         return self._units

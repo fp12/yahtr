@@ -1,4 +1,5 @@
 from kivy.app import App
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.core.window import Window
 
@@ -25,12 +26,13 @@ class MainWindow(App):
     def on_start(self):
         game_instance.load()
         self._map = HexMap(pos=Window.center)
-        self._key_binder.update({'n': [self._map.on_cycle_unit_action], 'd': [self._map.on_debug_key]})
+        self._key_binder.update( { 'n': [ self._map.on_cycle_unit_action ], 'd': [ self._map.on_debug_key ] } )
         self._layout.add_widget(self._map)
         self._layout.add_widget(create_units_list(game_instance.units, self.on_unit_selected))
+        #self._map.add_widget(create_units_list(game_instance.units, self.on_unit_selected))
 
     def build(self):
-        self._layout = AnchorLayout(anchor_x='left', anchor_y='top')
+        self._layout = AnchorLayout(anchor_x='left', anchor_y='top') # cols=2
         self.title = 'Yet Another Hex Tactical RPG'
         return self._layout
 

@@ -6,7 +6,6 @@ args_converter = lambda row_index, rec: {'text': rec,
                                          'size_hint_y': 0.1,
                                          'height': 25}
 
-
 def create_units_list(units, on_unit_selected):
     list_adapter = ListAdapter(data=units,
                                args_converter=args_converter,
