@@ -32,11 +32,11 @@ class HexMap(ScatterLayout):
         Window.bind(mouse_pos=self.on_mouse_pos)
         self._mouse_over_hex = None
 
-    def spawn_unit(self, unit):
+    def spawn_unit(self, selected_class):
         if self._unit:
             self._unit.clear()
             self.remove_widget(self._unit)
-        self._unit = Unit(self.hex_layout, game_instance.units[unit], q=-1, r=2)
+        self._unit = Unit(self.hex_layout, game_instance.units[selected_class], q=-1, r=2)
         self.add_widget(self._unit)
         self._unit.load()
 

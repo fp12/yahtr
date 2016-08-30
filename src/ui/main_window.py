@@ -3,7 +3,7 @@ from kivy.uix.anchorlayout import AnchorLayout
 from kivy.core.window import Window
 
 from ui.hexmap import HexMap
-from ui.units_list import create_units_list
+from ui.class_list import create_class_list
 
 from game import game_instance
 
@@ -18,16 +18,16 @@ class MainWindow(App):
 
     def on_unit_selected(self, adapter, *args):
         if len(adapter.selection) == 1:
-            unit = adapter.selection[0].text
-            if unit in game_instance.units.keys():
-                self._map.spawn_unit(unit)
+            selected_class = adapter.selection[0].text
+            if selected_class in game_instance.classes.keys():
+                self._map.spawn_unit(selected_class)
 
     def on_start(self):
         game_instance.load()
         self._map = HexMap(pos=(0, 0), size_hint=(None, None), size=Window.size)
         self._key_binder.update({'d': [self._map.on_debug_key]})
         self._layout.add_widget(self._map)
-        self._layout.add_widget(create_units_list(game_instance.units, self.on_unit_selected))
+        self._layout.add_widget(create_class_list(game_instance.classes, self.on_unit_selected))
 
     def build(self):
         self._layout = AnchorLayout(anchor_x='left', anchor_y='top')
