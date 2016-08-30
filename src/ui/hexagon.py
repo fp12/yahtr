@@ -10,10 +10,11 @@ class Hexagon(ColoredWidget):
     debug_label = StringProperty('')
 
     def __init__(self, layout, q, r, **kwargs):
-        self._layout = layout
+        self.hex_layout = layout
         self._hex = Hex(q, r)
         self._color = [self.red, self.green, self.blue, self.alpha]
-        super(Hexagon, self).__init__(center=layout.hex_to_pixel(self._hex), size_hint=(None, None), **kwargs)
+        hex_pos = layout.hex_to_pixel(self._hex)
+        super(Hexagon, self).__init__(pos=(hex_pos.x, hex_pos.y), size_hint=(None, None), **kwargs)
 
     def toggle_debug_label(self):
     	if self.debug_label:
