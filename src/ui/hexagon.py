@@ -12,9 +12,12 @@ class Hexagon(ColoredWidget):
     def __init__(self, layout, q, r, **kwargs):
         self.hex_layout = layout
         self._hex = Hex(q, r)
-        self._color = [self.red, self.green, self.blue, self.alpha]
         hex_pos = layout.hex_to_pixel(self._hex)
-        super(Hexagon, self).__init__(pos=(hex_pos.x, hex_pos.y), size_hint=(None, None), **kwargs)
+        super(Hexagon, self).__init__(pos=(hex_pos.x, hex_pos.y), color=[0.9, 0.9, 0.9, 1], size_hint=(None, None), **kwargs)
+
+    def move_to(self, hex_coords, tile_pos=None):
+        self._hex = hex_coords
+        self.pos = tile_pos or self.hex_layout.hex_to_pixel(self._hex)
 
     def toggle_debug_label(self):
         if self.debug_label:

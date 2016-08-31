@@ -3,7 +3,7 @@
 	"speed": "10",
 	"attack": "10",
 	"health": "10",
-	"color": [1, 0, 0],
+	"color": [0.25098, 0.878431, 0.815686],
 	"actions": 
 	{
 		"sword": "B",

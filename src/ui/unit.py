@@ -17,6 +17,15 @@ class Unit(Hexagon):
         self._bubbles = []
         self._displayed_action = None
 
+    @property
+    def actions_displayed(self):
+        return len(self._bubbles) > 0 
+    
+    def move_to(self, hex_coords, tile_pos=None):
+        self.clear()
+        super(Unit, self).move_to(hex_coords, tile_pos)
+
+
     def load(self):
         return
         for action in self._template['actions'].keys():
@@ -44,19 +53,18 @@ class Unit(Hexagon):
             self._actions.append(arrow)
             self.parent.add_widget(arrow)
 
-    def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
-            if not self._bubbles:
-                action_count = len(self._template['actions'])
-                angle = 60 if action_count < 6 else 30
-                start_angle = -90 - (action_count - 1) * angle / 2
-                distance = (self.hex_layout.size.x + self.hex_layout.size.y) / 2 * 1.5
-                for i, action in zip(range(0, action_count), self._template['actions']):
-                    bubble = ActionBubble(i, action, self)
-                    self._bubbles.append(bubble)
-                    self.parent.add_widget(bubble)
-                    new_angle = (start_angle + i * angle) * pi / 180
-                    x = self.x + cos(new_angle) * distance
-                    y = self.y + sin(new_angle) * distance
-                    bubble.center = (x, y)
-                return True
+    def on_real_touch_down(self):
+        if not self._bubbles:
+            action_count = len(self._template['actions'])
+            angle = 60 if action_count < 6 else 30
+            start_angle = -90 - (action_count - 1) * angle / 2
+            distance = (self.hex_layout.size.x + self.hex_layout.size.y) / 2 * 1.5
+            for i, action in zip(range(0, action_count), self._template['actions']):
+                bubble = ActionBubble(i, action, self)
+                self._bubbles.append(bubble)
+                self.parent.add_widget(bubble)
+                new_angle = (start_angle + i * angle) * pi / 180
+                x = self.x + cos(new_angle) * distance
+                y = self.y + sin(new_angle) * distance
+                bubble.center = (x, y)
+            return True
