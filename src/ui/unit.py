@@ -1,16 +1,16 @@
 from math import cos, sin, pi
 
-from ui.hexagon import Hexagon
+from ui.hex_widget import HexWidget
 from ui.action_arrow import ActionArrow
 from ui.action_bubble import ActionBubble
 
 from game import game_instance
-from hex_lib import Hex, Point
+from hex_lib import Hex
 
 
-class Unit(Hexagon):
-    def __init__(self, layout, template, q=0, r=0, **kwargs):
-        super(Unit, self).__init__(layout, q, r, **kwargs)
+class Unit(HexWidget):
+    def __init__(self, template, **kwargs):
+        super(Unit, self).__init__(**kwargs)
         self._template = template
         self.color = template['color']
         self._actions = []
@@ -19,12 +19,11 @@ class Unit(Hexagon):
 
     @property
     def actions_displayed(self):
-        return len(self._bubbles) > 0 
-    
+        return len(self._bubbles) > 0
+
     def move_to(self, hex_coords, tile_pos=None):
         self.clear()
         super(Unit, self).move_to(hex_coords, tile_pos)
-
 
     def load(self):
         return
@@ -45,8 +44,8 @@ class Unit(Hexagon):
     def load_action(self, action):
         self._displayed_action = action
         for h in game_instance.actions[action]['hits']:
-            origin = self._hex + Hex(qrs=h['origin'])
-            direction = self._hex + Hex(qrs=h['direction'])
+            origin = self.hex_coords + Hex(qrs=h['origin'])
+            direction = self.hex_coords + Hex(qrs=h['direction'])
             pos = self.hex_layout.get_mid_edge_position(origin, direction)
             angle = origin.angle_to_neighbour(direction)
             arrow = ActionArrow(angle=angle, pos=(pos.x, pos.y))

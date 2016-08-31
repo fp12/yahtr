@@ -25,14 +25,13 @@ class ActionBubble(ColoredWidget):
 
     def clear(self):
         for x in self._action_arrows:
-            print('removing ', x)
             self.parent.remove_widget(x)
         self._action_arrows = []
 
     def load_action(self):
         for h in game_instance.actions[self._action]['hits']:
-            h_origin = self._unit._hex + Hex(qrs=h['origin'])
-            h_direction = self._unit._hex + Hex(qrs=h['direction'])
+            h_origin = self._unit.hex_coords + Hex(qrs=h['origin'])
+            h_direction = self._unit.hex_coords + Hex(qrs=h['direction'])
             pos = self._unit.hex_layout.get_mid_edge_position(h_origin, h_direction)
             angle = h_origin.angle_to_neighbour(h_direction)
             arrow = ActionArrow(angle=angle, pos=(pos.x, pos.y))
