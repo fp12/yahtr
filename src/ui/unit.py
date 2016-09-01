@@ -1,4 +1,8 @@
 from math import cos, sin, pi
+from enum import Enum
+from functools import partial
+
+from kivy.animation import Animation
 
 from ui.hex_widget import HexWidget
 from ui.action_arrow import ActionArrow
@@ -6,6 +10,11 @@ from ui.action_bubble import ActionBubble
 
 from game import game_instance
 from hex_lib import Hex
+
+
+class Status(Enum):
+    Idle = 0
+    Moving = 1
 
 
 class Unit(HexWidget):
@@ -16,14 +25,33 @@ class Unit(HexWidget):
         self._actions = []
         self._bubbles = []
         self._displayed_action = None
+        self.status = Status.Idle
 
     @property
     def actions_displayed(self):
         return len(self._bubbles) > 0
 
-    def move_to(self, hex_coords, tile_pos=None):
+    def on_finished_moving(self, hex_coords):
+        self.status = Status.Idle
+        self.hex_coords = hex_coords
+
+    # override
+    def move_to(self, hex_coords, tile_pos=None, trajectory=[]):
         self.clear()
-        super(Unit, self).move_to(hex_coords, tile_pos)
+        if trajectory:
+            self.status = Status.Moving
+            Animation.cancel_all(self)
+            trajectory.remove(self.hex_coords)
+            trajectory.reverse()
+            anim = Animation(duration=0)
+            for hex_coords in trajectory:
+                pt = self.hex_layout.hex_to_pixel(hex_coords)
+                anim += Animation(pos=(pt.x, pt.y), duration=0.2)
+            # anim.bind(on_complete=lambda: self.on_finished_moving(hex_coords))
+            anim.start(self)
+            self.hex_coords = hex_coords  # to remove
+        else:
+            super(Unit, self).move_to(hex_coords, tile_pos, trajectory)
 
     def load(self):
         return

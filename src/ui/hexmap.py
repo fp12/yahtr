@@ -29,7 +29,7 @@ class HexMap(ScatterLayout):
                 self.add_widget(tile)
                 self.tiles.append(tile)
 
-        self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=3, color=[0.560784, 0.737255, 0.560784, 0.5])
+        self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=[0.560784, 0.737255, 0.560784, 0.5])
         self.selector.hide()
         self.add_widget(self.selector)
 
@@ -61,7 +61,7 @@ class HexMap(ScatterLayout):
             return
         for tile in self.tiles:
             if tile.hex_coords == hover_hex:
-                self.selector.move_to(hover_hex)
+                self.selector.move_to(hover_hex, tile_pos=tile.pos)
                 self.selector.hide(False)
 
                 if self._unit:
@@ -75,7 +75,7 @@ class HexMap(ScatterLayout):
                                 pt = self.hex_layout.hex_to_pixel(hex_coords)
                                 points.append(pt.x)
                                 points.append(pt.y)
-                            self.trajectory.set(points)
+                            self.trajectory.set(path, points)
                 return True
         # if we aren't on a tile, we reset the selector and trajectory
         self.selector.hide()
@@ -88,5 +88,5 @@ class HexMap(ScatterLayout):
                 return self._unit.on_real_touch_down()
             else:
                 self.trajectory.hide()
-                self._unit.move_to(self.selector.hex_coords, self.selector.pos)
+                self._unit.move_to(self.selector.hex_coords, trajectory=self.trajectory.hex_coords)
                 return True

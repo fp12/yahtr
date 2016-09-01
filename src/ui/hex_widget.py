@@ -10,8 +10,8 @@ from hex_lib import Hex
 class HexWidget(ColoredWidget):
     radius = NumericProperty(30)
     debug_label = StringProperty('')
-    coss = ListProperty([cos(pi/3 * i) for i in range(6)])
-    sins = ListProperty([sin(pi/3 * i) for i in range(6)])
+    coss = ListProperty([cos(pi / 3 * i) for i in range(6)])
+    sins = ListProperty([sin(pi / 3 * i) for i in range(6)])
 
     def __init__(self, q, r, layout, **kwargs):
         self.hex_coords = Hex(q, r)
@@ -21,7 +21,7 @@ class HexWidget(ColoredWidget):
         hex_pos = layout.hex_to_pixel(self.hex_coords)
         super(HexWidget, self).__init__(pos=(hex_pos.x, hex_pos.y), size_hint=(None, None), **kwargs)
 
-    def move_to(self, hex_coords, tile_pos=None):
+    def move_to(self, hex_coords, tile_pos=None, trajectory=[]):
         self.hex_coords = hex_coords
         self.pos = tile_pos or self.hex_layout.hex_to_pixel(self.hex_coords)
 
