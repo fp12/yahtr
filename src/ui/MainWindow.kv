@@ -21,6 +21,25 @@
 #            size: 8, 8
 
 <HexWidget>:
+    Label:
+        size: root.size
+        center: root.pos
+        text: root.debug_label
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        color: 0, 0, 0, 1
+
+<Tile>
+    canvas:
+        Color:
+            rgba: self.r, self.g, self.b, self.a
+        Mesh:
+            vertices: (self.x + math.cos(math.pi/3 * 0) * self.radius, self.y + math.sin(math.pi/3 * 0) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 1) * self.radius, self.y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * self.radius, self.y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 3) * self.radius, self.y + math.sin(math.pi/3 * 3) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 4) * self.radius, self.y + math.sin(math.pi/3 * 4) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 5) * self.radius, self.y + math.sin(math.pi/3 * 5) * self.radius, 0, 0)
+            indices: (0, 1, 2, 3, 4, 5)
+            mode: "triangle_fan"
+
+<Unit>
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a
@@ -34,29 +53,17 @@
         #    vertices: (self.x + math.cos(math.pi/3 * 1) * self.radius, self.y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * self.radius, self.y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * (self.radius - self.front_radius), self.y + math.sin(math.pi/3 * 2) * (self.radius - self.front_radius), 0, 0, self.x + math.cos(math.pi/3 * 1) * (self.radius - self.front_radius), self.y + math.sin(math.pi/3 * 1) * (self.radius - self.front_radius), 0, 0)
         #    indices: (0, 1, 2, 3)
         #    mode: "triangle_fan"
-#    canvas.after:
-#        Color:
-#            rgba: 0,1,0,1
-#        Ellipse:
-#            pos: self.x-3, self.y-3
-#            size: 6, 6
-    Label:
-        size: root.size
-        center: root.pos
-        text: root.debug_label
-        text_size: self.size
-        halign: 'center'
-        valign: 'middle'
-        color: 0, 0, 0, 1
 
 <Selector>:
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a
-        Mesh:
-            vertices: (self.x + math.cos(math.pi/3 * 0) * self.radius, self.y + math.sin(math.pi/3 * 0) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 1) * self.radius, self.y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * self.radius, self.y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 3) * self.radius, self.y + math.sin(math.pi/3 * 3) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 4) * self.radius, self.y + math.sin(math.pi/3 * 4) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 5) * self.radius, self.y + math.sin(math.pi/3 * 5) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 0) * (self.radius + self.margin), self.y + math.sin(math.pi/3 * 0) * (self.radius + self.margin), 0, 0, self.x + math.cos(math.pi/3 * 1) * (self.radius + self.margin), self.y + math.sin(math.pi/3 * 1) * (self.radius + self.margin), 0, 0, self.x + math.cos(math.pi/3 * 2) * (self.radius + self.margin), self.y + math.sin(math.pi/3 * 2) * (self.radius + self.margin), 0, 0, self.x + math.cos(math.pi/3 * 3) * (self.radius + self.margin), self.y + math.sin(math.pi/3 * 3) * (self.radius + self.margin), 0, 0, self.x + math.cos(math.pi/3 * 4) * (self.radius + self.margin), self.y + math.sin(math.pi/3 * 4) * (self.radius + self.margin), 0, 0, self.x + math.cos(math.pi/3 * 5) * (self.radius + self.margin), self.y + math.sin(math.pi/3 * 5) * (self.radius + self.margin), 0, 0)
-            indices: (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-            mode: "triangle_fan"
+        Line:
+            points: [self.x + self.coss[0] * (self.radius + self.margin/2), self.y + self.sins[0] * (self.radius + self.margin/2), self.x + self.coss[1] * (self.radius + self.margin/2), self.y + self.sins[1] * (self.radius + self.margin/2), self.x + self.coss[2] * (self.radius + self.margin/2), self.y + self.sins[2] * (self.radius + self.margin/2), self.x + self.coss[3] * (self.radius + self.margin/2), self.y + self.sins[3] * (self.radius + self.margin/2), self.x + self.coss[4] * (self.radius + self.margin/2), self.y + self.sins[4] * (self.radius + self.margin/2), self.x + self.coss[5] * (self.radius + self.margin/2), self.y + self.sins[5] * (self.radius + self.margin/2)]
+            joint: 'bevel'
+            cap: 'none'
+            width: self.margin
+            close: True
 
 <ActionArrow>:
     canvas:

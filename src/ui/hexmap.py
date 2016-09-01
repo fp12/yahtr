@@ -2,10 +2,12 @@ from kivy.uix.scatterlayout import ScatterLayout
 from kivy.core.window import Window
 
 from hex_lib import Layout
+import a_star
 from game import game_instance
 from ui.tile import Tile
 from ui.unit import Unit
 from ui.selector import Selector
+from ui.trajectory import Trajectory
 
 
 class HexMap(ScatterLayout):
@@ -17,9 +19,6 @@ class HexMap(ScatterLayout):
         self.hex_layout = Layout(origin=self.center, size=self.hex_radius, flat=game_instance.flat_layout, margin=self.hex_margin)
         self._unit = None
         self.tiles = []
-        self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=self.hex_margin, color=[1, 1, 1, 1])
-        self.selector.hide()
-        self.add_widget(self.selector)
 
         map_radius = 6
         for q in range(-map_radius, map_radius + 1):
@@ -30,8 +29,15 @@ class HexMap(ScatterLayout):
                 self.add_widget(tile)
                 self.tiles.append(tile)
 
+        self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=3, color=[0.560784, 0.737255, 0.560784, 0.5])
+        self.selector.hide()
+        self.add_widget(self.selector)
+
+        self.trajectory = Trajectory(color=[0.360784, 0.437255, 0.860784, 0.5])
+        self.trajectory.hide()
+        self.add_widget(self.trajectory)
+
         Window.bind(mouse_pos=self.on_mouse_pos)
-        self._hovered_tile = None
 
     def spawn_unit(self, selected_class):
         if self._unit:
@@ -51,29 +57,36 @@ class HexMap(ScatterLayout):
             return
         # get rounded hex coordinates
         hover_hex = self.hex_layout.pixel_to_hex(pos).get_round()
-        if self._hovered_tile and self._hovered_tile.hex_coords == hover_hex:
+        if self.selector.hex_coords == hover_hex:
             return
         for tile in self.tiles:
             if tile.hex_coords == hover_hex:
-                # reset the old hovered tile
-                if self._hovered_tile:
-                    self._hovered_tile.restore_old_color()
-                # store tile and set new color
-                self._hovered_tile = tile
-                self._hovered_tile.color = [0.560784, 0.737255, 0.560784, 1]
                 self.selector.move_to(hover_hex)
                 self.selector.hide(False)
+
+                if self._unit:
+                    if self._unit.hex_coords == tile.hex_coords:
+                        self.trajectory.hide()
+                    else:
+                        path = a_star.build_path(*a_star.search(self._unit.hex_coords, tile.hex_coords))
+                        if path:
+                            points = []
+                            for hex_coords in path:
+                                pt = self.hex_layout.hex_to_pixel(hex_coords)
+                                points.append(pt.x)
+                                points.append(pt.y)
+                            self.trajectory.set(points)
                 return True
-        # if we aren't on a tile, we reset the hovered tile
-        if self._hovered_tile:
-            self._hovered_tile.restore_old_color()
-            self._hovered_tile = None
-            self.selector.hide()
+        # if we aren't on a tile, we reset the selector and trajectory
+        self.selector.hide()
+        self.trajectory.hide()
+        return False
 
     def on_touch_down(self, touch):
-        if self._unit and self._hovered_tile:
-            if self._hovered_tile.hex_coords == self._unit.hex_coords:
+        if self._unit:
+            if self.selector.hex_coords == self._unit.hex_coords:
                 return self._unit.on_real_touch_down()
             else:
-                self._unit.move_to(self._hovered_tile.hex_coords, self._hovered_tile.pos)
+                self.trajectory.hide()
+                self._unit.move_to(self.selector.hex_coords, self.selector.pos)
                 return True

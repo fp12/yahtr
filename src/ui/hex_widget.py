@@ -1,4 +1,6 @@
-from kivy.properties import NumericProperty, StringProperty
+from math import pi, cos, sin
+
+from kivy.properties import NumericProperty, StringProperty, ListProperty
 
 from ui.colored_widget import ColoredWidget
 
@@ -8,6 +10,8 @@ from hex_lib import Hex
 class HexWidget(ColoredWidget):
     radius = NumericProperty(30)
     debug_label = StringProperty('')
+    coss = ListProperty([cos(pi/3 * i) for i in range(6)])
+    sins = ListProperty([sin(pi/3 * i) for i in range(6)])
 
     def __init__(self, q, r, layout, **kwargs):
         self.hex_coords = Hex(q, r)

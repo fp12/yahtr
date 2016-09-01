@@ -42,9 +42,15 @@ class Hex:
     def __repr__(self):
         return '<{0}, {1}, {2}>'.format(self._q, self._r, self.s)
 
+    def __hash__(self):
+        return hash(str(self))
+
     def __eq__(self, other):
         other = other if type(other) is Hex else Hex(qrs=other)
         return self._q == other.q and self._r == other.r
+
+    def __lt__(self, other):
+        return self._q < other.q or self._r < other.r
 
     def __add__(self, other):
         return Hex(self._q + other.q, self._r + other.r)
