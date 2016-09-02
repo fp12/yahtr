@@ -82,6 +82,13 @@ class Hex:
     def get_neighbours(self):
         return [self + Hex(qrs=x) for x in Hex.directions]
 
+    def get_neighbour(self, direction):
+        return self + Hex(qrs=Hex.directions[direction])
+
+    @classmethod
+    def get_directions_as_Hex(cls):
+        return [Hex(qrs=x) for x in Hex.directions]
+
     def angle_to_neighbour(self, other):
         neighbour = other - self
         if neighbour in Hex.directions:

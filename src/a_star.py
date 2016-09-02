@@ -51,3 +51,18 @@ def get_best_path(game_map, h_start, h_goal):
         backtrack_end = came_from[backtrack_end]
         path.append(backtrack_end)
     return path
+
+
+def get_reachable(game_map, h_start, move_max):
+    visited = set([h_start])
+    fringes = [[h_start]]
+
+    for k in range(1, move_max+1):
+        fringes.append([])
+        for h_current in fringes[k-1]:
+            for neighbor in game_map.get_neighbours(h_current):
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    fringes[k].append(neighbor)
+
+    return visited

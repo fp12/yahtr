@@ -41,7 +41,7 @@ class Map():
         assert(var in info)
         setattr(self, var, info[var])
 
-    def _validate_coords(self, q, r):
+    def validate_coords(self, q, r):
         if self.holes and [q, r] in self.holes:
             return False
         return True
@@ -49,13 +49,13 @@ class Map():
     def _get_tiles_parallelogram(self):
         for q in range(self.q1, self.q2 + 1):
             for r in range(self.r1, self.r2 + 1):
-                if self._validate_coords(q, r):
+                if self.validate_coords(q, r):
                     yield q, r
 
     def _get_tiles_triangle(self):
         for q in range(self.size + 1):
             for r in range(self.size - q, self.size + 1):
-                if self._validate_coords(q, r):
+                if self.validate_coords(q, r):
                     yield q, r
 
     def _get_tiles_hexagon(self):
@@ -63,17 +63,17 @@ class Map():
             r1 = max(-self.radius, -q - self.radius)
             r2 = min(self.radius, -q + self.radius)
             for r in range(r1, r2 + 1):
-                if self._validate_coords(q, r):
+                if self.validate_coords(q, r):
                     yield q, r
 
     def _get_tiles_rectangle(self):
         for r in range(self.height):
             r_offset = floor(r / 2.)
             for q in range(-r_offset, self.width - r_offset):
-                if self._validate_coords(q, r):
+                if self.validate_coords(q, r):
                     yield q, r
 
     def get_neighbours(self, hex_coords):
         for neighbour in hex_coords.get_neighbours():
-            if self._validate_coords(neighbour.q, neighbour.r):
+            if self.validate_coords(neighbour.q, neighbour.r):
                 yield neighbour

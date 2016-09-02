@@ -63,6 +63,11 @@ class GameView(ScatterLayout):
                 if self._unit:
                     if self._unit.status == Status.Moving or self._unit.hex_coords == tile.hex_coords:
                         self.trajectory.hide()
+                        reachable_h = a_star.get_reachable(game_instance.current_map, self._unit.hex_coords, 4)
+                        for x in reachable_h:
+                            for x_tile in self.tiles:
+                                if x_tile.hex_coords == x:
+                                    x_tile.color = [1, 0, 1, 1]
                     else:
                         path = a_star.get_best_path(game_instance.current_map, self._unit.hex_coords, tile.hex_coords)
                         if path:
