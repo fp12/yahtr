@@ -9,7 +9,6 @@ from hex_lib import Hex
 
 class HexWidget(ColoredWidget):
     radius = NumericProperty(30)
-    debug_label = StringProperty('')
     coss = ListProperty([cos(pi / 3 * i) for i in range(6)])
     sins = ListProperty([sin(pi / 3 * i) for i in range(6)])
 
@@ -24,9 +23,3 @@ class HexWidget(ColoredWidget):
     def move_to(self, hex_coords, tile_pos=None, trajectory=[]):
         self.hex_coords = hex_coords
         self.pos = tile_pos or self.hex_layout.hex_to_pixel(self.hex_coords)
-
-    def toggle_debug_label(self):
-        if self.debug_label:
-            self.debug_label = ''
-        else:
-            self.debug_label = '{0}, {1}'.format(self.hex_coords.q, self.hex_coords.r)
