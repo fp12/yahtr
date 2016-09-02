@@ -10,24 +10,20 @@ from ui.selector import Selector
 from ui.trajectory import Trajectory
 
 
-class HexMap(ScatterLayout):
+class GameView(ScatterLayout):
     hex_radius = 30
     hex_margin = 2
 
     def __init__(self, **kwargs):
-        super(HexMap, self).__init__(**kwargs)
+        super(GameView, self).__init__(**kwargs)
         self.hex_layout = Layout(origin=self.center, size=self.hex_radius, flat=game_instance.flat_layout, margin=self.hex_margin)
         self._unit = None
         self.tiles = []
 
-        map_radius = 6
-        for q in range(-map_radius, map_radius + 1):
-            r1 = max(-map_radius, -q - map_radius)
-            r2 = min(map_radius, -q + map_radius)
-            for r in range(r1, r2 + 1):
-                tile = Tile(q, r, layout=self.hex_layout, color=[0.8, 0.8, 0.8, 1], size=(self.hex_radius, self.hex_radius))
-                self.add_widget(tile)
-                self.tiles.append(tile)
+        for q, r in game_instance.current_map.get_tiles():
+            tile = Tile(q, r, layout=self.hex_layout, color=[0.8, 0.8, 0.8, 1], size=(self.hex_radius, self.hex_radius))
+            self.add_widget(tile)
+            self.tiles.append(tile)
 
         self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=[0.560784, 0.737255, 0.560784, 0.5])
         self.selector.hide()

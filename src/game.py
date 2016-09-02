@@ -1,5 +1,6 @@
 import data_loader
 import classes
+from game_map import Map
 
 
 class Game():
@@ -8,10 +9,12 @@ class Game():
         self._actions = {}
         self._classes = classes.ClassesList()
         self._flat_layout = True
+        self.current_map = None
 
     def load(self):
         self._actions = data_loader.local_load(self._root_path + 'data/actions/', '.json')
         self._classes.local_load(self._root_path)
+        self.current_map = Map('hexagon_default')
 
     def update_from_wiki(self):
         # print(self._classes.classes)

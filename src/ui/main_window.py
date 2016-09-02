@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.core.window import Window
 
-from ui.hexmap import HexMap
+from ui.game_view import GameView
 from ui.class_list import create_class_list
 
 from game import game_instance
@@ -12,7 +12,7 @@ class MainWindow(App):
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
         self._layout = None
-        self._map = None
+        self.game_view = None
         self._key_binder = {}
         Window.bind(on_key_down=self._on_keyboard_down)
 
@@ -20,13 +20,13 @@ class MainWindow(App):
         if len(adapter.selection) == 1:
             selected_class = adapter.selection[0].text
             if selected_class in game_instance.classes.keys():
-                self._map.spawn_unit(selected_class)
+                self.game_view.spawn_unit(selected_class)
 
     def on_start(self):
         game_instance.load()
-        self._map = HexMap(pos=(0, 0), size_hint=(None, None), size=Window.size)
-        self._key_binder.update({'d': [self._map.on_debug_key]})
-        self._layout.add_widget(self._map)
+        self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size)
+        self._key_binder.update({'d': [self.game_view.on_debug_key]})
+        self._layout.add_widget(self.game_view)
         self._layout.add_widget(create_class_list(game_instance.classes, self.on_unit_selected))
 
     def build(self):

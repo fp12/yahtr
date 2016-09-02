@@ -13,6 +13,12 @@ def local_load(folder, ext):
     return data
 
 
+def local_load_single(folder, file, ext):
+    with open(folder + file + ext) as f:
+        return json.load(f)
+    return {}
+
+
 def wiki_load(data_type, f_parse):
     __BASE_URL = 'https://raw.githubusercontent.com/wiki/fp12/yahtr/'
     __EXT = '.md'
