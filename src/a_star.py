@@ -23,7 +23,7 @@ def cost(hex_a, hex_b):
     return 1
 
 
-def search(h_start, h_goal):
+def get_best_path(game_map, h_start, h_goal):
     frontier = PriorityQueue()
     frontier.put(h_start, 0)
     came_from = {}
@@ -37,7 +37,7 @@ def search(h_start, h_goal):
         if h_current == h_goal:
             break
         
-        for h_next in h_current.get_neighbours():
+        for h_next in game_map.get_neighbours(h_current):
             new_cost = cost_so_far[h_current] + cost(h_current, h_next)
             if h_next not in cost_so_far or new_cost < cost_so_far[h_next]:
                 cost_so_far[h_next] = new_cost
@@ -45,9 +45,6 @@ def search(h_start, h_goal):
                 frontier.put(h_next, priority)
                 came_from[h_next] = h_current
     
-    return h_start, h_goal, came_from, cost_so_far
-
-def build_path(h_start, h_goal, came_from, cost_so_far):
     path = [h_goal]
     backtrack_end = h_goal
     while backtrack_end != h_start:

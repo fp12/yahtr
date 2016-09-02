@@ -64,7 +64,7 @@ class GameView(ScatterLayout):
                     if self._unit.status == Status.Moving or self._unit.hex_coords == tile.hex_coords:
                         self.trajectory.hide()
                     else:
-                        path = a_star.build_path(*a_star.search(self._unit.hex_coords, tile.hex_coords))
+                        path = a_star.get_best_path(game_instance.current_map, self._unit.hex_coords, tile.hex_coords)
                         if path:
                             points = []
                             for hex_coords in path:

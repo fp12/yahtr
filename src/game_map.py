@@ -72,3 +72,8 @@ class Map():
             for q in range(-r_offset, self.width - r_offset):
                 if self._validate_coords(q, r):
                     yield q, r
+
+    def get_neighbours(self, hex_coords):
+        for neighbour in hex_coords.get_neighbours():
+            if self._validate_coords(neighbour.q, neighbour.r):
+                yield neighbour
