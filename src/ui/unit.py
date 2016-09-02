@@ -47,9 +47,8 @@ class Unit(HexWidget):
             for hex_coords in trajectory:
                 pt = self.hex_layout.hex_to_pixel(hex_coords)
                 anim += Animation(pos=(pt.x, pt.y), duration=0.2)
-            # anim.bind(on_complete=lambda: self.on_finished_moving(hex_coords))
+            anim.bind(on_complete=lambda *args: self.on_finished_moving(hex_coords))
             anim.start(self)
-            self.hex_coords = hex_coords  # to remove
         else:
             super(Unit, self).move_to(hex_coords, tile_pos, trajectory)
 

@@ -5,7 +5,7 @@ from hex_lib import Layout
 import a_star
 from game import game_instance
 from ui.tile import Tile
-from ui.unit import Unit
+from ui.unit import Unit, Status
 from ui.selector import Selector
 from ui.trajectory import Trajectory
 
@@ -65,7 +65,7 @@ class HexMap(ScatterLayout):
                 self.selector.hide(False)
 
                 if self._unit:
-                    if self._unit.hex_coords == tile.hex_coords:
+                    if self._unit.status == Status.Moving or self._unit.hex_coords == tile.hex_coords:
                         self.trajectory.hide()
                     else:
                         path = a_star.build_path(*a_star.search(self._unit.hex_coords, tile.hex_coords))
