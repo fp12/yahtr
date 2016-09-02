@@ -19,6 +19,7 @@ class GameView(ScatterLayout):
         self.hex_layout = Layout(origin=self.center, size=self.hex_radius, flat=game_instance.flat_layout, margin=self.hex_margin)
         self._unit = None
         self.tiles = []
+        self.reachable_tiles = []
 
         for q, r in game_instance.current_map.get_tiles():
             tile = Tile(q, r, layout=self.hex_layout, color=[0.8, 0.8, 0.8, 1], size=(self.hex_radius, self.hex_radius))
@@ -29,7 +30,7 @@ class GameView(ScatterLayout):
         self.selector.hide()
         self.add_widget(self.selector)
 
-        self.trajectory = Trajectory(color=[0.360784, 0.437255, 0.860784, 0.5])
+        self.trajectory = Trajectory(color=[0, 0.392157, 0, 0.5])
         self.trajectory.hide()
         self.add_widget(self.trajectory)
 
@@ -47,41 +48,59 @@ class GameView(ScatterLayout):
         for x in self.tiles:
             x.toggle_debug_label()
 
+    def get_tile(self, hex_coords):
+        for tile in self.tiles:
+            if tile.hex_coords == hex_coords:
+                return tile
+        return None
+
+    def clean_reachable_tiles(self):
+        for tile in self.reachable_tiles:
+            tile.restore_old_color()
+        self.reachable_tiles = []
+
     def on_mouse_pos(self, stuff, pos):
         # do proceed if not displayed and/or no parent
         if not self.get_root_window():
             return
-        # get rounded hex coordinates
+
+        # get rounded hex coordinates and do nothing if we didn't change hex
         hover_hex = self.hex_layout.pixel_to_hex(pos).get_round()
         if self.selector.hex_coords == hover_hex:
             return
-        for tile in self.tiles:
-            if tile.hex_coords == hover_hex:
-                self.selector.move_to(hover_hex, tile_pos=tile.pos)
-                self.selector.hide(False)
 
-                if self._unit:
-                    if self._unit.status == Status.Moving or self._unit.hex_coords == tile.hex_coords:
-                        self.trajectory.hide()
-                        reachable_h = a_star.get_reachable(game_instance.current_map, self._unit.hex_coords, 4)
-                        for x in reachable_h:
-                            for x_tile in self.tiles:
-                                if x_tile.hex_coords == x:
-                                    x_tile.color = [1, 0, 1, 1]
-                    else:
-                        path = a_star.get_best_path(game_instance.current_map, self._unit.hex_coords, tile.hex_coords)
-                        if path:
-                            points = []
-                            for hex_coords in path:
-                                pt = self.hex_layout.hex_to_pixel(hex_coords)
-                                points.append(pt.x)
-                                points.append(pt.y)
-                            self.trajectory.set(path, points)
-                return True
-        # if we aren't on a tile, we reset the selector and trajectory
-        self.selector.hide()
-        self.trajectory.hide()
-        return False
+        tile = self.get_tile(hover_hex)
+        if tile:
+            if self._unit:
+                if self._unit.status == Status.Moving:
+                    self.trajectory.hide()
+                elif self._unit.hex_coords == tile.hex_coords:
+                    self.trajectory.hide()
+                    reachable_hexes = a_star.get_reachable(game_instance.current_map, self._unit.hex_coords, 4)
+                    for hx in reachable_hexes:
+                        reachable_tile = self.get_tile(hx)
+                        if reachable_tile:
+                            reachable_tile.color = [0.678431, 1, 0.184314, 1]
+                            self.reachable_tiles.append(reachable_tile)
+                else:
+                    self.clean_reachable_tiles()
+                    path = a_star.get_best_path(game_instance.current_map, self._unit.hex_coords, tile.hex_coords)
+                    if path:
+                        points = []
+                        for hex_coords in path:
+                            pt = self.hex_layout.hex_to_pixel(hex_coords)
+                            points.append(pt.x)
+                            points.append(pt.y)
+                        self.trajectory.set(path, points)
+            # finally move the selector
+            self.selector.move_to(hover_hex, tile_pos=tile.pos)
+            self.selector.hide(False)
+            return True
+        else:
+            # if we aren't on a tile, we reset the selector and trajectory
+            self.selector.hide()
+            self.trajectory.hide()
+            return False
 
     def on_touch_down(self, touch):
         if self._unit:

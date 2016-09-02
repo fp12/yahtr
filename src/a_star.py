@@ -4,13 +4,13 @@ import heapq
 class PriorityQueue:
     def __init__(self):
         self.elements = []
-    
+
     def empty(self):
         return len(self.elements) == 0
-    
+
     def put(self, item, priority):
         heapq.heappush(self.elements, (priority, item))
-    
+
     def get(self):
         return heapq.heappop(self.elements)[1]
 
@@ -30,13 +30,13 @@ def get_best_path(game_map, h_start, h_goal):
     cost_so_far = {}
     came_from[h_start] = None
     cost_so_far[h_start] = 0
-    
+
     while not frontier.empty():
         h_current = frontier.get()
-        
+
         if h_current == h_goal:
             break
-        
+
         for h_next in game_map.get_neighbours(h_current):
             new_cost = cost_so_far[h_current] + cost(h_current, h_next)
             if h_next not in cost_so_far or new_cost < cost_so_far[h_next]:
@@ -44,7 +44,7 @@ def get_best_path(game_map, h_start, h_goal):
                 priority = new_cost + heuristic(h_goal, h_next)
                 frontier.put(h_next, priority)
                 came_from[h_next] = h_current
-    
+
     path = [h_goal]
     backtrack_end = h_goal
     while backtrack_end != h_start:
@@ -57,9 +57,9 @@ def get_reachable(game_map, h_start, move_max):
     visited = set([h_start])
     fringes = [[h_start]]
 
-    for k in range(1, move_max+1):
+    for k in range(1, move_max + 1):
         fringes.append([])
-        for h_current in fringes[k-1]:
+        for h_current in fringes[k - 1]:
             for neighbor in game_map.get_neighbours(h_current):
                 if neighbor not in visited:
                     visited.add(neighbor)
