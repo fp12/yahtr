@@ -20,6 +20,8 @@ class HexWidget(ColoredWidget):
         hex_pos = layout.hex_to_pixel(self.hex_coords)
         super(HexWidget, self).__init__(pos=(hex_pos.x, hex_pos.y), size_hint=(None, None), **kwargs)
 
-    def move_to(self, hex_coords, tile_pos=None, trajectory=[]):
+    def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
         self.hex_coords = hex_coords
         self.pos = tile_pos or self.hex_layout.hex_to_pixel(self.hex_coords)
+        if on_move_end:
+            on_move_end()

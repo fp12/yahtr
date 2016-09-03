@@ -26,17 +26,21 @@ class Unit(HexWidget):
         self._bubbles = []
         self._displayed_action = None
         self.status = Status.Idle
+        self.selected = False
 
     @property
     def actions_displayed(self):
         return len(self._bubbles) > 0
 
-    def on_finished_moving(self, hex_coords):
+    def on_finished_moving(self, hex_coords, callback):
         self.status = Status.Idle
+        self.selected = False
         self.hex_coords = hex_coords
+        if callback:
+            callback()
 
     # override
-    def move_to(self, hex_coords, tile_pos=None, trajectory=[]):
+    def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
         self.clear()
         if trajectory:
             self.status = Status.Moving
@@ -47,7 +51,7 @@ class Unit(HexWidget):
             for hex_coords in trajectory:
                 pt = self.hex_layout.hex_to_pixel(hex_coords)
                 anim += Animation(pos=(pt.x, pt.y), duration=0.2)
-            anim.bind(on_complete=lambda *args: self.on_finished_moving(hex_coords))
+            anim.bind(on_complete=lambda *args: self.on_finished_moving(hex_coords, on_move_end))
             anim.start(self)
         else:
             super(Unit, self).move_to(hex_coords, tile_pos, trajectory)
@@ -80,6 +84,8 @@ class Unit(HexWidget):
             self.parent.add_widget(arrow)
 
     def on_real_touch_down(self):
+        self.selected = True
+        return True
         if not self._bubbles:
             action_count = len(self._template['actions'])
             angle = 60 if action_count < 6 else 30
