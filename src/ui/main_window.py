@@ -6,6 +6,7 @@ from ui.game_view import GameView
 from ui.class_list import create_class_list
 
 from game import game_instance
+from player import Player
 
 
 class MainWindow(App):
@@ -23,11 +24,29 @@ class MainWindow(App):
                 self.game_view.spawn_unit(selected_class)
 
     def on_start(self):
+        # prepare UI
         game_instance.load()
         self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size)
         self._key_binder.update({'d': [self.game_view.on_debug_key]})
         self._layout.add_widget(self.game_view)
         self._layout.add_widget(create_class_list(game_instance.classes, self.on_unit_selected))
+        # start fight
+        player1 = Player('Player 1')
+        player2 = Player('Player 2')
+        game_instance.start_new_fight(fight_map='hexagon_default', players=[player1, player2])
+        squads = {}
+        squads.update({player1: 
+            {
+                'guard': (-1, -4),
+                'lancer': (1, -5)
+            }})
+        squads.update({player2: 
+            {
+                'rogue': (-1, 5),
+                'warrior': (1, 4) 
+            }})
+        game_instance.deployment_finished(squads)
+        self.game_view.load_current_fight()
 
     def build(self):
         self._layout = AnchorLayout(anchor_x='left', anchor_y='top')

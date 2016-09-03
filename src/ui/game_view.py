@@ -18,13 +18,9 @@ class GameView(ScatterLayout):
         super(GameView, self).__init__(**kwargs)
         self.hex_layout = Layout(origin=self.center, size=self.hex_radius, flat=game_instance.flat_layout, margin=self.hex_margin)
         self._unit = None
+        self._units = []
         self.tiles = []
         self.reachable_tiles = []
-
-        for q, r in game_instance.current_map.get_tiles():
-            tile = Tile(q, r, layout=self.hex_layout, color=[0.8, 0.8, 0.8, 1], size=(self.hex_radius, self.hex_radius))
-            self.add_widget(tile)
-            self.tiles.append(tile)
 
         self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=[0.560784, 0.737255, 0.560784, 0.5])
         self.selector.hide()
@@ -43,6 +39,19 @@ class GameView(ScatterLayout):
         self._unit = Unit(template=game_instance.classes[selected_class], q=0, r=0, layout=self.hex_layout)
         self.add_widget(self._unit)
         self._unit.load()
+
+    def load_current_fight(self):
+        for q, r in game_instance.current_fight.current_map.get_tiles():
+            tile = Tile(q, r, layout=self.hex_layout, color=[0.8, 0.8, 0.8, 1], size=(self.hex_radius, self.hex_radius))
+            self.add_widget(tile)
+            self.tiles.append(tile)
+
+        for player, units in game_instance.current_fight.squads.items():
+            for template_name, hex_coords in units.items():
+                new_unit = Unit(template=game_instance.classes[template_name], q=hex_coords[0], r=hex_coords[1], layout=self.hex_layout)
+                self.add_widget(new_unit)
+                self._units.append(new_unit)
+                new_unit.load()
 
     def on_debug_key(self):
         for x in self.tiles:
