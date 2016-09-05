@@ -5,11 +5,13 @@ from functools import partial
 from kivy.animation import Animation
 
 from ui.hex_widget import HexWidget
+from ui.tile import Tile
 from ui.action_arrow import ActionArrow
 from ui.action_bubble import ActionBubble
 
 from game import game_instance
 from hex_lib import Hex
+import pathfinding
 
 
 class Status(Enum):
@@ -27,6 +29,7 @@ class Unit(HexWidget):
         self._displayed_action = None
         self.status = Status.Idle
         self.selected = False
+        self.reachable_tiles = []
 
     @property
     def actions_displayed(self):
@@ -37,7 +40,7 @@ class Unit(HexWidget):
         self.selected = False
         self.hex_coords = hex_coords
         if callback:
-            callback()
+            callback(self)
 
     # override
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
@@ -64,6 +67,7 @@ class Unit(HexWidget):
                 break
 
     def clear(self):
+        self.clean_reachable_tiles()
         for a in self._actions:
             self.parent.remove_widget(a)
         self._actions = []
@@ -83,7 +87,39 @@ class Unit(HexWidget):
             self._actions.append(arrow)
             self.parent.add_widget(arrow)
 
-    def on_real_touch_down(self):
+    def display_reachable_tiles(self):
+        assert(self.reachable_tiles == [])
+        reachable_hexes = pathfinding.get_reachable(game_instance.current_fight.current_map, self.hex_coords, self._template['move'])
+        for hx in reachable_hexes:
+            tile = tile = Tile(hx.q, hx.r, 
+                               layout=self.hex_layout, 
+                               color=[0.678431, 0.88, 0.184314, 0.2], 
+                               radius=self.radius - 2, 
+                               size=(self.radius - 2, self.radius - 2))
+            self.parent.add_widget(tile)
+            self.reachable_tiles.append(tile)
+
+    def is_in_move_range(self, hex_coords):
+        if self.reachable_tiles:
+            for tile in self.reachable_tiles:
+                if tile.hex_coords == hex_coords:
+                    return True
+        return False
+
+    def clean_reachable_tiles(self):
+        for tile in self.reachable_tiles:
+            self.parent.remove_widget(tile)
+        self.reachable_tiles = []
+
+    def on_hovered_in(self):
+        if not self.selected:
+            self.display_reachable_tiles()
+
+    def on_hovered_out(self):
+        if not self.selected:
+            self.clean_reachable_tiles()
+
+    def on_touched_down(self):
         self.selected = True
         return True
         if not self._bubbles:

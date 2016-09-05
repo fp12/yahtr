@@ -30,10 +30,12 @@ class MainWindow(App):
         self._key_binder.update({'d': [self.game_view.on_debug_key]})
         self._layout.add_widget(self.game_view)
         self._layout.add_widget(create_class_list(game_instance.classes, self.on_unit_selected))
-        # start fight
-        player1 = Player('Player 1')
-        player2 = Player('Player 2')
-        game_instance.start_new_fight(fight_map='hexagon_default', players=[player1, player2])
+        # prepare fight
+        player1 = 'Player 1'
+        player2 = 'Player 2'
+        game_instance.start_new_fight(fight_map='hexagon_default', players={player1: 'player', player2: 'player'})
+        # deployment
+        self.game_view.load_map()
         squads = {}
         squads.update({player1: 
             {
@@ -46,7 +48,7 @@ class MainWindow(App):
                 'warrior': (1, 4) 
             }})
         game_instance.deployment_finished(squads)
-        self.game_view.load_current_fight()
+        self.game_view.load_squads()
 
     def build(self):
         self._layout = AnchorLayout(anchor_x='left', anchor_y='top')

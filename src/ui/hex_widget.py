@@ -12,10 +12,10 @@ class HexWidget(ColoredWidget):
     coss = ListProperty([cos(pi / 3 * i) for i in range(6)])
     sins = ListProperty([sin(pi / 3 * i) for i in range(6)])
 
-    def __init__(self, q, r, layout, **kwargs):
+    def __init__(self, q, r, layout, radius=None, **kwargs):
         self.hex_coords = Hex(q, r)
         self.hex_layout = layout
-        self.radius = layout.size.x
+        self.radius = radius or layout.size.x
 
         hex_pos = layout.hex_to_pixel(self.hex_coords)
         super(HexWidget, self).__init__(pos=(hex_pos.x, hex_pos.y), size_hint=(None, None), **kwargs)

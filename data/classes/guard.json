@@ -1,4 +1,5 @@
 {
+	"move": 4,
 	"initiative" : "11",
 	"speed": "8",
 	"attack": "10",
