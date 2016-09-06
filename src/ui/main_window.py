@@ -29,7 +29,6 @@ class MainWindow(App):
         # prepare UI
         game_instance.load()
         self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size)
-        self._key_binder.update({'d': [self.game_view.on_debug_key]})
         self._layout.add_widget(self.game_view)
         self._layout.add_widget(create_class_list(game_instance.classes, self.on_unit_selected))
 
@@ -59,6 +58,9 @@ class MainWindow(App):
 
         game_instance.deployment_finished({p1: [u11, u12], p2: [u21, u22]})
         self.game_view.load_squads()
+        self._key_binder.update({'d': [self.game_view.on_debug_key], 
+                                 'n': [game_instance.current_fight.time_bar.next],
+                                 's': [game_instance.current_fight.time_bar.simulate_for]})
 
     def build(self):
         self._layout = AnchorLayout(anchor_x='left', anchor_y='top')

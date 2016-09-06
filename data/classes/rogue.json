@@ -1,9 +1,9 @@
 {
 	"move": 6,
-	"initiative" : "8",
-	"speed": "13",
-	"attack": "6",
-	"health": "8",
+	"initiative" : 8,
+	"speed": 13,
+	"attack": 6,
+	"health": 8,
 	"color": [0.9, 0.6, 0.9],
 	"actions": 
 	{

@@ -41,9 +41,7 @@ class Map():
         self.units = [] # ref
 
     def register_units(self, units):
-        print(type(units))
         self.units.extend(units)
-        print(self.units)
 
     def _check_and_set(self, var, info):
         assert(var in info)

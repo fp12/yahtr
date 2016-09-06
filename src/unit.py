@@ -9,3 +9,6 @@ class Unit:
 
     def __str__(self):
         return 'U<{0}>'.format(self.template_name)
+
+    def __repr__(self):
+        return 'U<{0}>'.format(self.template_name)
