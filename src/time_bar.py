@@ -27,13 +27,12 @@ class TimeBar:
         heapq.heappush(self.queue, new)
         return self.current
 
-    def simulate_for(self):
-        max_ = 10
+    def simulate_for(self, max_elements):
         copy = self.queue[:]
         index = 0
         count = itertools.count(start=next(self.count))
-        while len(copy) < max_:
+        while len(copy) < max_elements:
             current = copy[index]
             heapq.heappush(copy, (current[0] + current[2].template['speed'], next(count), current[2]))
             index += 1
-        return copy
+        return heapq.nsmallest(max_elements, copy)
