@@ -37,10 +37,10 @@ class Hex:
         return (abs(self._q) + abs(self._r) + abs(self.s)) // 2
 
     def __str__(self):
-        return '<{0}, {1}, {2}>'.format(self._q, self._r, self.s)
+        return 'H<{0}, {1}, {2}>'.format(self._q, self._r, self.s)
 
     def __repr__(self):
-        return '<{0}, {1}, {2}>'.format(self._q, self._r, self.s)
+        return 'H<{0}, {1}, {2}>'.format(self._q, self._r, self.s)
 
     def __hash__(self):
         return hash(str(self))

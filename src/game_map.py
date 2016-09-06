@@ -38,6 +38,12 @@ class Map():
 
         self.holes = data['holes'] if 'holes' in data else None
         self.tiles = [] # lazy loaded
+        self.units = [] # ref
+
+    def register_units(self, units):
+        print(type(units))
+        self.units.extend(units)
+        print(self.units)
 
     def _check_and_set(self, var, info):
         assert(var in info)
@@ -92,6 +98,7 @@ class Map():
                         yield q, r
 
     def get_neighbours(self, hex_coords):
+        units_hexes = [u.game_stats['hex_coords'] for u in self.units]
         for neighbour in hex_coords.get_neighbours():
-            if neighbour in self.tiles:
+            if neighbour in self.tiles and neighbour not in units_hexes:
                 yield neighbour

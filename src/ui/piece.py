@@ -19,17 +19,17 @@ class Status(Enum):
     Moving = 1
 
 
-class Unit(HexWidget):
-    def __init__(self, template, **kwargs):
-        super(Unit, self).__init__(**kwargs)
-        self._template = template
-        self.color = template['color']
+class Piece(HexWidget):
+    def __init__(self, unit, **kwargs):
+        self.unit = unit
+        self.color = unit.template['color']
         self._actions = []
         self._bubbles = []
         self._displayed_action = None
         self.status = Status.Idle
         self.selected = False
         self.reachable_tiles = []
+        super(Piece, self).__init__(q=unit.game_stats['hex_coords'].q, r=unit.game_stats['hex_coords'].r, **kwargs)
 
     @property
     def actions_displayed(self):
@@ -39,6 +39,7 @@ class Unit(HexWidget):
         self.status = Status.Idle
         self.selected = False
         self.hex_coords = hex_coords
+        self.unit.game_stats['hex_coords'] = hex_coords
         if callback:
             callback(self)
 
@@ -57,11 +58,11 @@ class Unit(HexWidget):
             anim.bind(on_complete=lambda *args: self.on_finished_moving(hex_coords, on_move_end))
             anim.start(self)
         else:
-            super(Unit, self).move_to(hex_coords, tile_pos, trajectory)
+            super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
 
     def load(self):
         return
-        for action in self._template['actions'].keys():
+        for action in self.unit.template['actions'].keys():
             if action in game_instance.actions:
                 self._load_action(action)
                 break
@@ -89,13 +90,13 @@ class Unit(HexWidget):
 
     def display_reachable_tiles(self):
         assert(self.reachable_tiles == [])
-        reachable_hexes = pathfinding.get_reachable(game_instance.current_fight.current_map, self.hex_coords, self._template['move'])
+        reachable_hexes = pathfinding.get_reachable(game_instance.current_fight.current_map, self.hex_coords, self.unit.template['move'])
         for hx in reachable_hexes:
-            tile = tile = Tile(hx.q, hx.r, 
-                               layout=self.hex_layout, 
-                               color=[0.678431, 0.88, 0.184314, 0.2], 
-                               radius=self.radius - 2, 
-                               size=(self.radius - 2, self.radius - 2))
+            tile = Tile(hx.q, hx.r, 
+                        layout=self.hex_layout, 
+                        color=[0.678431, 0.88, 0.184314, 0.2], 
+                        radius=self.radius - 2, 
+                        size=(self.radius - 2, self.radius - 2))
             self.parent.add_widget(tile)
             self.reachable_tiles.append(tile)
 
@@ -123,11 +124,11 @@ class Unit(HexWidget):
         self.selected = True
         return True
         if not self._bubbles:
-            action_count = len(self._template['actions'])
+            action_count = len(self.unit.template['actions'])
             angle = 60 if action_count < 6 else 30
             start_angle = -90 - (action_count - 1) * angle / 2
             distance = (self.hex_layout.size.x + self.hex_layout.size.y) / 2 * 1.5
-            for i, action in zip(range(0, action_count), self._template['actions']):
+            for i, action in zip(range(0, action_count), self.unit.template['actions']):
                 bubble = ActionBubble(i, action, self)
                 self._bubbles.append(bubble)
                 self.parent.add_widget(bubble)

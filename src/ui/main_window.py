@@ -7,6 +7,8 @@ from ui.class_list import create_class_list
 
 from game import game_instance
 from player import Player
+from unit import Unit
+from hex_lib import Hex
 
 
 class MainWindow(App):
@@ -30,24 +32,32 @@ class MainWindow(App):
         self._key_binder.update({'d': [self.game_view.on_debug_key]})
         self._layout.add_widget(self.game_view)
         self._layout.add_widget(create_class_list(game_instance.classes, self.on_unit_selected))
+
         # prepare fight
-        player1 = 'Player 1'
-        player2 = 'Player 2'
-        game_instance.start_new_fight(fight_map='hexagon_default', players={player1: 'player', player2: 'player'})
-        # deployment
+        p1 = Player('Player 1')
+        p2 = Player('Player 2')
+        game_instance.register_player(p1)
+        game_instance.register_player(p2)
+        game_instance.start_new_fight(fight_map='hexagon_default', players=[p1, p2])
         self.game_view.load_map()
-        squads = {}
-        squads.update({player1: 
-            {
-                'guard': (-1, -4),
-                'lancer': (1, -5)
-            }})
-        squads.update({player2: 
-            {
-                'rogue': (-1, 5),
-                'warrior': (1, 4) 
-            }})
-        game_instance.deployment_finished(squads)
+
+        # deployment
+        u11 = Unit('guard')
+        u12 = Unit('lancer')
+        u21 = Unit('rogue')
+        u22 = Unit('warrior')
+
+        p1.add_unit(u11)
+        p1.add_unit(u12)
+        p1.add_unit(u21)
+        p1.add_unit(u22)
+
+        u11.game_stats['hex_coords'] = Hex(-1, -4)
+        u12.game_stats['hex_coords'] = Hex( 1, -5)
+        u21.game_stats['hex_coords'] = Hex(-1,  5)
+        u22.game_stats['hex_coords'] = Hex( 1,  4)
+
+        game_instance.deployment_finished({p1: [u11, u12], p2: [u21, u22]})
         self.game_view.load_squads()
 
     def build(self):

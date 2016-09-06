@@ -2,6 +2,7 @@ import data_loader
 import classes
 from fight import Fight
 
+
 class Game():
     def __init__(self, root_path=''):
         self._root_path = root_path
@@ -9,6 +10,7 @@ class Game():
         self._classes = classes.ClassesList()
         self._flat_layout = True
         self.current_fight = None
+        self.players = []
 
     def load(self):
         self._actions = data_loader.local_load(self._root_path + 'data/actions/', '.json')
@@ -19,6 +21,14 @@ class Game():
         added, changed, removed = self._classes.wiki_load()
         print(added, changed, removed)
         # print(self._classes.classes)
+
+    def register_player(self, player):
+        self.players.append(player)
+
+    def get_player(self, player_name):
+        for p in players:
+            if p.name == player_name:
+                return p
 
     def start_new_fight(self, fight_map, players):
         assert(self.current_fight == None)

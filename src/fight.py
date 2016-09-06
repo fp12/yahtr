@@ -5,18 +5,15 @@ from player import Player
 class Fight():
     def __init__(self, fight_map, players):
         self.current_map = Map(fight_map)
-        self.squads = {}
-        for name, player_type in players.items():
-            if player_type == 'player':
-                self.squads.update({Player(name): None})
+        self.squads = {p: [] for p in players}
         self.started = False
 
     def deploy(self, squads):
-        for player_name, units in squads.items():
+        for squad_owner, units in squads.items():
             for player in self.squads.keys():
-                if player.name == player_name:
+                if player == squad_owner:
                     self.squads[player] = units
-                    continue
+                    self.current_map.register_units(units)
 
     def start(self):
         self.started = True
