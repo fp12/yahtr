@@ -1,13 +1,14 @@
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.core.window import Window
 
-from hex_lib import Layout
-import pathfinding
-from game import game_instance
 from ui.tile import Tile
 from ui.piece import Piece, Status
 from ui.selector import Selector
 from ui.trajectory import Trajectory
+
+from hex_lib import Layout
+import pathfinding
+from game import game_instance
 
 
 class GameView(ScatterLayout):
@@ -48,6 +49,7 @@ class GameView(ScatterLayout):
                 self.add_widget(new_piece)
                 self.pieces.append(new_piece)
                 new_piece.load()
+        self.select_piece_for_turn()
 
     def on_debug_key(self):
         for x in self.tiles:
@@ -76,7 +78,17 @@ class GameView(ScatterLayout):
                 return True
         return False
 
+    def select_piece_for_turn(self):
+        _, _, unit = game_instance.current_fight.time_bar.current
+        for piece in self.pieces:
+            if piece.unit == unit:
+                piece.select_for_turn()
+
     def on_piece_move_end(self, piece):
+        _, _, unit = game_instance.current_fight.time_bar.next()
+        for piece in self.pieces:
+            if piece.unit == unit:
+                piece.select_for_turn()
         piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
         if piece == piece_hovered:
             piece_hovered.on_hovered_in()

@@ -64,12 +64,13 @@ class MainWindow(App):
         u21.hex_coords = Hex(-1,  5)
         u22.hex_coords = Hex( 1,  4)
 
-        game_instance.deployment_finished({p1: [u11, u12], p2: [u21, u22]})
+        game_instance.deployment_finished({p1: [u11, u12], p2: [u21, u22]})  # see ordered dict
         self.game_view.load_squads()
+        self.time_bar.create()
+
         self._key_binder.update({'d': [self.game_view.on_debug_key], 
                                  'n': [game_instance.current_fight.time_bar.next]})
 
-        self.time_bar.create()
 
     def build(self):
         self._layout = FloatLayout()

@@ -112,6 +112,10 @@ class Piece(HexWidget):
             self.parent.remove_widget(tile)
         self.reachable_tiles = []
 
+    def select_for_turn(self):
+        self.display_reachable_tiles()
+        self.selected = True
+
     def on_hovered_in(self):
         if not self.selected:
             self.display_reachable_tiles()
