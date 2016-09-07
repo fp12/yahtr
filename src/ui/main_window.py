@@ -59,10 +59,10 @@ class MainWindow(App):
         p1.add_unit(u21)
         p1.add_unit(u22)
 
-        u11.game_stats['hex_coords'] = Hex(-1, -4)
-        u12.game_stats['hex_coords'] = Hex( 1, -5)
-        u21.game_stats['hex_coords'] = Hex(-1,  5)
-        u22.game_stats['hex_coords'] = Hex( 1,  4)
+        u11.hex_coords = Hex(-1, -4)
+        u12.hex_coords = Hex( 1, -5)
+        u21.hex_coords = Hex(-1,  5)
+        u22.hex_coords = Hex( 1,  4)
 
         game_instance.deployment_finished({p1: [u11, u12], p2: [u21, u22]})
         self.game_view.load_squads()

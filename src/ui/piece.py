@@ -22,14 +22,14 @@ class Status(Enum):
 class Piece(HexWidget):
     def __init__(self, unit, **kwargs):
         self.unit = unit
-        self.color = unit.template['color']
+        self.color = unit.color
         self._actions = []
         self._bubbles = []
         self._displayed_action = None
         self.status = Status.Idle
         self.selected = False
         self.reachable_tiles = []
-        super(Piece, self).__init__(q=unit.game_stats['hex_coords'].q, r=unit.game_stats['hex_coords'].r, **kwargs)
+        super(Piece, self).__init__(q=unit.hex_coords.q, r=unit.hex_coords.r, **kwargs)
 
     @property
     def actions_displayed(self):
@@ -39,7 +39,7 @@ class Piece(HexWidget):
         self.status = Status.Idle
         self.selected = False
         self.hex_coords = hex_coords
-        self.unit.game_stats['hex_coords'] = hex_coords
+        self.unit.hex_coords = hex_coords
         if callback:
             callback(self)
 
@@ -62,7 +62,7 @@ class Piece(HexWidget):
 
     def load(self):
         return
-        for action in self.unit.template['actions'].keys():
+        for action in self.unit.actions.keys():
             if action in game_instance.actions:
                 self._load_action(action)
                 break
@@ -90,7 +90,7 @@ class Piece(HexWidget):
 
     def display_reachable_tiles(self):
         assert(self.reachable_tiles == [])
-        reachable_hexes = pathfinding.get_reachable(game_instance.current_fight.current_map, self.hex_coords, self.unit.template['move'])
+        reachable_hexes = pathfinding.get_reachable(game_instance.current_fight.current_map, self.hex_coords, self.unit.move)
         for hx in reachable_hexes:
             tile = Tile(hx.q, hx.r, 
                         layout=self.hex_layout, 
@@ -124,11 +124,11 @@ class Piece(HexWidget):
         self.selected = True
         return True
         if not self._bubbles:
-            action_count = len(self.unit.template['actions'])
+            action_count = len(self.unit.actions)
             angle = 60 if action_count < 6 else 30
             start_angle = -90 - (action_count - 1) * angle / 2
             distance = (self.hex_layout.size.x + self.hex_layout.size.y) / 2 * 1.5
-            for i, action in zip(range(0, action_count), self.unit.template['actions']):
+            for i, action in zip(range(0, action_count), self.unit.actions):
                 bubble = ActionBubble(i, action, self)
                 self._bubbles.append(bubble)
                 self.parent.add_widget(bubble)

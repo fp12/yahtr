@@ -96,7 +96,7 @@ class Map():
                         yield q, r
 
     def get_neighbours(self, hex_coords):
-        units_hexes = [u.game_stats['hex_coords'] for u in self.units]
+        units_hexes = [u.hex_coords for u in self.units]
         for neighbour in hex_coords.get_neighbours():
             if neighbour in self.tiles and neighbour not in units_hexes:
                 yield neighbour

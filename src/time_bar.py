@@ -11,7 +11,7 @@ class TimeBar:
         return str(self.queue)
 
     def register_unit(self, unit):
-        heapq.heappush(self.queue, (unit.template['initiative'], next(self.count), unit))
+        heapq.heappush(self.queue, (unit.initiative, next(self.count), unit))
 
     def register_units(self, units):
         for u in units:
@@ -22,9 +22,8 @@ class TimeBar:
         return self.queue[0]
 
     def next(self):
-        first = heapq.heappop(self.queue)
-        new = (first[0] + first[2].template['speed'], next(self.count), first[2])
-        heapq.heappush(self.queue, new)
+        old_priority, _, unit = heapq.heappop(self.queue)
+        heapq.heappush(self.queue, (old_priority + unit.speed, next(self.count), unit))
         return self.current
 
     def simulate_for(self, max_elements):
@@ -32,7 +31,7 @@ class TimeBar:
         index = 0
         count = itertools.count(start=next(self.count))
         while len(copy) < max_elements:
-            current = copy[index]
-            heapq.heappush(copy, (current[0] + current[2].template['speed'], next(count), current[2]))
+            old_priority, _, unit = copy[index]
+            heapq.heappush(copy, (old_priority + unit.speed, next(count), unit))
             index += 1
         return heapq.nsmallest(max_elements, copy)
