@@ -10,6 +10,7 @@ from ui.tile import Tile
 from ui.action_arrow import ActionArrow
 from ui.action_bubble import ActionBubble
 from ui.shield_widget import ShieldWidget
+from ui.selector import Selector
 
 from game import game_instance
 from hex_lib import Hex
@@ -36,6 +37,8 @@ class Piece(HexWidget):
         self.reachable_tiles = []
         super(Piece, self).__init__(q=unit.hex_coords.q, r=unit.hex_coords.r, **kwargs)
         
+        self._selection_widget = Selector(q=unit.hex_coords.q, r=unit.hex_coords.r, layout=self.hex_layout, margin=2.5, color=[0.1, 0.9, 0.2, 0])
+        self.add_widget(self._selection_widget)
         self.do_rotate()
         self.update_shields()
 
@@ -64,7 +67,7 @@ class Piece(HexWidget):
 
     def on_finished_moving(self, trajectory, callback):
         self.status = Status.Idle
-        self.selected = False
+        self.do_select(False)
         previous = trajectory[-2] if len(trajectory) > 1 else self.hex_coords
         self.hex_coords = trajectory[-1]
         self.unit.move_to(hex_coords=self.hex_coords, orientation=trajectory[-1] - previous)
@@ -119,6 +122,7 @@ class Piece(HexWidget):
             b.clear()
             self.parent.remove_widget(b)
         self._bubbles = []
+        self._selection_widget.a = 0
 
     def load_action(self, action):
         self._displayed_action = action
@@ -156,8 +160,7 @@ class Piece(HexWidget):
         self.reachable_tiles = []
 
     def select_for_turn(self):
-        self.display_reachable_tiles()
-        self.selected = True
+        self.do_select(True)
 
     def on_hovered_in(self):
         if not self.selected:
@@ -168,7 +171,7 @@ class Piece(HexWidget):
             self.clean_reachable_tiles()
 
     def on_touched_down(self):
-        self.selected = True
+        self.do_select(True)
         return True
         if not self._bubbles:
             action_count = len(self.unit.actions)
@@ -184,3 +187,10 @@ class Piece(HexWidget):
                 y = self.y + sin(new_angle) * distance
                 bubble.center = (x, y)
             return True
+
+    def do_select(self, select):
+        if self.selected != select:
+            if select:
+                self.display_reachable_tiles()
+                self._selection_widget.a = 1
+            self.selected = select
