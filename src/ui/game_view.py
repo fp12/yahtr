@@ -55,6 +55,11 @@ class GameView(ScatterLayout):
         for x in self.tiles:
             x.toggle_debug_label()
 
+    def on_action_change(self, action_type):
+        piece = self.get_selected_piece()
+        if piece:
+            piece.on_action_change(action_type)
+
     def get_tile_on_hex(self, hex_coords):
         for tile in self.tiles:
             if tile.hex_coords == hex_coords:

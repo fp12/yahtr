@@ -1,6 +1,5 @@
 from math import cos, sin, pi
 from enum import Enum
-from functools import partial
 
 from kivy.properties import NumericProperty
 from kivy.animation import Animation
@@ -36,7 +35,7 @@ class Piece(HexWidget):
         self.selected = False
         self.reachable_tiles = []
         super(Piece, self).__init__(q=unit.hex_coords.q, r=unit.hex_coords.r, **kwargs)
-        
+
         self._selection_widget = Selector(q=unit.hex_coords.q, r=unit.hex_coords.r, layout=self.hex_layout, margin=2.5, color=[0.1, 0.9, 0.2, 0])
         self.add_widget(self._selection_widget)
         self.do_rotate()
@@ -50,17 +49,16 @@ class Piece(HexWidget):
         self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
 
     def update_shields(self):
-        unit_angle = self.unit.hex_coords.angle_to_neighbour(self.unit.orientation)
         for index, shield_value in enumerate(self.unit.shields):
             old_size = len(self._shields[index])
             diff = shield_value - old_size
             if diff > 0:
                 for i in range(old_size, diff):
                     col = .6 - i * (0.6 / 3.)
-                    w = ShieldWidget(q=self.hex_coords.q, r=self.hex_coords.r, 
+                    w = ShieldWidget(q=self.hex_coords.q, r=self.hex_coords.r,
                                      layout=self.hex_layout,
                                      color=[col, col, col, 1],
-                                     radius=self.radius - (2 + 4) * i, thickness=8- i*2,
+                                     radius=self.radius - (2 + 4) * i, thickness=8 - i * 2,
                                      angle=Hex.angles[index])
                     self.add_widget(w)
                     self._shields[index].append(w)
@@ -74,7 +72,7 @@ class Piece(HexWidget):
         if callback:
             callback(self)
 
-    def on_pos(self, *args):    
+    def on_pos(self, *args):
         for c in self.children:
             c.pos = self.pos
 
@@ -93,7 +91,7 @@ class Piece(HexWidget):
                 pt = self.hex_layout.hex_to_pixel(h)
                 step_anim = Animation(pos=(pt.x, pt.y), duration=duration_per_tile)
                 prev_hex, prev_angle = prev_state
-                angle = prev_hex.angle_to_neighbour(h-prev_hex)
+                angle = prev_hex.angle_to_neighbour(h - prev_hex)
                 if angle != prev_angle:
                     if abs(prev_angle - angle) > 180:
                         angle += 360
@@ -139,10 +137,10 @@ class Piece(HexWidget):
         assert(self.reachable_tiles == [])
         reachable_hexes = pathfinding.get_reachable(game_instance.current_fight.current_map, self.hex_coords, self.unit.move)
         for hx in reachable_hexes:
-            tile = Tile(hx.q, hx.r, 
-                        layout=self.hex_layout, 
-                        color=[0.678431, 0.88, 0.184314, 0.2], 
-                        radius=self.radius - 2, 
+            tile = Tile(hx.q, hx.r,
+                        layout=self.hex_layout,
+                        color=[0.678431, 0.88, 0.184314, 0.2],
+                        radius=self.radius - 2,
                         size=(self.radius - 2, self.radius - 2))
             self.parent.add_widget(tile)
             self.reachable_tiles.append(tile)
@@ -161,6 +159,9 @@ class Piece(HexWidget):
 
     def select_for_turn(self):
         self.do_select(True)
+
+    def on_action_change(self, action_type):
+        print('received action_type change: %s' % action_type)
 
     def on_hovered_in(self):
         if not self.selected:

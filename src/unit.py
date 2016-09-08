@@ -5,6 +5,7 @@ class Unit:
     def __init__(self, template_name):
         self.template_name = template_name
         self.__dict__.update(game_instance.classes[template_name])
+        self.__dict__.update({'base_' + k: v for k, v in game_instance.classes[template_name].items()})
         self.hex_coords = None
         self.orientation = None
 

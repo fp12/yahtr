@@ -4,7 +4,7 @@ class Player():
         self.units = []
 
     def add_unit(self, unit):
-    	self.units.append(unit)
+        self.units.append(unit)
 
     def __str__(self):
         return 'P<{0}>'.format(self.name)

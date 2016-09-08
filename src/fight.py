@@ -1,5 +1,4 @@
 from game_map import Map
-from player import Player
 from time_bar import TimeBar
 
 
@@ -9,6 +8,7 @@ class Fight():
         self.squads = {p: [] for p in players}
         self.time_bar = TimeBar()
         self.started = False
+        self.actions_history = []  # (unit, [ actions ])
 
     def deploy(self, squads):
         for squad_owner, units in squads.items():
@@ -20,3 +20,6 @@ class Fight():
 
     def start(self):
         self.started = True
+
+    def on_turn_end(self, unit, actions):
+        self.actions_history.append((unit, actions))

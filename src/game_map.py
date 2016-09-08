@@ -37,8 +37,8 @@ class Map():
             self.get_tiles = self._get_tiles_rectangle
 
         self.holes = data['holes'] if 'holes' in data else None
-        self.tiles = [] # lazy loaded
-        self.units = [] # ref
+        self.tiles = []  # lazy loaded
+        self.units = []  # ref
 
     def register_units(self, units):
         self.units.extend(units)

@@ -26,12 +26,12 @@ class Game():
         self.players.append(player)
 
     def get_player(self, player_name):
-        for p in players:
+        for p in self.players:
             if p.name == player_name:
                 return p
 
     def start_new_fight(self, fight_map, players):
-        assert(self.current_fight == None)
+        assert(not self.current_fight)
         self.current_fight = Fight(fight_map, players)
 
     def deployment_finished(self, squads):
