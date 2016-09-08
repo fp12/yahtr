@@ -33,12 +33,17 @@
         size: root.size
         center: root.pos
         text: root.debug_label
-        #text_size: self.size
-        #halign: 'center'
-        #valign: 'middle'
+#        text_size: self.size
+#        halign: 'center'
+#        valign: 'middle'
         color: 1, 0, 0, 1
 
 <Piece>
+    canvas.before:
+        PushMatrix
+        Rotate:
+            angle: self.angle
+            origin: self.pos
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a
@@ -46,12 +51,17 @@
             vertices: (self.x + math.cos(math.pi/3 * 0) * self.radius, self.y + math.sin(math.pi/3 * 0) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 1) * self.radius, self.y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * self.radius, self.y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 3) * self.radius, self.y + math.sin(math.pi/3 * 3) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 4) * self.radius, self.y + math.sin(math.pi/3 * 4) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 5) * self.radius, self.y + math.sin(math.pi/3 * 5) * self.radius, 0, 0)
             indices: (0, 1, 2, 3, 4, 5)
             mode: "triangle_fan"
-        #Color:
-        #    rgb: 0.5, 0.5, 0.5
-        #Mesh:
-        #    vertices: (self.x + math.cos(math.pi/3 * 1) * self.radius, self.y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * self.radius, self.y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * (self.radius - self.front_radius), self.y + math.sin(math.pi/3 * 2) * (self.radius - self.front_radius), 0, 0, self.x + math.cos(math.pi/3 * 1) * (self.radius - self.front_radius), self.y + math.sin(math.pi/3 * 1) * (self.radius - self.front_radius), 0, 0)
-        #    indices: (0, 1, 2, 3)
-        #    mode: "triangle_fan"
+        Color:
+            rgba: self.r + 0.1, self.g + 0.1, self.b + 0.1, self.a + 0.2
+        Line:
+            points: [self.x - self.radius/2, self.y, self.x, self.y + self.radius/2, self.x + self.radius/2, self.y]
+            joint: 'bevel'
+            cap: 'none'
+            width: 3
+            close: False
+    
+    canvas.after:
+        PopMatrix
 
 <Selector>:
     canvas:

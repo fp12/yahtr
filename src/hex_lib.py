@@ -12,13 +12,11 @@ class Hex:
     directions = [(0, 1, -1), (1, 0, -1), (1, -1, 0), (0, -1, 1), (-1, 0, 1), (-1, 1, 0)]
     angles = [0, -60, -120, -180, -240, -300]
 
-    def __init__(self, q=0, r=0, s=0, qrs=()):
+    def __init__(self, q=0, r=0, qrs=()):
         if qrs and len(qrs) >= 2:
-            self._q = qrs[0]
-            self._r = qrs[1]
+            self._q, self._r = qrs[0:2]
         else:
-            self._q = q
-            self._r = r
+            self._q, self._r = q, r
 
     @property
     def q(self):
@@ -89,8 +87,7 @@ class Hex:
     def get_directions_as_Hex(cls):
         return [Hex(qrs=x) for x in Hex.directions]
 
-    def angle_to_neighbour(self, other):
-        neighbour = other - self
+    def angle_to_neighbour(self, neighbour):
         if neighbour in Hex.directions:
             return Hex.angles[Hex.directions.index(neighbour)]
         return 0
@@ -107,9 +104,7 @@ class Hex:
         else:
             if r_diff > s_diff:
                 r = -q - s
-            else:
-                s = -q - r
-        return Hex(q, r, s)
+        return Hex(q, r)
 
 
 Point = collections.namedtuple("Point", ["x", "y"])

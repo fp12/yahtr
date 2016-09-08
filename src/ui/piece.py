@@ -2,6 +2,7 @@ from math import cos, sin, pi
 from enum import Enum
 from functools import partial
 
+from kivy.properties import NumericProperty
 from kivy.animation import Animation
 
 from ui.hex_widget import HexWidget
@@ -20,6 +21,8 @@ class Status(Enum):
 
 
 class Piece(HexWidget):
+    angle = NumericProperty(0)
+
     def __init__(self, unit, **kwargs):
         self.unit = unit
         self.color = unit.color
@@ -30,16 +33,21 @@ class Piece(HexWidget):
         self.selected = False
         self.reachable_tiles = []
         super(Piece, self).__init__(q=unit.hex_coords.q, r=unit.hex_coords.r, **kwargs)
+        self.do_rotate()
 
     @property
     def actions_displayed(self):
         return len(self._bubbles) > 0
 
-    def on_finished_moving(self, hex_coords, callback):
+    def do_rotate(self):
+        self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
+
+    def on_finished_moving(self, trajectory, callback):
         self.status = Status.Idle
         self.selected = False
-        self.hex_coords = hex_coords
-        self.unit.hex_coords = hex_coords
+        previous = trajectory[-2] if len(trajectory) > 1 else self.hex_coords
+        self.hex_coords = trajectory[-1]
+        self.unit.move_to(hex_coords=self.hex_coords, orientation=trajectory[-1] - previous)
         if callback:
             callback(self)
 
@@ -47,15 +55,25 @@ class Piece(HexWidget):
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
         self.clear()
         if trajectory:
+            duration_per_tile = 0.2
             self.status = Status.Moving
             Animation.cancel_all(self)
             trajectory.remove(self.hex_coords)
             trajectory.reverse()
             anim = Animation(duration=0)
-            for hex_coords in trajectory:
-                pt = self.hex_layout.hex_to_pixel(hex_coords)
-                anim += Animation(pos=(pt.x, pt.y), duration=0.2)
-            anim.bind(on_complete=lambda *args: self.on_finished_moving(hex_coords, on_move_end))
+            prev_state = self.hex_coords, self.angle
+            for h in trajectory:
+                pt = self.hex_layout.hex_to_pixel(h)
+                step_anim = Animation(pos=(pt.x, pt.y), duration=duration_per_tile)
+                prev_hex, prev_angle = prev_state
+                angle = prev_hex.angle_to_neighbour(h-prev_hex)
+                if angle != prev_angle:
+                    if abs(prev_angle - angle) > 180:
+                        angle += 360
+                    step_anim &= Animation(angle=angle, duration=duration_per_tile / 3)
+                anim += step_anim
+                prev_state = h, angle
+            anim.bind(on_complete=lambda *args: self.on_finished_moving(trajectory, on_move_end))
             anim.start(self)
         else:
             super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
