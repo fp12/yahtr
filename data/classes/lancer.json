@@ -5,6 +5,7 @@
 	"attack": 10,
 	"health": 10,
 	"color": [0.9, 0.8, 0],
+	"shields": [2, 0, 0, 0, 1, 1],
 	"actions": 
 	{
 		"spear": "B"

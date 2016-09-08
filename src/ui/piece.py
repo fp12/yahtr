@@ -9,6 +9,7 @@ from ui.hex_widget import HexWidget
 from ui.tile import Tile
 from ui.action_arrow import ActionArrow
 from ui.action_bubble import ActionBubble
+from ui.shield_widget import ShieldWidget
 
 from game import game_instance
 from hex_lib import Hex
@@ -28,12 +29,15 @@ class Piece(HexWidget):
         self.color = unit.color
         self._actions = []
         self._bubbles = []
+        self._shields = [[] for _ in range(6)]
         self._displayed_action = None
         self.status = Status.Idle
         self.selected = False
         self.reachable_tiles = []
         super(Piece, self).__init__(q=unit.hex_coords.q, r=unit.hex_coords.r, **kwargs)
+        
         self.do_rotate()
+        self.update_shields()
 
     @property
     def actions_displayed(self):
@@ -41,6 +45,22 @@ class Piece(HexWidget):
 
     def do_rotate(self):
         self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
+
+    def update_shields(self):
+        unit_angle = self.unit.hex_coords.angle_to_neighbour(self.unit.orientation)
+        for index, shield_value in enumerate(self.unit.shields):
+            old_size = len(self._shields[index])
+            diff = shield_value - old_size
+            if diff > 0:
+                for i in range(old_size, diff):
+                    col = .6 - i * (0.6 / 3.)
+                    w = ShieldWidget(q=self.hex_coords.q, r=self.hex_coords.r, 
+                                     layout=self.hex_layout,
+                                     color=[col, col, col, 1],
+                                     radius=self.radius - (2 + 4) * i, thickness=8- i*2,
+                                     angle=Hex.angles[index])
+                    self.add_widget(w)
+                    self._shields[index].append(w)
 
     def on_finished_moving(self, trajectory, callback):
         self.status = Status.Idle
@@ -50,6 +70,10 @@ class Piece(HexWidget):
         self.unit.move_to(hex_coords=self.hex_coords, orientation=trajectory[-1] - previous)
         if callback:
             callback(self)
+
+    def on_pos(self, *args):    
+        for c in self.children:
+            c.pos = self.pos
 
     # override
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
@@ -79,6 +103,7 @@ class Piece(HexWidget):
             super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
 
     def load(self):
+        self.update_shields()
         return
         for action in self.unit.actions.keys():
             if action in game_instance.actions:

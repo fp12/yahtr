@@ -5,6 +5,7 @@
 	"attack": 6,
 	"health": 8,
 	"color": [0.9, 0.6, 0.9],
+	"shields": [1, 0, 0, 2, 0, 0],
 	"actions": 
 	{
 		"daggers": "B"

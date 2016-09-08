@@ -12,7 +12,7 @@ from game import game_instance
 
 
 class GameView(ScatterLayout):
-    hex_radius = 30
+    hex_radius = 40
     hex_margin = 2
 
     def __init__(self, **kwargs):

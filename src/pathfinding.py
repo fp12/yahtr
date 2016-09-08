@@ -64,5 +64,5 @@ def get_reachable(game_map, h_start, move_max):
                 if neighbor not in visited:
                     visited.add(neighbor)
                     fringes[k].append(neighbor)
-
+    visited.remove(h_start)
     return visited
