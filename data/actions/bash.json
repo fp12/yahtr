@@ -1,0 +1,16 @@
+{
+	"comment": "A shield hit that pushes an ennemy",
+	"HUN":
+	[
+		{
+			"H": 
+			[
+				[0, 0, 0, 1]
+			],
+			"N":
+			[
+				[0, 1, 0, 2]
+			]
+		}
+	]
+}

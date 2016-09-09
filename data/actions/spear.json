@@ -1,14 +1,13 @@
 {
-	"hits" : 
+	"comment": "A basic move to hit 2 ennemies at once",
+	"HUN":
 	[
 		{
-			"origin" : [0, 0],
-			"direction" : [0, 1]
-		},
-		{
-			"origin" : [0, 1],
-			"direction" : [0, 2]
+			"H" : 
+			[
+				[0, 0, 0, 1],
+				[0, 1, 0, 2]
+			]
 		}
-	],
-	"endpos" : null
+	]
 }

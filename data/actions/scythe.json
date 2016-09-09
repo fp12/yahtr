@@ -1,14 +1,18 @@
 {
-	"hits" : 
+	"comment": "A sweeping move that hits from the sides",
+	"HUN":
 	[
 		{
-			"origin" : [1, 0],
-			"direction" : [0, 1]
+			"H" : 
+			[
+				[1, 0, 0, 1]				
+			]
 		},
 		{
-			"origin" : [0, 1],
-			"direction" : [-1, 1]
+			"H" : 
+			[
+				[0, 1, -1, 1]
+			]
 		}
-	],
-	"endpos" : null
+	]
 }

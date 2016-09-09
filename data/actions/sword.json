@@ -1,18 +1,12 @@
 {
-	"hits" : 
+	"comment": "A basic move to hit in front",
+	"HUN":
 	[
 		{
-			"origin" : [0, 0],
-			"direction" : [0, 1]
+			"H" : 
+			[
+				[0, 0, 0, 1]
+			]
 		}
-	],
-	"endpos" : null,
-	"atk_value" :
-	{
-		"S": 12,
-		"A": 10,
-		"B":  8,
-		"C":  8,
-		"D":  6
-	}
+	]
 }

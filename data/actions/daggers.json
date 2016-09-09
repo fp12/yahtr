@@ -1,14 +1,13 @@
 {
-	"hits" : 
+	"comment": "Two quick hits on front diagonals",
+	"HUN":
 	[
 		{
-			"origin" : [0, 0],
-			"direction" : [1, 0]
-		},
-		{
-			"origin" : [0, 0],
-			"direction" : [-1, 1]
+			"H" : 
+			[
+				[0, 0, 1, 0],
+				[0, 0, -1, 1]
+			]
 		}
-	],
-	"endpos" : null
+	]
 }
