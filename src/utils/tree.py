@@ -27,6 +27,10 @@ class Tree:
     def __iter__(self):
         return self.nodes.__iter__()
 
+    @property
+    def default(self):
+        return self.nodes[0]
+
 
 class Node(Tree):
     def __init__(self, data, *nodes):

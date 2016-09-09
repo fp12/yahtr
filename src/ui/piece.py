@@ -14,6 +14,7 @@ from ui.selector import Selector
 from game import game_instance
 from hex_lib import Hex
 import pathfinding
+import actions
 
 
 class Status(Enum):
@@ -105,11 +106,6 @@ class Piece(HexWidget):
 
     def load(self):
         self.update_shields()
-        return
-        for action in self.unit.actions.keys():
-            if action in game_instance.actions:
-                self._load_action(action)
-                break
 
     def clear(self):
         self.clean_reachable_tiles()
@@ -134,16 +130,16 @@ class Piece(HexWidget):
             self.parent.add_widget(arrow)
 
     def display_reachable_tiles(self):
-        assert(self.reachable_tiles == [])
-        reachable_hexes = pathfinding.get_reachable(game_instance.current_fight.current_map, self.hex_coords, self.unit.move)
-        for hx in reachable_hexes:
-            tile = Tile(hx.q, hx.r,
-                        layout=self.hex_layout,
-                        color=[0.678431, 0.88, 0.184314, 0.2],
-                        radius=self.radius - 2,
-                        size=(self.radius - 2, self.radius - 2))
-            self.parent.add_widget(tile)
-            self.reachable_tiles.append(tile)
+        if not self.reachable_tiles:
+            reachable_hexes = pathfinding.get_reachable(game_instance.current_fight.current_map, self.hex_coords, self.unit.move)
+            for hx in reachable_hexes:
+                tile = Tile(hx.q, hx.r,
+                            layout=self.hex_layout,
+                            color=[0.678431, 0.88, 0.184314, 0.2],
+                            radius=self.radius - 2,
+                            size=(self.radius - 2, self.radius - 2))
+                self.parent.add_widget(tile)
+                self.reachable_tiles.append(tile)
 
     def is_in_move_range(self, hex_coords):
         if self.reachable_tiles:
@@ -162,6 +158,10 @@ class Piece(HexWidget):
 
     def on_action_change(self, action_type):
         print('received action_type change: %s' % action_type)
+        if action_type != actions.ActionType.Move:
+            self.clean_reachable_tiles()
+        else:
+            self.display_reachable_tiles()
 
     def on_hovered_in(self):
         if not self.selected:

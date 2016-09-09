@@ -9,6 +9,7 @@ from ui.trajectory import Trajectory
 from hex_lib import Layout
 import pathfinding
 from game import game_instance
+import actions
 
 
 class GameView(ScatterLayout):
@@ -23,7 +24,7 @@ class GameView(ScatterLayout):
         self.tiles = []
         self.selector = Selector(q=5000, r=5000, layout=self.hex_layout, margin=2.5, color=[0.560784, 0.737255, 0.560784, 0.5])
         self.trajectory = Trajectory(color=[0, 0.392157, 0, 0.5])
-
+        self.current_action_type = None
         Window.bind(mouse_pos=self.on_mouse_pos)
 
     def spawn_piece(self, template):
@@ -59,6 +60,11 @@ class GameView(ScatterLayout):
         piece = self.get_selected_piece()
         if piece:
             piece.on_action_change(action_type)
+        if action_type != actions.ActionType.Move:
+            self.trajectory.hide()
+        else:
+            self.trajectory.hide(False)
+        self.current_action_type = action_type
 
     def get_tile_on_hex(self, hex_coords):
         for tile in self.tiles:
@@ -125,18 +131,22 @@ class GameView(ScatterLayout):
                     self.trajectory.hide()
                 # over tile with piece selected: show trajectory
                 elif piece_selected:
-                    path = pathfinding.get_best_path(game_instance.current_fight.current_map, piece_selected.hex_coords, hover_hex)
-                    if path:
-                        points = []
-                        for hex_coords in path:
-                            pt = self.hex_layout.hex_to_pixel(hex_coords)
-                            points.append(pt.x)
-                            points.append(pt.y)
-                        if piece_selected.is_in_move_range(hover_hex):
-                            self.trajectory.color = [0, 0.392157, 0, 0.5]
-                        else:
-                            self.trajectory.color = [0.9, 0.12, 0, 0.75]
-                        self.trajectory.set(path, points)
+                    if self.current_action_type == actions.ActionType.Move:
+                        path = pathfinding.get_best_path(game_instance.current_fight.current_map, piece_selected.hex_coords, hover_hex)
+                        if path:
+                            points = []
+                            for hex_coords in path:
+                                pt = self.hex_layout.hex_to_pixel(hex_coords)
+                                points.append(pt.x)
+                                points.append(pt.y)
+                            if piece_selected.is_in_move_range(hover_hex):
+                                self.trajectory.color = [0, 0.392157, 0, 0.5]
+                            else:
+                                self.trajectory.color = [0.9, 0.12, 0, 0.75]
+                            self.trajectory.set(path, points)
+                    elif self.current_action_type == actions.ActionType.Rotate and piece_selected.hex_coords != hover_hex:
+                        piece_selected.unit.orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
+                        piece_selected.do_rotate()
 
             # finally move the selector
             self.selector.move_to(hover_hex, tile_pos=tile.pos)
