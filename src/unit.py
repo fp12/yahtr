@@ -1,4 +1,5 @@
 from game import game_instance
+from actions import actions_trees
 
 
 class Unit:
@@ -6,6 +7,7 @@ class Unit:
         self.template_name = template_name
         self.__dict__.update(game_instance.classes[template_name])
         self.__dict__.update({'base_' + k: v for k, v in game_instance.classes[template_name].items()})
+        self.actions_tree = actions_trees[self.base_actions_tree_name]
         self.hex_coords = None
         self.orientation = None
 

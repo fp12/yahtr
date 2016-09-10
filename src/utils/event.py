@@ -1,5 +1,5 @@
 class Event:
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.handlers = set()
 
     def handle(self, handler):

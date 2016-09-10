@@ -6,7 +6,7 @@
 	"health": 8,
 	"color": [0.9, 0.6, 0.9],
 	"shields": [1, 0, 0, 2, 0, 0],
-	"action_tree": "base",
+	"actions_tree_name": "rogue",
 	"actions": 
 	{
 		"daggers": "B"

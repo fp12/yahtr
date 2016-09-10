@@ -16,7 +16,7 @@ class TimedWidgetBar(BoxLayout):
     def create(self):
         game_instance.current_fight.on_next_turn += self.on_next
 
-    def on_next(self, unit, default_action_type):
+    def on_next(self, unit):
         self.clear_widgets()
         simulation = game_instance.current_fight.time_bar.simulate_for(self.max_widgets)
         for priority, _, unit in simulation:

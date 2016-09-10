@@ -49,5 +49,25 @@ actions_trees = {
                       Node(ActionType.EndTurn)),
                  Node(ActionType.Rotate,
                       Node(ActionType.EndTurn)),
-                 Node(ActionType.EndTurn))
+                 Node(ActionType.EndTurn)),
+    # base action tree for rogues (can use weapons twice)
+    'rogue': Tree(Node(ActionType.Move,
+                       Node(ActionType.Weapon,
+                            Node(ActionType.Weapon,
+                                 Node(ActionType.EndTurn)),
+                            Node(ActionType.EndTurn)),
+                       Node(ActionType.Skill,
+                            Node(ActionType.EndTurn)),
+                       Node(ActionType.Rotate,
+                            Node(ActionType.EndTurn)),
+                       Node(ActionType.EndTurn)),
+                  Node(ActionType.Weapon,
+                       Node(ActionType.Weapon,
+                            Node(ActionType.EndTurn)),
+                       Node(ActionType.EndTurn)),
+                  Node(ActionType.Skill,
+                       Node(ActionType.EndTurn)),
+                  Node(ActionType.Rotate,
+                       Node(ActionType.EndTurn)),
+                  Node(ActionType.EndTurn))
 }

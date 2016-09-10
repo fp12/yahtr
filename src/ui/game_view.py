@@ -104,7 +104,7 @@ class GameView(ScatterLayout):
                 return True
         return False
 
-    def on_next_turn(self, unit, d):
+    def on_next_turn(self, unit):
         self.trajectory.hide()
         for piece in self.pieces:
             if piece.unit == unit:
