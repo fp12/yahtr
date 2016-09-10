@@ -29,7 +29,8 @@ actions_trees = {
     # debug action tree
     'dbg': Tree(Node(ActionType.Move,
                      Node(ActionType.Rotate,
-                          Node(ActionType.EndTurn))),
+                          Node(ActionType.EndTurn)),
+                     Node(ActionType.EndTurn)),
                 Node(ActionType.Rotate,
                      Node(ActionType.EndTurn)),
                 Node(ActionType.EndTurn)),

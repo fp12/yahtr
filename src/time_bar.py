@@ -6,7 +6,6 @@ class TimeBar:
     def __init__(self):
         self.queue = []
         self.count = itertools.count()
-        self.callbacks = {'on_next': []}
 
     def __str__(self):
         return str(self.queue)
@@ -18,10 +17,6 @@ class TimeBar:
         for u in units:
             self.register_unit(u)
 
-    def register_event(self, on_next=None):
-        if on_next:
-            self.callbacks['on_next'].append(on_next)
-
     @property
     def current(self):
         return self.queue[0]
@@ -29,8 +24,6 @@ class TimeBar:
     def next(self):
         old_priority, _, unit = heapq.heappop(self.queue)
         heapq.heappush(self.queue, (old_priority + unit.speed, next(self.count), unit))
-        for cb in self.callbacks['on_next']:
-            cb()
         return self.current
 
     def simulate_for(self, max_elements):

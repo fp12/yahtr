@@ -52,7 +52,7 @@ class MainWindow(App):
         p2 = Player('Player 2')
         game_instance.register_player(p1)
         game_instance.register_player(p2)
-        game_instance.start_new_fight(fight_map='hexagon_default', players=[p1, p2])
+        game_instance.prepare_new_fight(fight_map='hexagon_default', players=[p1, p2])
         self.game_view.load_map()
 
         # deployment
@@ -71,20 +71,20 @@ class MainWindow(App):
         u21.move_to(hex_coords=Hex(-1,  5), orientation=Hex(0, -1))
         u22.move_to(hex_coords=Hex( 1,  4), orientation=Hex(0, -1))
 
-        game_instance.deployment_finished({p1: [u11, u12], p2: [u21, u22]})  # see ordered dict
+        game_instance.current_fight.deploy({p1: [u11, u12], p2: [u21, u22]})  # see ordered dict
         self.game_view.load_squads()
         self.time_bar.create()
         self.actions_bar.create()
-        self.actions_bar.register_event(on_action_change=self.game_view.on_action_change)
 
         self._key_binder.update({'d': [self.game_view.on_debug_key],
-                                 'n': [game_instance.current_fight.time_bar.next],
                                  '0': [lambda: self.actions_bar.on_key_pressed('0')],
                                  '1': [lambda: self.actions_bar.on_key_pressed('1')],
                                  '2': [lambda: self.actions_bar.on_key_pressed('2')],
                                  '3': [lambda: self.actions_bar.on_key_pressed('3')],
                                  '4': [lambda: self.actions_bar.on_key_pressed('4')],
                                  })
+
+        game_instance.current_fight.start()
 
     def build(self):
         self._layout = FloatLayout()

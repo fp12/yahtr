@@ -30,13 +30,9 @@ class Game():
             if p.name == player_name:
                 return p
 
-    def start_new_fight(self, fight_map, players):
+    def prepare_new_fight(self, fight_map, players):
         assert(not self.current_fight)
         self.current_fight = Fight(fight_map, players)
-
-    def deployment_finished(self, squads):
-        self.current_fight.deploy(squads)
-        self.current_fight.start()
 
     @property
     def actions(self):

@@ -66,7 +66,6 @@ class Piece(HexWidget):
 
     def on_finished_moving(self, trajectory, callback):
         self.status = Status.Idle
-        self.do_select(False)
         previous = trajectory[-2] if len(trajectory) > 1 else self.hex_coords
         self.hex_coords = trajectory[-1]
         self.unit.move_to(hex_coords=self.hex_coords, orientation=trajectory[-1] - previous)
@@ -116,7 +115,6 @@ class Piece(HexWidget):
             b.clear()
             self.parent.remove_widget(b)
         self._bubbles = []
-        self._selection_widget.a = 0
 
     def load_action(self, action):
         self._displayed_action = action
@@ -153,11 +151,7 @@ class Piece(HexWidget):
             self.parent.remove_widget(tile)
         self.reachable_tiles = []
 
-    def select_for_turn(self):
-        self.do_select(True)
-
     def on_action_change(self, action_type):
-        print('received action_type change: %s' % action_type)
         if action_type != actions.ActionType.Move:
             self.clean_reachable_tiles()
         else:
@@ -194,4 +188,7 @@ class Piece(HexWidget):
             if select:
                 self.display_reachable_tiles()
                 self._selection_widget.a = 1
+            else:
+                self.clean_reachable_tiles()
+                self._selection_widget.a = 0
             self.selected = select

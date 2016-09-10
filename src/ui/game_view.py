@@ -22,9 +22,9 @@ class GameView(ScatterLayout):
         self.piece = None
         self.pieces = []
         self.tiles = []
-        self.selector = Selector(q=5000, r=5000, layout=self.hex_layout, margin=2.5, color=[0.560784, 0.737255, 0.560784, 0.5])
+        self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=[0.560784, 0.737255, 0.560784, 0.5])
         self.trajectory = Trajectory(color=[0, 0.392157, 0, 0.5])
-        self.current_action_type = None
+        self.current_action = None
         Window.bind(mouse_pos=self.on_mouse_pos)
 
     def spawn_piece(self, template):
@@ -50,21 +50,36 @@ class GameView(ScatterLayout):
                 self.add_widget(new_piece)
                 self.pieces.append(new_piece)
                 new_piece.load()
-        self.select_piece_for_turn()
+        game_instance.current_fight.register_event(on_action_change=self.on_action_change,
+                                                   on_next_turn=self.on_next_turn)
 
     def on_debug_key(self):
         for x in self.tiles:
             x.toggle_debug_label()
 
-    def on_action_change(self, action_type):
+    def on_action_change(self, action_type, action_node):
+        self.current_action = action_type
         piece = self.get_selected_piece()
         if piece:
             piece.on_action_change(action_type)
-        if action_type != actions.ActionType.Move:
-            self.trajectory.hide()
+        if action_type == actions.ActionType.Move and piece:
+            self.display_trajectory(piece, self.selector.hex_coords)
         else:
-            self.trajectory.hide(False)
-        self.current_action_type = action_type
+            self.trajectory.hide()
+
+    def display_trajectory(self, piece, hover_hex):
+        path = pathfinding.get_best_path(game_instance.current_fight.current_map, piece.hex_coords, hover_hex)
+        if path:
+            points = []
+            for hex_coords in path:
+                pt = self.hex_layout.hex_to_pixel(hex_coords)
+                points.append(pt.x)
+                points.append(pt.y)
+            if piece.is_in_move_range(hover_hex):
+                self.trajectory.color = [0, 0.392157, 0, 0.5]
+            else:
+                self.trajectory.color = [0.9, 0.12, 0, 0.75]
+            self.trajectory.set(path, points)        
 
     def get_tile_on_hex(self, hex_coords):
         for tile in self.tiles:
@@ -89,20 +104,19 @@ class GameView(ScatterLayout):
                 return True
         return False
 
-    def select_piece_for_turn(self):
-        _, _, unit = game_instance.current_fight.time_bar.current
+    def on_next_turn(self, unit, d):
+        self.trajectory.hide()
         for piece in self.pieces:
             if piece.unit == unit:
-                piece.select_for_turn()
+                piece.do_select(True)
+            elif piece.selected:
+                piece.do_select(False)
 
     def on_piece_move_end(self, piece):
-        _, _, unit = game_instance.current_fight.time_bar.next()
-        for piece in self.pieces:
-            if piece.unit == unit:
-                piece.select_for_turn()
         piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
         if piece == piece_hovered:
             piece_hovered.on_hovered_in()
+        game_instance.current_fight.notify_action_end(actions.ActionType.Move)
 
     def on_mouse_pos(self, stuff, pos):
         # do proceed if not displayed and/or no parent
@@ -131,20 +145,9 @@ class GameView(ScatterLayout):
                     self.trajectory.hide()
                 # over tile with piece selected: show trajectory
                 elif piece_selected:
-                    if self.current_action_type == actions.ActionType.Move:
-                        path = pathfinding.get_best_path(game_instance.current_fight.current_map, piece_selected.hex_coords, hover_hex)
-                        if path:
-                            points = []
-                            for hex_coords in path:
-                                pt = self.hex_layout.hex_to_pixel(hex_coords)
-                                points.append(pt.x)
-                                points.append(pt.y)
-                            if piece_selected.is_in_move_range(hover_hex):
-                                self.trajectory.color = [0, 0.392157, 0, 0.5]
-                            else:
-                                self.trajectory.color = [0.9, 0.12, 0, 0.75]
-                            self.trajectory.set(path, points)
-                    elif self.current_action_type == actions.ActionType.Rotate and piece_selected.hex_coords != hover_hex:
+                    if self.current_action == actions.ActionType.Move:
+                        self.display_trajectory(piece_selected, hover_hex)
+                    elif self.current_action == actions.ActionType.Rotate and piece_selected.hex_coords != hover_hex:
                         piece_selected.unit.orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
                         piece_selected.do_rotate()
 
@@ -159,11 +162,16 @@ class GameView(ScatterLayout):
             return False
 
     def on_touch_down(self, touch):
-        piece_touched = self.get_piece_on_hex(self.selector.hex_coords)
         piece_selected = self.get_selected_piece()
+        if piece_selected and self.current_action == actions.ActionType.Rotate:
+            game_instance.current_fight.notify_action_end(actions.ActionType.Rotate)
+            return True
+
+        piece_touched = self.get_piece_on_hex(self.selector.hex_coords)
         if piece_touched and not piece_selected:
             return piece_touched.on_touched_down()
-        elif not piece_touched:
+
+        if not piece_touched:
             tile_touched = self.get_tile_on_hex(self.selector.hex_coords)
             if piece_selected and tile_touched and piece_selected.is_in_move_range(self.selector.hex_coords):
                 self.trajectory.hide()
