@@ -50,8 +50,8 @@ class GameView(ScatterLayout):
                 self.add_widget(new_piece)
                 self.pieces.append(new_piece)
                 new_piece.load()
-        game_instance.current_fight.register_event(on_action_change=self.on_action_change,
-                                                   on_next_turn=self.on_next_turn)
+        game_instance.current_fight.on_action_change += self.on_action_change
+        game_instance.current_fight.on_next_turn += self.on_next_turn
 
     def on_debug_key(self):
         for x in self.tiles:

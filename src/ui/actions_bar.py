@@ -16,7 +16,8 @@ class ActionsBar(BoxLayout):
         super(ActionsBar, self).__init__(orientation='horizontal', **kwargs)
 
     def create(self):
-        game_instance.current_fight.register_event(on_next_turn=self.on_next, on_action_change=self.on_new_action)
+        game_instance.current_fight.on_next_turn += self.on_next
+        game_instance.current_fight.on_action_change += self.on_new_action
 
     def on_next(self, unit, default_action_type):
         self.clear_widgets()

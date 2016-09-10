@@ -14,7 +14,7 @@ class TimedWidgetBar(BoxLayout):
         self.max_widgets = max_widgets
 
     def create(self):
-        game_instance.current_fight.register_event(on_next_turn=self.on_next)
+        game_instance.current_fight.on_next_turn += self.on_next
 
     def on_next(self, unit, default_action_type):
         self.clear_widgets()
