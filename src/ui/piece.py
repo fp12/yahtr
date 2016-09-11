@@ -7,7 +7,6 @@ from kivy.animation import Animation
 from ui.hex_widget import HexWidget
 from ui.tile import Tile
 from ui.action_arrow import ActionArrow
-from ui.action_bubble import ActionBubble
 from ui.shield_widget import ShieldWidget
 from ui.selector import Selector
 
@@ -29,7 +28,6 @@ class Piece(HexWidget):
         self.unit = unit
         self.color = unit.color
         self._actions = []
-        self._bubbles = []
         self._shields = [[] for _ in range(6)]
         self._displayed_action = None
         self.status = Status.Idle
@@ -41,10 +39,6 @@ class Piece(HexWidget):
         self.add_widget(self._selection_widget)
         self.do_rotate()
         self.update_shields()
-
-    @property
-    def actions_displayed(self):
-        return len(self._bubbles) > 0
 
     def do_rotate(self):
         self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
@@ -111,10 +105,6 @@ class Piece(HexWidget):
         for a in self._actions:
             self.parent.remove_widget(a)
         self._actions = []
-        for b in self._bubbles:
-            b.clear()
-            self.parent.remove_widget(b)
-        self._bubbles = []
 
     def load_action(self, action):
         self._displayed_action = action
@@ -168,20 +158,6 @@ class Piece(HexWidget):
     def on_touched_down(self):
         self.do_select(True)
         return True
-        if not self._bubbles:
-            action_count = len(self.unit.actions)
-            angle = 60 if action_count < 6 else 30
-            start_angle = -90 - (action_count - 1) * angle / 2
-            distance = (self.hex_layout.size.x + self.hex_layout.size.y) / 2 * 1.5
-            for i, action in zip(range(0, action_count), self.unit.actions):
-                bubble = ActionBubble(i, action, self)
-                self._bubbles.append(bubble)
-                self.parent.add_widget(bubble)
-                new_angle = (start_angle + i * angle) * pi / 180
-                x = self.x + cos(new_angle) * distance
-                y = self.y + sin(new_angle) * distance
-                bubble.center = (x, y)
-            return True
 
     def do_select(self, select):
         if self.selected != select:
