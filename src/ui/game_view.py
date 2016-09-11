@@ -53,19 +53,20 @@ class GameView(ScatterLayout):
         game_instance.current_fight.on_action_change += self.on_action_change
         game_instance.current_fight.on_next_turn += self.on_next_turn
 
-    def on_debug_key(self):
+    def on_debug_key(self, code, key):
         for x in self.tiles:
             x.toggle_debug_label()
 
-    def on_action_change(self, action_type, action_node):
+    def on_action_change(self, unit, action_type, action_node, skill):
         self.current_action = action_type
         piece = self.get_selected_piece()
         if piece:
             piece.on_action_change(action_type)
-        if action_type == actions.ActionType.Move and piece:
-            self.display_trajectory(piece, self.selector.hex_coords)
-        else:
-            self.trajectory.hide()
+            piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
+            if action_type == actions.ActionType.Move and piece and not piece_hovered:
+                self.display_trajectory(piece, self.selector.hex_coords)
+                return
+        self.trajectory.hide()
 
     def display_trajectory(self, piece, hover_hex):
         path = pathfinding.get_best_path(game_instance.current_fight.current_map, piece.hex_coords, hover_hex)

@@ -152,10 +152,10 @@ class Piece(HexWidget):
         self.reachable_tiles = []
 
     def on_action_change(self, action_type):
-        if action_type != actions.ActionType.Move:
-            self.clean_reachable_tiles()
-        else:
+        if action_type == actions.ActionType.Move:
             self.display_reachable_tiles()
+        else:
+            self.clean_reachable_tiles()
 
     def on_hovered_in(self):
         if not self.selected:

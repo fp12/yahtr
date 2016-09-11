@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from kivy.app import App
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.floatlayout import FloatLayout
@@ -11,6 +13,7 @@ from ui.actions_bar import ActionsBar
 from game import game_instance
 from player import Player
 from unit import Unit
+from weapon import Weapon
 from hex_lib import Hex
 
 
@@ -20,7 +23,7 @@ class MainWindow(App):
         self._layout = None
         self.game_view = None
         self.time_bar = TimedWidgetBar(max_widgets=10, size_hint=(None, 1), width=100)
-        self.actions_bar = ActionsBar()
+        self.actions_bar = ActionsBar(orientation='horizontal')
         self._key_binder = {}
         Window.bind(on_key_down=self._on_keyboard_down)
 
@@ -43,7 +46,7 @@ class MainWindow(App):
         anchor_tr.add_widget(self.time_bar)
         self._layout.add_widget(anchor_tr)
 
-        anchor_bc = AnchorLayout(anchor_x='center', anchor_y='bottom', size_hint=(0.3, 0.05))
+        anchor_bc = AnchorLayout(anchor_x='center', anchor_y='bottom', size_hint=(0.5, 0.05))
         anchor_bc.add_widget(self.actions_bar)
         self._layout.add_widget(anchor_bc)
 
@@ -56,10 +59,20 @@ class MainWindow(App):
         self.game_view.load_map()
 
         # deployment
+        w11 = Weapon('default_sword')
+        w12 = Weapon('default_spear')
+        w21 = Weapon('default_daggers')
+        w22 = Weapon('default_sword')
+
         u11 = Unit('guard')
         u12 = Unit('lancer')
         u21 = Unit('rogue')
         u22 = Unit('warrior')
+
+        u11.equip(w11)
+        u12.equip(w12)
+        u21.equip(w21)
+        u22.equip(w22)
 
         p1.add_unit(u11)
         p1.add_unit(u12)
@@ -71,17 +84,22 @@ class MainWindow(App):
         u21.move_to(hex_coords=Hex(-1,  5), orientation=Hex(0, -1))
         u22.move_to(hex_coords=Hex( 1,  4), orientation=Hex(0, -1))
 
-        game_instance.current_fight.deploy({p1: [u11, u12], p2: [u21, u22]})  # see ordered dict
+        game_instance.current_fight.deploy(OrderedDict({p1: [u11, u12], p2: [u21, u22]}))
         self.game_view.load_squads()
         self.time_bar.create()
         self.actions_bar.create()
 
         self._key_binder.update({'d': [self.game_view.on_debug_key],
-                                 '0': [lambda: self.actions_bar.on_key_pressed('0')],
-                                 '1': [lambda: self.actions_bar.on_key_pressed('1')],
-                                 '2': [lambda: self.actions_bar.on_key_pressed('2')],
-                                 '3': [lambda: self.actions_bar.on_key_pressed('3')],
-                                 '4': [lambda: self.actions_bar.on_key_pressed('4')],
+                                 '0': [self.actions_bar.on_key_pressed],
+                                 '1': [self.actions_bar.on_key_pressed],
+                                 '2': [self.actions_bar.on_key_pressed],
+                                 '3': [self.actions_bar.on_key_pressed],
+                                 '4': [self.actions_bar.on_key_pressed],
+                                 '5': [self.actions_bar.on_key_pressed],
+                                 '6': [self.actions_bar.on_key_pressed],
+                                 '7': [self.actions_bar.on_key_pressed],
+                                 '8': [self.actions_bar.on_key_pressed],
+                                 '9': [self.actions_bar.on_key_pressed]
                                  })
 
         game_instance.current_fight.start()
@@ -94,5 +112,5 @@ class MainWindow(App):
     def _on_keyboard_down(self, sdl_thing, code, thing, key, modifiers, *args):
         if key in self._key_binder:
             for cb in self._key_binder[key]:
-                cb()
+                cb(code, key)
             return True

@@ -11,7 +11,7 @@ class Fight():
         self.time_bar = TimeBar()
         self.started = False
         self.actions_history = []  # (unit, [ actions ])
-        self.on_action_change = Event('action_type', 'action_node')
+        self.on_action_change = Event('unit', 'action_type', 'action_node', 'skill')
         self.on_next_turn = Event('unit')
 
     def deploy(self, squads):
@@ -30,9 +30,11 @@ class Fight():
         _, _, unit = self.time_bar.current
         self.actions_history.append((unit, []))
         self.on_next_turn(unit)
-        self.on_action_change(unit.actions_tree.default.data, unit.actions_tree)
+        skills = unit.get_skills(unit.actions_tree.default.data)
+        skill_tup = skills.popitem(False) if skills else (None, None) 
+        self.on_action_change(unit, unit.actions_tree.default.data, unit.actions_tree, skill_tup)
 
-    def notify_action_change(self, action_type):
+    def notify_action_change(self, action_type, skill):
         if action_type == actions.ActionType.EndTurn:
             self.time_bar.next()
             self.start_turn()
@@ -41,7 +43,7 @@ class Fight():
             action_node = unit.actions_tree
             if history:
                 action_node = unit.actions_tree.get_node_from_history(history)
-            self.on_action_change(action_type, action_node)
+            self.on_action_change(unit, action_type, action_node, skill)
 
     def notify_action_end(self, action_type):
         unit, history = self.actions_history[-1]
@@ -51,4 +53,6 @@ class Fight():
             self.time_bar.next()
             self.start_turn()
         else:
-            self.on_action_change(new_action.default.data, new_action)
+            skills = unit.get_skills(new_action.default.data)
+            skill_tup = skills.popitem(False) if skills else (None, None) 
+            self.on_action_change(unit, new_action.default.data, new_action, skill_tup)

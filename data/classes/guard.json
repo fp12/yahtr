@@ -7,9 +7,12 @@
 	"color": [0.4, 0.4, 0.7],
 	"shields": [3, 2, 1, 0, 1, 2],
 	"actions_tree_name": "base",
-	"actions": 
+	"weapons":
 	{
-		"sword": "C",
-		"sword_slash": "C"
+		"sword": "C"
+	},
+	"skills":
+	{
+		"bash" : "B"
 	}
 }

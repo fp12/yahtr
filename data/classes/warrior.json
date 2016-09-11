@@ -7,9 +7,13 @@
 	"color": [0.25098, 0.878431, 0.815686],
 	"shields": [2, 1, 0, 0, 0, 1],
 	"actions_tree_name": "base",
-	"actions": 
+	"weapons": 
 	{
 		"sword": "B",
-		"sword_slash": "D"
+		"daggers": "D"
+	},
+	"skills":
+	{
+		"slash" : "B"
 	}
 }

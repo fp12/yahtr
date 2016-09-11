@@ -6,14 +6,16 @@ from fight import Fight
 class Game():
     def __init__(self, root_path=''):
         self._root_path = root_path
-        self._actions = {}
+        self.skills = {}
         self._classes = classes.ClassesList()
+        self.weapons_templates = {}
         self._flat_layout = True
         self.current_fight = None
         self.players = []
 
     def load(self):
-        self._actions = data_loader.local_load(self._root_path + 'data/actions/', '.json')
+        self.skills = data_loader.local_load(self._root_path + 'data/skills/', '.json')
+        self.weapons_templates = data_loader.local_load(self._root_path + 'data/templates/weapons/', '.json')
         self._classes.local_load(self._root_path)
 
     def update_from_wiki(self):
@@ -30,13 +32,14 @@ class Game():
             if p.name == player_name:
                 return p
 
+    def get_skill(self, skill_name):
+        if skill_name in self.skills:
+            return self.skills[skill_name]
+        return None
+
     def prepare_new_fight(self, fight_map, players):
         assert(not self.current_fight)
         self.current_fight = Fight(fight_map, players)
-
-    @property
-    def actions(self):
-        return self._actions
 
     @property
     def classes(self):

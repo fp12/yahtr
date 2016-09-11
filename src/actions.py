@@ -10,21 +10,6 @@ class ActionType(Enum):
     Skill = 4
 
 
-def to_string(action):
-    txt = 'Action not Found!'
-    if action == ActionType.EndTurn:
-        txt = 'End Turn (0)'
-    elif action == ActionType.Move:
-        txt = 'Move (1)'
-    elif action == ActionType.Rotate:
-        txt = 'Rotate (2)'
-    elif action == ActionType.Weapon:
-        txt = 'Weapon (3)'
-    elif action == ActionType.Skill:
-        txt = 'Skill (4)'
-    return txt
-
-
 actions_trees = {
     # debug action tree
     'dbg': Tree(Node(ActionType.Move,

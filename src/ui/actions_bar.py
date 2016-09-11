@@ -2,42 +2,54 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 
 from game import game_instance
-import actions
+from actions import ActionType
 
 
 class UnitActionButton(Button):
-    def __init__(self, action_type, **kwargs):
+    def __init__(self, index, action_type, skill_tup=(), **kwargs):
+        self.index = index
         self.action_type = action_type
+        self.skill_tup = skill_tup
         super(UnitActionButton, self).__init__(**kwargs)
 
 
 class ActionsBar(BoxLayout):
-    def __init__(self, **kwargs):
-        super(ActionsBar, self).__init__(orientation='horizontal', **kwargs)
-
     def create(self):
-        game_instance.current_fight.on_next_turn += self.on_next
+        game_instance.current_fight.on_next_turn += lambda unit: self.on_new_action(unit, None, unit.actions_tree)
         game_instance.current_fight.on_action_change += self.on_new_action
 
-    def on_next(self, unit):
-        self.clear_widgets()
-        for a in unit.actions_tree:
-            new_widget = UnitActionButton(action_type=a.data, text=actions.to_string(a.data))
-            new_widget.bind(on_press=self.on_button_pressed)
-            self.add_widget(new_widget)
+    def create_action_widget(self, index, action_type, text, skill_tup=()):
+        new_widget = UnitActionButton(index=index, action_type=action_type, text=text, skill_tup=skill_tup)
+        new_widget.bind(on_press=self.on_button_pressed)
+        self.add_widget(new_widget)
 
-    def on_new_action(self, action_type, action_node):
+    def on_new_action(self, unit, action_type, action_node, skill_tup=()):
         self.clear_widgets()
+        index = 1
         for a in action_node:
-            new_widget = UnitActionButton(action_type=a.data, text=actions.to_string(a.data))
-            new_widget.bind(on_press=self.on_button_pressed)
-            self.add_widget(new_widget)
+            if a.data in [ActionType.Weapon, ActionType.Skill]:
+                for skill_name, skill in unit.get_skills(a.data).items():
+                    self.create_action_widget(index=index, action_type=a.data, text=skill_name, skill_tup=(skill_name, skill))
+                    index += 1
 
-    def _on_action_selected(self, action_type):
-        game_instance.current_fight.notify_action_change(action_type)
+            elif a.data == ActionType.EndTurn:
+                self.create_action_widget(index=0, action_type=a.data, text='End Turn')
 
-    def on_key_pressed(self, key):
-        self._on_action_selected(actions.ActionType(int(key)))
+            else:
+                self.create_action_widget(index=index, action_type=a.data, text=a.data.name)
+                index += 1
+
+    def _on_action_selected(self, index, button=None):
+        if not button:
+            for ch in self.children:
+                if ch.index == index:
+                    button = ch
+                    break
+        if button:
+            game_instance.current_fight.notify_action_change(button.action_type, button.skill_tup)
+
+    def on_key_pressed(self, code, key):
+        self._on_action_selected(int(key))
 
     def on_button_pressed(self, button):
-        self._on_action_selected(button.action_type)
+        self._on_action_selected(button.index)
