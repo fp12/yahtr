@@ -94,10 +94,10 @@
         Color:
             rgba: self.r, self.g, self.b, self.a
         Line:
-            points: [self.x, self.y-10, self.x, self.y+5, self.x-5, self.y, self.x+5, self.y, self.x, self.y+5]
-            joint: 'bevel'
+            points: [self.x, self.y-20, self.x, self.y+10, self.x-10, self.y, self.x+10, self.y, self.x, self.y+10]
+            joint: 'round'
             cap: 'none'
-            width: 1
+            width: 3
             close: False
     canvas.before:
         PushMatrix

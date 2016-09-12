@@ -27,9 +27,8 @@ class Piece(HexWidget):
     def __init__(self, unit, **kwargs):
         self.unit = unit
         self.color = unit.color
-        self._actions = []
+        self._skill_widgets = []
         self._shields = [[] for _ in range(6)]
-        self._displayed_action = None
         self.status = Status.Idle
         self.selected = False
         self.reachable_tiles = []
@@ -72,7 +71,6 @@ class Piece(HexWidget):
 
     # override
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
-        self.clear()
         if trajectory:
             duration_per_tile = 0.2
             self.status = Status.Moving
@@ -100,22 +98,20 @@ class Piece(HexWidget):
     def load(self):
         self.update_shields()
 
-    def clear(self):
-        self.clean_reachable_tiles()
-        for a in self._actions:
-            self.parent.remove_widget(a)
-        self._actions = []
+    def clean_skill(self):
+        for w in self._skill_widgets:
+            self.remove_widget(w)
+        self._skill_widgets = []
 
-    def load_action(self, action):
-        self._displayed_action = action
-        for h in game_instance.actions[action]['hits']:
-            origin = self.hex_coords + Hex(qrs=h['origin'])
-            direction = self.hex_coords + Hex(qrs=h['direction'])
-            pos = self.hex_layout.get_mid_edge_position(origin, direction)
-            angle = origin.angle_to_neighbour(direction)
-            arrow = ActionArrow(angle=angle, pos=(pos.x, pos.y))
-            self._actions.append(arrow)
-            self.parent.add_widget(arrow)
+    def load_skill(self, skill):
+        for hun in skill.huns:
+            for hit in hun.H:
+                pos = self.hex_layout.get_mid_edge_position(hit.origin, hit.destination)
+                x = self.x + pos.x - self.hex_layout.origin.x
+                y = self.y + pos.y - self.hex_layout.origin.y
+                arrow = ActionArrow(angle=hit.angle, pos=(x, y))
+                self._skill_widgets.append(arrow)
+                self.add_widget(arrow)
 
     def display_reachable_tiles(self):
         if not self.reachable_tiles:
@@ -141,11 +137,14 @@ class Piece(HexWidget):
             self.parent.remove_widget(tile)
         self.reachable_tiles = []
 
-    def on_action_change(self, action_type):
+    def on_action_change(self, action_type, skill):
+        self.clean_skill()
         if action_type == actions.ActionType.Move:
             self.display_reachable_tiles()
         else:
             self.clean_reachable_tiles()
+            if skill:
+                self.load_skill(skill)
 
     def on_hovered_in(self):
         if not self.selected:
@@ -165,6 +164,7 @@ class Piece(HexWidget):
                 self.display_reachable_tiles()
                 self._selection_widget.a = 1
             else:
+                self.clean_skill()
                 self.clean_reachable_tiles()
                 self._selection_widget.a = 0
             self.selected = select

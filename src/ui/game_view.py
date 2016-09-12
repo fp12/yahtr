@@ -9,7 +9,7 @@ from ui.trajectory import Trajectory
 from hex_lib import Layout
 import pathfinding
 from game import game_instance
-import actions
+from actions import ActionType
 
 
 class GameView(ScatterLayout):
@@ -61,9 +61,9 @@ class GameView(ScatterLayout):
         self.current_action = action_type
         piece = self.get_selected_piece()
         if piece:
-            piece.on_action_change(action_type)
+            piece.on_action_change(action_type, skill)
             piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
-            if action_type == actions.ActionType.Move and piece and not piece_hovered:
+            if action_type == ActionType.Move and piece and not piece_hovered:
                 self.display_trajectory(piece, self.selector.hex_coords)
                 return
         self.trajectory.hide()
@@ -117,7 +117,7 @@ class GameView(ScatterLayout):
         piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
         if piece == piece_hovered:
             piece_hovered.on_hovered_in()
-        game_instance.current_fight.notify_action_end(actions.ActionType.Move)
+        game_instance.current_fight.notify_action_end(ActionType.Move)
 
     def on_mouse_pos(self, stuff, pos):
         # do proceed if not displayed and/or no parent
@@ -146,9 +146,9 @@ class GameView(ScatterLayout):
                     self.trajectory.hide()
                 # over tile with piece selected: show trajectory
                 elif piece_selected:
-                    if self.current_action == actions.ActionType.Move:
+                    if self.current_action == ActionType.Move:
                         self.display_trajectory(piece_selected, hover_hex)
-                    elif self.current_action == actions.ActionType.Rotate and piece_selected.hex_coords != hover_hex:
+                    elif self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill] and piece_selected.hex_coords != hover_hex:
                         piece_selected.unit.orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
                         piece_selected.do_rotate()
 
@@ -164,8 +164,8 @@ class GameView(ScatterLayout):
 
     def on_touch_down(self, touch):
         piece_selected = self.get_selected_piece()
-        if piece_selected and self.current_action == actions.ActionType.Rotate:
-            game_instance.current_fight.notify_action_end(actions.ActionType.Rotate)
+        if piece_selected and self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill]:
+            game_instance.current_fight.notify_action_end(self.current_action)
             return True
 
         piece_touched = self.get_piece_on_hex(self.selector.hex_coords)

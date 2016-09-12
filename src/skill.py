@@ -7,6 +7,7 @@ class HexDir:
         q0, r0, q1, r1 = data
         self.origin = Hex(q=q0, r=r0)
         self.destination = Hex(q=q1, r=r1)
+        self.angle = self.origin.angle_to_neighbour(self.destination - self.origin)
 
     def __repr__(self):
         return 'From {0} To {1}'.format(self.origin, self.destination)
@@ -24,6 +25,18 @@ class HUN:
         if 'N' in hun:
             for n_def in hun['N']:
                 self.ennemy_moves.append(HexDir(h_def))
+
+    @property
+    def H(self):
+        return self.hits
+    
+    @property
+    def U(self):
+        return self.unit_move
+
+    @property
+    def N(self):
+        return self.ennemy_moves
 
     def __repr__(self):
         return 'Hits: {0}\n\tUnit move: {1}\n\tNMIs moves: {2}'.format(self.hits, self.unit_move, self.ennemy_moves)
