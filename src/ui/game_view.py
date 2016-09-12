@@ -80,7 +80,7 @@ class GameView(ScatterLayout):
                 self.trajectory.color = [0, 0.392157, 0, 0.5]
             else:
                 self.trajectory.color = [0.9, 0.12, 0, 0.75]
-            self.trajectory.set(path, points)        
+            self.trajectory.set(path, points)
 
     def get_tile_on_hex(self, hex_coords):
         for tile in self.tiles:

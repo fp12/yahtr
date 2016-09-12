@@ -3,6 +3,7 @@ import classes
 from fight import Fight
 import skill
 
+
 class Game():
     def __init__(self, root_path=''):
         self._root_path = root_path

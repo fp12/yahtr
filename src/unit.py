@@ -14,6 +14,7 @@ class Unit:
         self.hex_coords = None
         self.orientation = None
         self.equipped_weapons = []
+        self.owner = None
 
         if 'skills' in raw_data:
             self.base_skills = [RankedSkill(game_instance.get_skill(name), Rank[rank]) for name, rank in raw_data['skills'].items()]

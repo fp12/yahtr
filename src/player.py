@@ -4,6 +4,7 @@ class Player():
         self.units = []
 
     def add_unit(self, unit):
+        unit.owner = self
         self.units.append(unit)
 
     def __str__(self):

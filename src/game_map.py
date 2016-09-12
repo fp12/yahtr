@@ -60,7 +60,7 @@ class Map():
                 for r in range(self.r1, self.r2 + 1):
                     if self._validate_not_hole(q, r):
                         self.tiles.append(Hex(q, r))
-                        yield q, r            
+                        yield q, r
 
     def _get_tiles_triangle(self):
         if self.tiles:

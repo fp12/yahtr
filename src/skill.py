@@ -12,6 +12,7 @@ class HexDir:
     def __repr__(self):
         return 'From {0} To {1}'.format(self.origin, self.destination)
 
+
 class HUN:
     def __init__(self, hun):
         self.hits = []
@@ -29,7 +30,7 @@ class HUN:
     @property
     def H(self):
         return self.hits
-    
+
     @property
     def U(self):
         return self.unit_move
@@ -41,13 +42,14 @@ class HUN:
     def __repr__(self):
         return 'Hits: {0}\n\tUnit move: {1}\n\tNMIs moves: {2}'.format(self.hits, self.unit_move, self.ennemy_moves)
 
+
 class Skill:
     def __init__(self, name, data):
         self.name = name
         self.huns = []
         if 'HUN' in data:
             for hun in data['HUN']:
-                 self.huns.append(HUN(hun))
+                self.huns.append(HUN(hun))
 
     def __repr__(self):
         return 'Sk<{0}>\n\t{1}'.format(self.name, '\n\t'.join(map(repr, self.huns)))

@@ -1,4 +1,3 @@
-from math import cos, sin, pi
 from enum import Enum
 
 from kivy.properties import NumericProperty

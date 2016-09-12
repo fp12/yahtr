@@ -14,6 +14,7 @@ from game import game_instance
 from player import Player
 from unit import Unit
 from weapon import Weapon
+import tie
 from hex_lib import Hex
 
 
@@ -56,6 +57,7 @@ class MainWindow(App):
         game_instance.register_player(p1)
         game_instance.register_player(p2)
         game_instance.prepare_new_fight(fight_map='hexagon_default', players=[p1, p2])
+        game_instance.current_fight.set_tie(p1, p2, tie.Type.Ennemy)
         self.game_view.load_map()
 
         # deployment
