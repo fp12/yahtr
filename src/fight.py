@@ -31,8 +31,8 @@ class Fight():
         self.actions_history.append((unit, []))
         self.on_next_turn(unit)
         skills = unit.get_skills(unit.actions_tree.default.data)
-        skill_tup = skills.popitem(False) if skills else (None, None) 
-        self.on_action_change(unit, unit.actions_tree.default.data, unit.actions_tree, skill_tup)
+        skill = skills[0] if skills else None 
+        self.on_action_change(unit, unit.actions_tree.default.data, unit.actions_tree, skill)
 
     def notify_action_change(self, action_type, skill):
         if action_type == actions.ActionType.EndTurn:
@@ -54,5 +54,5 @@ class Fight():
             self.start_turn()
         else:
             skills = unit.get_skills(new_action.default.data)
-            skill_tup = skills.popitem(False) if skills else (None, None) 
-            self.on_action_change(unit, new_action.default.data, new_action, skill_tup)
+            skill = skills[0] if skills else None 
+            self.on_action_change(unit, new_action.default.data, new_action, skill)
