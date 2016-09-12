@@ -7,7 +7,7 @@ import tie
 
 class Fight():
     def __init__(self, fight_map, players):
-        self.current_map = Map(fight_map)
+        self.current_map = Map(self, fight_map)
         self.squads = {p: [] for p in players}
         self.ties = []
         self.time_bar = TimeBar()
@@ -66,8 +66,10 @@ class Fight():
                 return
         self.ties.append(tie.Tie(p1, p2, tie_type))
 
-    def get_tie(self, x1, x2):
+    def get_tie(self, p1, p2):
+        if p1 == p2:
+            return tie.Type.Ally
         for t in self.ties:
-            if t.has(x1, x2):
+            if t.has(p1, p2):
                 return t.tie_type
         return tie.Type.Neutral

@@ -57,7 +57,7 @@ class MainWindow(App):
         game_instance.register_player(p1)
         game_instance.register_player(p2)
         game_instance.prepare_new_fight(fight_map='hexagon_default', players=[p1, p2])
-        game_instance.current_fight.set_tie(p1, p2, tie.Type.Ennemy)
+        game_instance.current_fight.set_tie(p1, p2, tie.Type.Enemy)
         self.game_view.load_map()
 
         # deployment
@@ -78,15 +78,19 @@ class MainWindow(App):
 
         p1.add_unit(u11)
         p1.add_unit(u12)
-        p1.add_unit(u21)
-        p1.add_unit(u22)
+        p2.add_unit(u21)
+        p2.add_unit(u22)
 
         u11.move_to(hex_coords=Hex(-1, -4), orientation=Hex(0,  1))
         u12.move_to(hex_coords=Hex( 1, -5), orientation=Hex(0,  1))
         u21.move_to(hex_coords=Hex(-1,  5), orientation=Hex(0, -1))
         u22.move_to(hex_coords=Hex( 1,  4), orientation=Hex(0, -1))
 
-        game_instance.current_fight.deploy(OrderedDict({p1: [u11, u12], p2: [u21, u22]}))
+        squads = OrderedDict()
+        squads.update({p1: [u11, u12]})
+        squads.update({p2: [u21, u22]})
+        game_instance.current_fight.deploy(squads)
+
         self.game_view.load_squads()
         self.time_bar.create()
         self.actions_bar.create()

@@ -15,54 +15,73 @@ class PriorityQueue:
         return heapq.heappop(self.elements)[1]
 
 
-def heuristic(hex_a, hex_b):
-    return hex_a.distance(hex_b)
-
-
-def cost(hex_a, hex_b):
-    return 1
-
-
-def get_best_path(game_map, h_start, h_goal):
+def get_best_path(start, goal, heuristic, get_neighbours, get_cost):
     frontier = PriorityQueue()
-    frontier.put(h_start, 0)
+    frontier.put(start, 0)
     came_from = {}
     cost_so_far = {}
-    came_from[h_start] = None
-    cost_so_far[h_start] = 0
+    came_from[start] = None
+    cost_so_far[start] = 0
 
     while not frontier.empty():
-        h_current = frontier.get()
+        current = frontier.get()
 
-        if h_current == h_goal:
+        if current == goal:
             break
 
-        for h_next in game_map.get_neighbours(h_current):
-            new_cost = cost_so_far[h_current] + cost(h_current, h_next)
-            if h_next not in cost_so_far or new_cost < cost_so_far[h_next]:
-                cost_so_far[h_next] = new_cost
-                priority = new_cost + heuristic(h_goal, h_next)
-                frontier.put(h_next, priority)
-                came_from[h_next] = h_current
+        for neighbour in get_neighbours(current):
+            new_cost = cost_so_far[current] + get_cost(neighbour)
+            if neighbour not in cost_so_far or new_cost < cost_so_far[neighbour]:
+                cost_so_far[neighbour] = new_cost
+                priority = new_cost + heuristic(goal, neighbour)
+                frontier.put(neighbour, priority)
+                came_from[neighbour] = current
 
-    path = [h_goal]
-    backtrack_end = h_goal
-    while backtrack_end != h_start:
+    path = [goal]
+    backtrack_end = goal
+    while backtrack_end != start:
         backtrack_end = came_from[backtrack_end]
         path.append(backtrack_end)
     return path
 
 
-def get_reachable(game_map, h_start, move_max):
-    visited = set([h_start])
-    fringes = [[h_start]]
+def get_reachable_simple(start, move_max, get_neighbours):
+    visited = set([start])
+    fringes = [[start]]
 
     for k in range(1, move_max + 1):
         fringes.append([])
         for h_current in fringes[k - 1]:
-            for neighbor in game_map.get_neighbours(h_current):
-                if neighbor not in visited:
-                    visited.add(neighbor)
-                    fringes[k].append(neighbor)
-    visited.remove(h_start)
+            for neighbour in get_neighbours(h_current):
+                if neighbour not in visited:
+                    visited.add(neighbour)
+                    fringes[k].append(neighbour)
+    visited.remove(start)
     return visited
+
+
+def get_reachable(start, move_max, get_neighbours, get_cost):
+    def expand(h):
+        parentPoints = movementPoints[h]
+        closedList.append(h)
+        for neighbour in get_neighbours(h):
+            if neighbour in closedList or neighbour in openList:
+                continue
+            points = parentPoints - get_cost(neighbour)
+            if points < 0:
+                continue  # hex is outside of the reachable area
+            openList.append(neighbour)
+            movementPoints[neighbour] = points
+
+    openList = []
+    closedList = []
+    movementPoints = {start: move_max}
+
+    expand(start)
+
+    while len(openList) > 0:
+        openList.sort(key=lambda h: movementPoints[h])
+        h = openList.pop(-1)
+        expand(h)
+
+    return closedList

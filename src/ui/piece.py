@@ -11,7 +11,6 @@ from ui.selector import Selector
 
 from game import game_instance
 from hex_lib import Hex
-import pathfinding
 import actions
 
 
@@ -71,6 +70,7 @@ class Piece(HexWidget):
     # override
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
         if trajectory:
+            self.clean_reachable_tiles()
             duration_per_tile = 0.2
             self.status = Status.Moving
             Animation.cancel_all(self)
@@ -114,7 +114,7 @@ class Piece(HexWidget):
 
     def display_reachable_tiles(self):
         if not self.reachable_tiles:
-            reachable_hexes = pathfinding.get_reachable(game_instance.current_fight.current_map, self.hex_coords, self.unit.move)
+            reachable_hexes = game_instance.current_fight.current_map.get_reachable(self.unit)
             for hx in reachable_hexes:
                 tile = Tile(hx.q, hx.r,
                             layout=self.hex_layout,

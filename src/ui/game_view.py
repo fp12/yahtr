@@ -7,7 +7,6 @@ from ui.selector import Selector
 from ui.trajectory import Trajectory
 
 from hex_lib import Layout
-import pathfinding
 from game import game_instance
 from actions import ActionType
 
@@ -69,7 +68,7 @@ class GameView(ScatterLayout):
         self.trajectory.hide()
 
     def display_trajectory(self, piece, hover_hex):
-        path = pathfinding.get_best_path(game_instance.current_fight.current_map, piece.hex_coords, hover_hex)
+        path = game_instance.current_fight.current_map.get_best_path(piece.hex_coords, hover_hex)
         if path:
             points = []
             for hex_coords in path:

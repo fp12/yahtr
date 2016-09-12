@@ -3,6 +3,8 @@ from math import floor
 
 import data_loader
 from hex_lib import Hex
+import pathfinding
+import tie
 
 
 class MapType(Enum):
@@ -14,7 +16,8 @@ class MapType(Enum):
 
 
 class Map():
-    def __init__(self, name):
+    def __init__(self, fight, name):
+        self.fight = fight
         self.name = name
         data = data_loader.local_load_single('data/maps/', name, '.json')
 
@@ -95,8 +98,45 @@ class Map():
                         self.tiles.append(Hex(q, r))
                         yield q, r
 
-    def get_neighbours(self, hex_coords):
+    def get_unit_on(self, hex_coords):
+        for u in self.units:
+            if u.hex_coords == hex_coords:
+                return u
+        return None
+
+    def get_free_neighbours(self, hex_coords):
         units_hexes = [u.hex_coords for u in self.units]
         for neighbour in hex_coords.get_neighbours():
             if neighbour in self.tiles and neighbour not in units_hexes:
                 yield neighbour
+
+    def get_all_neighbours(self, hex_coords):
+        for neighbour in hex_coords.get_neighbours():
+            if neighbour in self.tiles:
+                yield neighbour
+
+    def _get_cost(self, unit, a):
+        for n in self.get_all_neighbours(a):
+            other_unit = self.get_unit_on(n)
+            if other_unit and self.fight.get_tie(unit.owner, other_unit.owner) == tie.Type.Enemy:
+                return 2
+        return 1
+
+    def get_best_path(self, start, goal):
+        unit = self.get_unit_on(start)
+
+        def heuristic(a, b):
+            return a.distance(b)
+
+        def get_cost(a):
+            # could be cached later
+            return self._get_cost(unit, a)
+
+        return pathfinding.get_best_path(start, goal, heuristic, self.get_free_neighbours, get_cost)
+
+    def get_reachable(self, unit):
+        def get_cost(a):
+            # could be cached later
+            return self._get_cost(unit, a)
+
+        return pathfinding.get_reachable(unit.hex_coords, unit.move, self.get_free_neighbours, get_cost)
