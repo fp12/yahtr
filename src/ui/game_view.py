@@ -164,7 +164,7 @@ class GameView(ScatterLayout):
     def on_touch_down(self, touch):
         piece_selected = self.get_selected_piece()
         if piece_selected and self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill]:
-            game_instance.current_fight.notify_action_end(self.current_action)
+            game_instance.current_fight.notify_action_end(self.current_action, piece_selected.current_skill)
             return True
 
         piece_touched = self.get_piece_on_hex(self.selector.hex_coords)

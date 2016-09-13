@@ -25,6 +25,7 @@ class Piece(HexWidget):
     def __init__(self, unit, **kwargs):
         self.unit = unit
         self.color = unit.color
+        self.current_skill = None
         self._skill_widgets = []
         self._shields = [[] for _ in range(6)]
         self.status = Status.Idle
@@ -101,8 +102,10 @@ class Piece(HexWidget):
         for w in self._skill_widgets:
             self.remove_widget(w)
         self._skill_widgets = []
+        self.current_skill = None
 
     def load_skill(self, skill):
+        self.current_skill = skill
         for hun in skill.huns:
             for hit in hun.H:
                 pos = self.hex_layout.get_mid_edge_position(hit.origin, hit.destination)

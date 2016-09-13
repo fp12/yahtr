@@ -88,6 +88,14 @@ class Hex:
             return Hex.angles[Hex.directions.index(neighbour)]
         return 0
 
+    def rotate_to(self, direction):
+        index = Hex.directions.index(direction)
+        for _ in range(index):
+            q, s = self._q, -self._q - self._r 
+            self._q = -s
+            self._r = -q
+        return self
+
     def direction_to_distant(self, other):
         step = 1.0 / max(self.distance(other), 1)
         direction = Hex(q=self._q * (1 - step) + other.q * step, r=self._r * (1 - step) + other.r * step).get_round()
