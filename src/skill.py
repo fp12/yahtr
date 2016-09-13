@@ -18,6 +18,7 @@ class HUN:
         self.hits = []
         self.unit_move = None
         self.ennemy_moves = []
+        self.damage = []
         if 'H' in hun:
             for h_def in hun['H']:
                 self.hits.append(HexDir(h_def))
@@ -25,7 +26,10 @@ class HUN:
             self.unit_move = HexDir(hun['U'])
         if 'N' in hun:
             for n_def in hun['N']:
-                self.ennemy_moves.append(HexDir(h_def))
+                self.ennemy_moves.append(HexDir(n_def))
+        if 'D' in hun:
+            for d_def in hun['D']:
+                self.ennemy_moves.append(d_def)
 
     @property
     def H(self):
@@ -38,6 +42,10 @@ class HUN:
     @property
     def N(self):
         return self.ennemy_moves
+
+    @property
+    def D(self):
+        return self.damage
 
     def __repr__(self):
         return 'Hits: {0}\n\tUnit move: {1}\n\tNMIs moves: {2}'.format(self.hits, self.unit_move, self.ennemy_moves)

@@ -2,6 +2,7 @@ from game import game_instance
 from actions import ActionType, actions_trees
 from rank import Rank
 from skill import RankedSkill
+from weapon import RankedWeapon
 
 
 class Unit:
@@ -35,13 +36,15 @@ class Unit:
             self.orientation = orientation
 
     def equip(self, weapon):
-        self.equipped_weapons.append(weapon)
+        if weapon.wp_type.name in self.weapons:
+            rank = Rank[self.weapons[weapon.wp_type.name]]
+            self.equipped_weapons.append(RankedWeapon(weapon, rank))
 
     def get_skills(self, action_type):
         skills = []
         if action_type == ActionType.Weapon:
-            for weapon in self.equipped_weapons:
-                skills.extend(weapon.skills)
+            for ranked_weapon in self.equipped_weapons:
+                skills.extend(ranked_weapon.weapon.skills)
         elif action_type == ActionType.Skill:
             skills = [rs.skill for rs in self.skills]
         return skills

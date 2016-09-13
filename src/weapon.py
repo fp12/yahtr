@@ -20,7 +20,7 @@ class Weapon:
             self.skills = [game_instance.get_skill(name) for name in raw_data['skills']]
 
 
-class RankedWeaponType(Weapon):
-    def __init__(self, wp_type, rank):
-        self.wp_type = wp_type
+class RankedWeapon:
+    def __init__(self, weapon, rank):
+        self.weapon = weapon
         self.rank = rank
