@@ -25,6 +25,10 @@ class ColoredWidget(Widget):
         self._old_color = [self.r, self.g, self.b, self.a]
         self.r, self.g, self.b, self.a = value
 
+    @property
+    def hidden(self):
+        return self.a == 0
+
     def restore_old_color(self):
         if self._old_color:
             self.r, self.g, self.b, self.a = self._old_color

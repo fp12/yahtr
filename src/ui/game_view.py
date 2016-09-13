@@ -98,12 +98,6 @@ class GameView(ScatterLayout):
             if piece.selected:
                 return piece
 
-    def is_piece_moving(self):
-        for piece in self.pieces:
-            if piece.status == Status.Moving:
-                return True
-        return False
-
     def on_next_turn(self, unit):
         self.trajectory.hide()
         for piece in self.pieces:
@@ -125,7 +119,7 @@ class GameView(ScatterLayout):
 
         # get rounded hex coordinates and do nothing if we didn't change hex
         hover_hex = self.hex_layout.pixel_to_hex(pos).get_round()
-        if self.selector.hex_coords == hover_hex:
+        if not self.selector.hidden and self.selector.hex_coords == hover_hex:
             return
 
         tile = self.get_tile_on_hex(hover_hex)
@@ -140,13 +134,12 @@ class GameView(ScatterLayout):
                         new_piece_hovered.on_hovered_in()
 
                 piece_selected = self.get_selected_piece()
-                # piece is moving: clean everything
-                if self.is_piece_moving() or new_piece_hovered:
-                    self.trajectory.hide()
-                # over tile with piece selected: show trajectory
-                elif piece_selected:
+                if piece_selected:
                     if self.current_action == ActionType.Move:
-                        self.display_trajectory(piece_selected, hover_hex)
+                        if piece_selected.status == Status.Moving or new_piece_hovered:
+                            self.trajectory.hide()
+                        else:
+                            self.display_trajectory(piece_selected, hover_hex)
                     elif self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill] and piece_selected.hex_coords != hover_hex:
                         piece_selected.unit.orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
                         piece_selected.do_rotate()
