@@ -20,6 +20,6 @@ class TimedWidgetBar(BoxLayout):
         self.clear_widgets()
         simulation = game_instance.current_fight.time_bar.simulate_for(self.max_widgets)
         for priority, _, unit in simulation:
-            text = '{0} ({1})'.format(unit.template_name, priority)
+            text = '{0} ({1})'.format(unit.template.name, priority)
             new_widget = TimedWidget(text=text, color=[0, 0, 0, 1], background_normal='', background_color=unit.color + [1])
             self.add_widget(new_widget)

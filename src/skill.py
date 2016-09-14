@@ -68,6 +68,9 @@ class RankedSkill:
         self.skill = skill
         self.rank = rank
 
+    def __repr__(self):
+        return 'RkSk<{0}:{1}>'.format(self.skill.name, self.rank.name)
+
 
 def load_all(root_path):
     raw_skills = data_loader.local_load(root_path + 'data/skills/', '.json')

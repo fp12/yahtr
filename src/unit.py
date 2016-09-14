@@ -1,33 +1,47 @@
-from game import game_instance
+import copy
+
+import data_loader
 from actions import ActionType, actions_trees
 from rank import Rank
 from skill import RankedSkill
 from weapon import RankedWeapon
 
 
+class UnitTemplate:
+    def __init__(self, name, data, get_skill):
+        self.name = name
+        self.auto_get(data, 'move', 'initiative', 'speed', 'shields', 'color', 'weapons')
+        self.actions_tree = actions_trees[data['actions_tree_name']]
+        self.skills = []
+        if 'skills' in data:
+            self.skills = [RankedSkill(get_skill(n), Rank[rank]) for n, rank in data['skills'].items()]
+
+    def auto_get(self, data, *args):
+        for arg in args:
+            if arg in data:
+                setattr(self, arg, data[arg])
+
+
+def copy_attr(a, b, *args):
+    for arg in args:
+        attr = getattr(a, arg)
+        if isinstance(attr, list):
+            setattr(b, arg, attr[:])
+        else:
+            setattr(b, arg, copy.copy(attr))
+
+
 class Unit:
-    def __init__(self, template_name):
-        self.template_name = template_name
-        raw_data = game_instance.classes[template_name]
-        self.__dict__.update(raw_data)
-        self.__dict__.update({'base_' + k: v for k, v in raw_data.items()})
-        self.actions_tree = actions_trees[self.base_actions_tree_name]
+    def __init__(self, template):
+        self.template = template
+        copy_attr(template, self, 'move', 'initiative', 'speed', 'shields', 'color', 'actions_tree', 'skills')
         self.hex_coords = None
         self.orientation = None
         self.equipped_weapons = []
         self.owner = None
 
-        if 'skills' in raw_data:
-            self.base_skills = [RankedSkill(game_instance.get_skill(name), Rank[rank]) for name, rank in raw_data['skills'].items()]
-            self.skills = self.base_skills[:]
-        else:
-            self.skills = self.base_skills = []
-
-    def __str__(self):
-        return 'U<{0}>'.format(self.template_name)
-
     def __repr__(self):
-        return 'U<{0}>'.format(self.template_name)
+        return 'U<{0}>'.format(self.template.name)
 
     def move_to(self, hex_coords=None, orientation=None):
         if hex_coords:
@@ -36,15 +50,20 @@ class Unit:
             self.orientation = orientation
 
     def equip(self, weapon):
-        if weapon.wp_type.name in self.weapons:
-            rank = Rank[self.weapons[weapon.wp_type.name]]
+        if weapon.wp_type.name in self.template.weapons:
+            rank = Rank[self.template.weapons[weapon.wp_type.name]]
             self.equipped_weapons.append(RankedWeapon(weapon, rank))
 
     def get_skills(self, action_type):
         skills = []
         if action_type == ActionType.Weapon:
             for ranked_weapon in self.equipped_weapons:
-                skills.extend(ranked_weapon.weapon.skills)
+                skills.extend(ranked_weapon.skills)
         elif action_type == ActionType.Skill:
-            skills = [rs.skill for rs in self.skills]
+            skills = self.skills
         return skills
+
+
+def load_all(root_path, get_skill):
+    raw_units = data_loader.local_load(root_path + 'data/templates/units/', '.json')
+    return [UnitTemplate(name, data, get_skill) for name, data in raw_units.items()]

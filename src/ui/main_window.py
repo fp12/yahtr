@@ -6,14 +6,12 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.core.window import Window
 
 from ui.game_view import GameView
-from ui.class_list import create_class_list
 from ui.timed_widget import TimedWidgetBar
 from ui.actions_bar import ActionsBar
 
 from game import game_instance
 from player import Player
 from unit import Unit
-from weapon import Weapon
 import tie
 from hex_lib import Hex
 
@@ -28,20 +26,11 @@ class MainWindow(App):
         self._key_binder = {}
         Window.bind(on_key_down=self._on_keyboard_down)
 
-    def on_unit_selected(self, adapter, *args):
-        if len(adapter.selection) == 1:
-            selected_class = adapter.selection[0].text
-            if selected_class in game_instance.classes.keys():
-                self.game_view.spawn_unit(selected_class)
-
     def on_start(self):
         # prepare UI
         game_instance.load()
         self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size)
         self._layout.add_widget(self.game_view)
-        list_layout = AnchorLayout(anchor_x='left', anchor_y='top')
-        list_layout.add_widget(create_class_list(game_instance.classes, self.on_unit_selected))
-        self._layout.add_widget(list_layout)
 
         anchor_tr = AnchorLayout(anchor_x='right', anchor_y='top')
         anchor_tr.add_widget(self.time_bar)
@@ -52,24 +41,22 @@ class MainWindow(App):
         self._layout.add_widget(anchor_bc)
 
         # prepare fight
-        p1 = Player('Player 1')
-        p2 = Player('Player 2')
-        game_instance.register_player(p1)
-        game_instance.register_player(p2)
+        p1 = Player(game_instance, 'Player 1')
+        p2 = Player(game_instance, 'Player 2')
         game_instance.prepare_new_fight(fight_map='hexagon_default', players=[p1, p2])
         game_instance.current_fight.set_tie(p1, p2, tie.Type.Enemy)
         self.game_view.load_map()
 
         # deployment
-        w11 = Weapon('default_sword')
-        w12 = Weapon('default_spear')
-        w21 = Weapon('default_daggers')
-        w22 = Weapon('default_sword')
+        w11 = p1.add_weapon('default_sword')
+        w12 = p1.add_weapon('default_spear')
+        w21 = p2.add_weapon('default_daggers')
+        w22 = p2.add_weapon('default_sword')
 
-        u11 = Unit('guard')
-        u12 = Unit('lancer')
-        u21 = Unit('rogue')
-        u22 = Unit('warrior')
+        u11 = Unit(game_instance.get_unit_template('guard'))
+        u12 = Unit(game_instance.get_unit_template('lancer'))
+        u21 = Unit(game_instance.get_unit_template('rogue'))
+        u22 = Unit(game_instance.get_unit_template('warrior'))
 
         u11.equip(w11)
         u12.equip(w12)

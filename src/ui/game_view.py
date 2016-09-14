@@ -26,14 +26,6 @@ class GameView(ScatterLayout):
         self.current_action = None
         Window.bind(mouse_pos=self.on_mouse_pos)
 
-    def spawn_piece(self, template):
-        if self.piece:
-            self.piece.clear()
-            self.remove_widget(self.piece)
-        self.piece = Piece(template=game_instance.classes[template], q=0, r=0, layout=self.hex_layout)
-        self.add_widget(self.piece)
-        self.piece.load()
-
     def load_map(self):
         for q, r in game_instance.current_fight.current_map.get_tiles():
             tile = Tile(q, r, layout=self.hex_layout, color=[0.8, 0.8, 0.8, 0.4], size=(self.hex_radius, self.hex_radius))
@@ -56,11 +48,11 @@ class GameView(ScatterLayout):
         for x in self.tiles:
             x.toggle_debug_label()
 
-    def on_action_change(self, unit, action_type, action_node, skill):
+    def on_action_change(self, unit, action_type, action_node, rk_skill):
         self.current_action = action_type
         piece = self.get_selected_piece()
         if piece:
-            piece.on_action_change(action_type, skill)
+            piece.on_action_change(action_type, rk_skill)
             piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
             if action_type == ActionType.Move and piece and not piece_hovered:
                 self.display_trajectory(piece, self.selector.hex_coords)

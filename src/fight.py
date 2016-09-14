@@ -5,7 +5,6 @@ from time_bar import TimeBar
 import actions
 from utils.event import Event
 import tie
-from hex_lib import Hex
 
 
 class Fight():
@@ -35,24 +34,24 @@ class Fight():
         _, _, unit = self.time_bar.current
         self.actions_history.append((unit, []))
         self.on_next_turn(unit)
-        skills = unit.get_skills(unit.actions_tree.default.data)
-        skill = skills[0] if skills else None
-        self.on_action_change(unit, unit.actions_tree.default.data, unit.actions_tree, skill)
+        rk_skills = unit.get_skills(unit.actions_tree.default.data)
+        rk_skill = rk_skills[0] if rk_skills else None
+        self.on_action_change(unit, unit.actions_tree.default.data, unit.actions_tree, rk_skill)
 
     def end_turn(self):
         # here check if all units are dead in one major squad
         self.time_bar.next()
         self.start_turn()
 
-    def resolve_skill(self, unit, skill):
-        for hun in skill.huns:
-            for hit in hun.H:
+    def resolve_skill(self, unit, rk_skill):
+        for hun in rk_skill.skill.huns:
+            for index, hit in enumerate(hun.H):
                 hitted_h = copy(hit.destination).rotate_to(unit.orientation) + unit.hex_coords
                 hitted_u = self.current_map.get_unit_on(hitted_h)
                 if hitted_u:
                     print('{0} has been hit by {1}'.format(hitted_u, unit))
 
-    def notify_action_change(self, action_type, skill):
+    def notify_action_change(self, action_type, rk_skill):
         if action_type == actions.ActionType.EndTurn:
             self.end_turn()
         else:
@@ -60,20 +59,20 @@ class Fight():
             action_node = unit.actions_tree
             if history:
                 action_node = unit.actions_tree.get_node_from_history(history)
-            self.on_action_change(unit, action_type, action_node, skill)
+            self.on_action_change(unit, action_type, action_node, rk_skill)
 
-    def notify_action_end(self, action_type, skill=None):
+    def notify_action_end(self, action_type, rk_skill=None):
         unit, history = self.actions_history[-1]
         history.append(action_type)
-        if skill:
-            self.resolve_skill(unit, skill)
+        if rk_skill:
+            self.resolve_skill(unit, rk_skill)
         new_action = unit.actions_tree.get_node_from_history(history)
         if new_action.default.data == actions.ActionType.EndTurn:
             self.end_turn()
         else:
-            skills = unit.get_skills(new_action.default.data)
-            skill = skills[0] if skills else None
-            self.on_action_change(unit, new_action.default.data, new_action, skill)
+            rk_skills = unit.get_skills(new_action.default.data)
+            rk_skill = rk_skills[0] if rk_skills else None
+            self.on_action_change(unit, new_action.default.data, new_action, rk_skill)
 
     def set_tie(self, p1, p2, tie_type):
         for t in self.ties:

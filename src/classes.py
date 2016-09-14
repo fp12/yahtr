@@ -6,7 +6,7 @@ class ClassesList:
         self.classes = {}
 
     def local_load(self, root_path):
-        self.classes = data_loader.local_load(root_path + 'data/classes/', '.json')
+        self.classes = data_loader.local_load(root_path + 'data/templates/units/', '.json')
 
     def wiki_load(self):
         def parse(raw_file):

@@ -104,9 +104,9 @@ class Piece(HexWidget):
         self._skill_widgets = []
         self.current_skill = None
 
-    def load_skill(self, skill):
-        self.current_skill = skill
-        for hun in skill.huns:
+    def load_skill(self, rk_skill):
+        self.current_skill = rk_skill
+        for hun in rk_skill.skill.huns:
             for hit in hun.H:
                 pos = self.hex_layout.get_mid_edge_position(hit.origin, hit.destination)
                 x = self.x + pos.x - self.hex_layout.origin.x
@@ -139,14 +139,14 @@ class Piece(HexWidget):
             self.parent.remove_widget(tile)
         self.reachable_tiles = []
 
-    def on_action_change(self, action_type, skill):
+    def on_action_change(self, action_type, rk_skill):
         self.clean_skill()
         if action_type == actions.ActionType.Move:
             self.display_reachable_tiles()
         else:
             self.clean_reachable_tiles()
-            if skill:
-                self.load_skill(skill)
+            if rk_skill:
+                self.load_skill(rk_skill)
 
     def on_hovered_in(self):
         if not self.selected:
