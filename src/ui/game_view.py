@@ -107,12 +107,12 @@ class GameView(ScatterLayout):
     def on_mouse_pos(self, stuff, pos):
         # do proceed if not displayed and/or no parent
         if not self.get_root_window():
-            return
+            return False
 
         # get rounded hex coordinates and do nothing if we didn't change hex
         hover_hex = self.hex_layout.pixel_to_hex(pos).get_round()
         if not self.selector.hidden and self.selector.hex_coords == hover_hex:
-            return
+            return False
 
         tile = self.get_tile_on_hex(hover_hex)
         if tile:

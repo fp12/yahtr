@@ -89,6 +89,24 @@
             close: True
 
 
+<UnitActionTile>:
+    canvas:
+        Color:
+            rgba: self.r, self.g, self.b, self.a
+        Mesh:
+            vertices: (self.x + math.cos(math.pi/3 * 0) * self.radius, self.y + math.sin(math.pi/3 * 0) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 1) * self.radius, self.y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * self.radius, self.y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 3) * self.radius, self.y + math.sin(math.pi/3 * 3) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 4) * self.radius, self.y + math.sin(math.pi/3 * 4) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 5) * self.radius, self.y + math.sin(math.pi/3 * 5) * self.radius, 0, 0)
+            indices: (0, 1, 2, 3, 4, 5)
+            mode: "triangle_fan"
+    Label:
+        size: root.size
+        center: root.pos
+        text: root.action
+#        text_size: self.size
+#        halign: 'center'
+#        valign: 'middle'
+        color: 1, 0, 0, 1
+
+
 <ActionArrow>:
     canvas:
         Color:

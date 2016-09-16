@@ -22,7 +22,7 @@ class MainWindow(App):
         self._layout = None
         self.game_view = None
         self.time_bar = TimedWidgetBar(max_widgets=10, size_hint=(None, 1), width=100)
-        self.actions_bar = ActionsBar(orientation='horizontal')
+        self.actions_bar = None
         self._key_binder = {}
         Window.bind(on_key_down=self._on_keyboard_down)
 
@@ -36,9 +36,8 @@ class MainWindow(App):
         anchor_tr.add_widget(self.time_bar)
         self._layout.add_widget(anchor_tr)
 
-        anchor_bc = AnchorLayout(anchor_x='center', anchor_y='bottom', size_hint=(0.5, 0.05))
-        anchor_bc.add_widget(self.actions_bar)
-        self._layout.add_widget(anchor_bc)
+        self.actions_bar = ActionsBar(pos=(0, 0), size_hint=(None, None), size=(200, 200))
+        self._layout.add_widget(self.actions_bar)
 
         # prepare fight
         p1 = Player(game_instance, 'Player 1')
