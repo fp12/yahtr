@@ -1,0 +1,20 @@
+{
+	"move": 6,
+	"initiative" : 12,
+	"speed": 6,
+	"attack": 10,
+	"health": 10,
+	"color": [0.5, 0.8, 0],
+	"body" : [0, 0, 0, 1],
+	"shields": [0, 1, 0, 0, 0, 1,
+				1, 1, 1, 0, 1, 1],
+	"actions_tree_name": "base",
+	"weapons":
+	{
+		"spear": "B"
+	},
+	"skills":
+	{
+		"slash" : "B"
+	}
+}

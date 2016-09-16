@@ -81,7 +81,7 @@ class GameView(ScatterLayout):
 
     def get_piece_on_hex(self, hex_coords):
         for piece in self.pieces:
-            if piece.hex_coords == hex_coords:
+            if piece.hex_test(hex_coords):
                 return piece
         return None
 
@@ -133,8 +133,10 @@ class GameView(ScatterLayout):
                         else:
                             self.display_trajectory(piece_selected, hover_hex)
                     elif self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill] and piece_selected.hex_coords != hover_hex:
-                        piece_selected.unit.orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
-                        piece_selected.do_rotate()
+                        orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
+                        if game_instance.current_fight.current_map.unit_can_fit(piece_selected.unit, piece_selected.unit.hex_coords, orientation):
+                            piece_selected.unit.orientation = orientation
+                            piece_selected.do_rotate()
 
             # finally move the selector
             self.selector.move_to(hover_hex, tile_pos=tile.pos)

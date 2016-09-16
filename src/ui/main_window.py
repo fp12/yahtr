@@ -53,10 +53,10 @@ class MainWindow(App):
         w21 = p2.add_weapon('default_daggers')
         w22 = p2.add_weapon('default_sword')
 
-        u11 = Unit(game_instance.get_unit_template('guard'))
+        u11 = Unit(game_instance.get_unit_template('mounted_knight'))
         u12 = Unit(game_instance.get_unit_template('lancer'))
         u21 = Unit(game_instance.get_unit_template('rogue'))
-        u22 = Unit(game_instance.get_unit_template('warrior'))
+        u22 = Unit(game_instance.get_unit_template('boss'))
 
         u11.equip(w11)
         u12.equip(w12)

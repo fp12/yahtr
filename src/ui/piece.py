@@ -2,12 +2,14 @@ from enum import Enum
 
 from kivy.properties import NumericProperty
 from kivy.animation import Animation
+from kivy.graphics import Color, Mesh, Rectangle, PushMatrix, PopMatrix, Rotate, Line
 
 from ui.hex_widget import HexWidget
 from ui.tile import Tile
 from ui.action_arrow import ActionArrow
 from ui.shield_widget import ShieldWidget
 from ui.selector import Selector
+from ui.colored_widget import ColoredWidget
 
 from game import game_instance
 from hex_lib import Hex
@@ -19,42 +21,79 @@ class Status(Enum):
     Moving = 1
 
 
+class DirectionIndicator(ColoredWidget):
+    pass
+
+
 class Piece(HexWidget):
     angle = NumericProperty(0)
 
     def __init__(self, unit, **kwargs):
+        super(Piece, self).__init__(q=unit.hex_coords.q, r=unit.hex_coords.r, **kwargs)
         self.unit = unit
         self.color = unit.color
         self.current_skill = None
         self._skill_widgets = []
-        self._shields = [[] for _ in range(6)]
         self.status = Status.Idle
         self.selected = False
         self.reachable_tiles = []
-        super(Piece, self).__init__(q=unit.hex_coords.q, r=unit.hex_coords.r, **kwargs)
+
+        with self.canvas:
+            """
+            # done_list = []
+            self.canvas.add(Color(self.r, self.g, self.b, self.a))
+            for body_part in self.unit.body:
+                part_hex = self.hex_coords + body_part
+                hex_pos = self.hex_layout.hex_to_pixel(part_hex)
+                vertices = []
+                for vert_i in range(6):
+                    vertices.extend([hex_pos.x + self.coss[vert_i] * self.radius, hex_pos.y + self.sins[vert_i] * self.radius, 0, 0])
+                Mesh(vertices=tuple(vertices), indices=(0, 1, 2, 3, 4, 5), mode='triangle_fan')
+
+                for body_part_other in self.unit.body:
+                    same_body_parts = body_part == body_part_other
+                    processed = (body_part, body_part_other) in done_list or (body_part_other, body_part) not in done_list
+                    if not same_body_parts and not processed and (body_part_other - body_part) in Hex.directions:
+                        done_list.append((body_part, body_part_other))
+                        part_hex_other = self.hex_coords + body_part_other
+                        hex_pos_other = self.hex_layout.hex_to_pixel(part_hex_other)
+                        size = (self.hex_layout.size.x, self.hex_layout.margin * 5)
+                        pos = (hex_pos.x + (hex_pos_other.x - hex_pos.x) / 2 - size[0] / 2,
+                               hex_pos.y + (hex_pos_other.y - hex_pos.y) / 2 - size[1] / 2)
+                        angle = body_part.angle_to_neighbour(body_part_other - body_part)
+                        PushMatrix()
+                        Rotate(angle=angle, axis=(0, 0, 1))
+                        Rectangle(pos=pos, size=size)
+                        PopMatrix()
+                """
 
         self._selection_widget = Selector(q=unit.hex_coords.q, r=unit.hex_coords.r, layout=self.hex_layout, margin=2.5, color=[0.1, 0.9, 0.2, 0])
         self.add_widget(self._selection_widget)
         self.do_rotate()
+        self._shields = [[] for _ in range(len(unit.shields))]
         self.update_shields()
 
     def do_rotate(self):
         self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
 
     def update_shields(self):
-        for index, shield_value in enumerate(self.unit.shields):
-            old_size = len(self._shields[index])
-            diff = shield_value - old_size
-            if diff > 0:
-                for i in range(old_size, diff):
-                    col = .6 - i * (0.6 / 3.)
-                    w = ShieldWidget(q=self.hex_coords.q, r=self.hex_coords.r,
-                                     layout=self.hex_layout,
-                                     color=[col, col, col, 1],
-                                     radius=self.radius - (2 + 4) * i, thickness=8 - i * 2,
-                                     angle=Hex.angles[index])
-                    self.add_widget(w)
-                    self._shields[index].append(w)
+        for body_part_index, body_part in enumerate(self.unit.body):
+            for shield_index in range(6):
+                linear_index = body_part_index * 6 + shield_index
+                shield_value = self.unit.shields[linear_index]
+                old_size = len(self._shields[linear_index])
+                diff = shield_value - old_size
+                if diff > 0:
+                    for i in range(old_size, diff):
+                        col = .6 - i * (0.6 / 3.)
+                        body_coord = self.hex_coords + body_part
+                        w = ShieldWidget(q=body_coord.q, r=body_coord.r,
+                                         layout=self.hex_layout,
+                                         color=[col, col, col, 1],
+                                         radius=self.radius - (2 + 4) * i, thickness=8 - i * 2,
+                                         angle=Hex.angles[shield_index])
+                        self.add_widget(w)
+                        self._shields[linear_index].append(w)
 
     def on_finished_moving(self, trajectory, callback):
         self.status = Status.Idle
@@ -67,6 +106,9 @@ class Piece(HexWidget):
     def on_pos(self, *args):
         for c in self.children:
             c.pos = self.pos
+
+    def hex_test(self, hex_coords):
+        return self.unit.hex_test(hex_coords)
 
     # override
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):

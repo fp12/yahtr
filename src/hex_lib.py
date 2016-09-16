@@ -91,7 +91,7 @@ class Hex:
     def rotate_to(self, direction):
         index = Hex.directions.index(direction)
         for _ in range(index):
-            q, s = self._q, -self._q - self._r 
+            q, s = self._q, -self._q - self._r
             self._q = -s
             self._r = -q
         return self

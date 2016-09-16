@@ -104,11 +104,30 @@ class Map():
                 return u
         return None
 
-    def get_free_neighbours(self, hex_coords):
-        units_hexes = [u.hex_coords for u in self.units]
+    def get_free_neighbours(self, unit, hex_coords):
+        units_hexes = []
+        for u in self.units:
+            if u != unit:
+                units_hexes.extend(u.calc_body_at(u.hex_coords, u.orientation))
         for neighbour in hex_coords.get_neighbours():
-            if neighbour in self.tiles and neighbour not in units_hexes:
+            orientation = neighbour - hex_coords
+            body_can_fit = True
+            for body_part in unit.calc_body_at(neighbour, orientation):
+                if body_part not in self.tiles or body_part in units_hexes:
+                    body_can_fit = False
+                    break
+            if body_can_fit:
                 yield neighbour
+
+    def unit_can_fit(self, unit, hex_coords, orientation):
+        units_hexes = []
+        for u in self.units:
+            if u != unit:
+                units_hexes.extend(u.calc_body_at(u.hex_coords, u.orientation))
+        for body_part in unit.calc_body_at(hex_coords, orientation):
+            if body_part not in self.tiles or body_part in units_hexes:
+                return False
+        return True
 
     def get_all_neighbours(self, hex_coords):
         for neighbour in hex_coords.get_neighbours():
@@ -123,7 +142,16 @@ class Map():
         return 1
 
     def get_best_path(self, start, goal):
+        if goal not in self.tiles:
+            return []
+
         unit = self.get_unit_on(start)
+        if not unit:
+            return []
+
+        for direction in Hex.directions:
+            if not self.unit_can_fit(unit, goal, Hex(qrs=direction)):
+                return []
 
         def heuristic(a, b):
             return a.distance(b)
@@ -132,11 +160,17 @@ class Map():
             # could be cached later
             return self._get_cost(unit, a)
 
-        return pathfinding.get_best_path(start, goal, heuristic, self.get_free_neighbours, get_cost)
+        def get_neighbours(a):
+            return self.get_free_neighbours(unit, a)
+
+        return pathfinding.get_best_path(start, goal, heuristic, get_neighbours, get_cost)
 
     def get_reachable(self, unit):
         def get_cost(a):
             # could be cached later
             return self._get_cost(unit, a)
 
-        return pathfinding.get_reachable(unit.hex_coords, unit.move, self.get_free_neighbours, get_cost)
+        def get_neighbours(a):
+            return self.get_free_neighbours(unit, a)
+
+        return pathfinding.get_reachable(unit.hex_coords, unit.move, get_neighbours, get_cost)
