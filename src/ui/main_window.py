@@ -1,5 +1,6 @@
 from collections import OrderedDict
 
+from kivy.lang import Builder
 from kivy.app import App
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.floatlayout import FloatLayout
@@ -16,9 +17,13 @@ import tie
 from hex_lib import Hex
 
 
+Builder.load_file('src/ui/kv/main_window.kv')
+
+
 class MainWindow(App):
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
+
         self._layout = None
         self.game_view = None
         self.time_bar = TimedWidgetBar(max_widgets=10, size_hint=(None, 1), width=100)

@@ -25,6 +25,10 @@ class PieceBody(HexWidget):
     pass
 
 
+class PieceInterBody(ColoredWidget):
+    angle = NumericProperty(0)
+
+
 class Piece(HexWidget):
     angle = NumericProperty(0)
 
@@ -39,11 +43,28 @@ class Piece(HexWidget):
         self.reachable_tiles = []
 
         self._body_parts = {}
+        done_list = []
         for body_part in self.unit.body:
             part_hex = self.hex_coords + body_part
             w = PieceBody(q=part_hex.q, r=part_hex.r, layout=self.hex_layout, color=self.color)
             self._body_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
             self.add_widget(w)
+
+            for body_part_other in self.unit.body:
+                same_body_parts = body_part == body_part_other
+                processed = (body_part, body_part_other) in done_list or (body_part_other, body_part) in done_list
+                if not same_body_parts and not processed and (body_part_other - body_part) in Hex.directions:
+                    done_list.append((body_part, body_part_other))
+                    hex_pos = self.hex_layout.hex_to_pixel(part_hex)
+                    part_hex_other = self.hex_coords + body_part_other
+                    hex_pos_other = self.hex_layout.hex_to_pixel(part_hex_other)
+                    size = (self.hex_layout.size.x, self.hex_layout.margin * 5)
+                    pos = (hex_pos.x + (hex_pos_other.x - hex_pos.x) / 2 - size[0] / 2,
+                           hex_pos.y + (hex_pos_other.y - hex_pos.y) / 2 - size[1] / 2)
+                    angle = body_part.angle_to_neighbour(body_part_other - body_part)
+                    w = PieceInterBody(pos=pos, size=size, angle=angle, color=self.color)
+                    self._body_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
+                    self.add_widget(w)
 
         self._selection_widget = Selector(q=unit.hex_coords.q, r=unit.hex_coords.r, layout=self.hex_layout, margin=2.5, color=[0.1, 0.9, 0.2, 0])
         self.add_widget(self._selection_widget)

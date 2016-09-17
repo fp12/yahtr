@@ -1,0 +1,20 @@
+#:kivy 1.9.1
+
+<Widget>:
+    canvas.after:
+        Line:
+            rectangle: self.x+1,self.y+1,self.width-1,self.height-1
+            dash_offset: 5
+            dash_length: 3
+
+<ScatterLayout>:
+    canvas.after:
+        Color:
+            rgb: 1,0,0
+        Line:
+            rectangle: self.x+1,self.y+1,self.width-1,self.height-1
+        Color:
+            rgb: 0,0,1
+        Ellipse:
+            pos: self.center_x-4, self.center_y-4
+            size: 8, 8
