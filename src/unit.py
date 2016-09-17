@@ -33,18 +33,18 @@ class UnitTemplate:
         if 'skills' in data:
             self.skills = [RankedSkill(get_skill(n), Rank[rank]) for n, rank in data['skills'].items()]
 
-        self.body = [Hex(0, 0)]
-        if 'body' in data:
-            self.body = []
-            body_def = data['body']
-            for index in range(0, len(body_def), 2):
-                self.body.append(Hex(q=body_def[index], r=body_def[index + 1]))
+        self.shape = [Hex(0, 0)]
+        if 'shape' in data:
+            self.shape = []
+            shape_def = data['shape']
+            for index in range(0, len(shape_def), 2):
+                self.shape.append(Hex(q=shape_def[index], r=shape_def[index + 1]))
 
 
 class Unit:
     def __init__(self, template):
         self.template = template
-        copy_attr(template, self, 'move', 'initiative', 'speed', 'shields', 'color', 'actions_tree', 'skills', 'body')
+        copy_attr(template, self, 'move', 'initiative', 'speed', 'shields', 'color', 'actions_tree', 'skills', 'shape')
         self.hex_coords = None
         self.orientation = None
         self.equipped_weapons = []
@@ -73,16 +73,16 @@ class Unit:
             skills = self.skills
         return skills
 
-    def calc_body_at(self, position, orientation):
-        body = []
-        for body_part in self.body:
-            new_pos = copy.copy(body_part).rotate_to(orientation)
+    def calc_shape_at(self, position, orientation):
+        shape = []
+        for shape_part in self.shape:
+            new_pos = copy.copy(shape_part).rotate_to(orientation)
             new_pos += position
-            body.append(new_pos)
-        return body
+            shape.append(new_pos)
+        return shape
 
     def hex_test(self, hex_coords):
-        if hex_coords in self.calc_body_at(self.hex_coords, self.orientation):
+        if hex_coords in self.calc_shape_at(self.hex_coords, self.orientation):
             return True
 
 

@@ -108,24 +108,24 @@ class Map():
         units_hexes = []
         for u in self.units:
             if u != unit:
-                units_hexes.extend(u.calc_body_at(u.hex_coords, u.orientation))
+                units_hexes.extend(u.calc_shape_at(u.hex_coords, u.orientation))
         for neighbour in hex_coords.get_neighbours():
             orientation = neighbour - hex_coords
-            body_can_fit = True
-            for body_part in unit.calc_body_at(neighbour, orientation):
-                if body_part not in self.tiles or body_part in units_hexes:
-                    body_can_fit = False
+            shape_can_fit = True
+            for shape_part in unit.calc_shape_at(neighbour, orientation):
+                if shape_part not in self.tiles or shape_part in units_hexes:
+                    shape_can_fit = False
                     break
-            if body_can_fit:
+            if shape_can_fit:
                 yield neighbour
 
     def unit_can_fit(self, unit, hex_coords, orientation):
         units_hexes = []
         for u in self.units:
             if u != unit:
-                units_hexes.extend(u.calc_body_at(u.hex_coords, u.orientation))
-        for body_part in unit.calc_body_at(hex_coords, orientation):
-            if body_part not in self.tiles or body_part in units_hexes:
+                units_hexes.extend(u.calc_shape_at(u.hex_coords, u.orientation))
+        for shape_part in unit.calc_shape_at(hex_coords, orientation):
+            if shape_part not in self.tiles or shape_part in units_hexes:
                 return False
         return True
 
