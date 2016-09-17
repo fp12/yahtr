@@ -37,11 +37,13 @@ def get_best_path(start, goal, heuristic, get_neighbours, get_cost):
                 frontier.put(neighbour, priority)
                 came_from[neighbour] = current
 
+    # something wrong happened?!
+    if goal not in came_from:
+        return []
+
     path = [goal]
     backtrack_end = goal
     while backtrack_end != start:
-        if backtrack_end not in came_from:
-            print(start, goal, backtrack_end, came_from, sep='\n')
         backtrack_end = came_from[backtrack_end]
         path.append(backtrack_end)
     return path

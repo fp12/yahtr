@@ -21,7 +21,7 @@ class Status(Enum):
     Moving = 1
 
 
-class DirectionIndicator(ColoredWidget):
+class PieceBody(HexWidget):
     pass
 
 
@@ -38,9 +38,27 @@ class Piece(HexWidget):
         self.selected = False
         self.reachable_tiles = []
 
+        self._body_parts = {}
+        for body_part in self.unit.body:
+            part_hex = self.hex_coords + body_part
+            w = PieceBody(q=part_hex.q, r=part_hex.r, layout=self.hex_layout, color=self.color)
+            self._body_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
+            self.add_widget(w)
+
+        self._selection_widget = Selector(q=unit.hex_coords.q, r=unit.hex_coords.r, layout=self.hex_layout, margin=2.5, color=[0.1, 0.9, 0.2, 0])
+        self.add_widget(self._selection_widget)
+
+        self.do_rotate()
+        self._shields = [{} for _ in range(len(unit.shields))]
+        self.update_shields()
+
+    def redraw(self, *args):
+        if self != args[0]:
+            return
+        print(args)
+        self.canvas.clear()
         with self.canvas:
-            """
-            # done_list = []
+            done_list = []
             self.canvas.add(Color(self.r, self.g, self.b, self.a))
             for body_part in self.unit.body:
                 part_hex = self.hex_coords + body_part
@@ -65,13 +83,6 @@ class Piece(HexWidget):
                         Rotate(angle=angle, axis=(0, 0, 1))
                         Rectangle(pos=pos, size=size)
                         PopMatrix()
-                """
-
-        self._selection_widget = Selector(q=unit.hex_coords.q, r=unit.hex_coords.r, layout=self.hex_layout, margin=2.5, color=[0.1, 0.9, 0.2, 0])
-        self.add_widget(self._selection_widget)
-        self.do_rotate()
-        self._shields = [[] for _ in range(len(unit.shields))]
-        self.update_shields()
 
     def do_rotate(self):
         self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
@@ -93,7 +104,7 @@ class Piece(HexWidget):
                                          radius=self.radius - (2 + 4) * i, thickness=8 - i * 2,
                                          angle=Hex.angles[shield_index])
                         self.add_widget(w)
-                        self._shields[linear_index].append(w)
+                        self._shields[linear_index].update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
 
     def on_finished_moving(self, trajectory, callback):
         self.status = Status.Idle
@@ -104,8 +115,16 @@ class Piece(HexWidget):
             callback(self)
 
     def on_pos(self, *args):
-        for c in self.children:
-            c.pos = self.pos
+        # do proceed if not displayed and/or no parent
+        if not self.get_root_window():
+            return False
+
+        self._selection_widget.pos = self.pos
+        for body_part, offset in self._body_parts.items():
+            body_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
+        for shield_data in self._shields:
+            for shield_part, offset in shield_data.items():
+                shield_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
 
     def hex_test(self, hex_coords):
         return self.unit.hex_test(hex_coords)

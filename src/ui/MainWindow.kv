@@ -39,15 +39,14 @@
         color: 1, 0, 0, 1
 
 
-<DirectionIndicator>
-    Color:
-        rgba: self.r + 0.1, self.g + 0.1, self.b + 0.1, self.a + 0.2
-    Line:
-        points: [self.x - self.radius / 2, self.y, self.x, self.y + self.radius / 2, self.x + self.radius / 2, self.y]
-        joint: 'bevel'
-        cap: 'none'
-        width: 3
-        close: False
+<PieceBody>
+    canvas:
+        Color:
+            rgba: self.r, self.g, self.b, self.a
+        Mesh:
+            vertices: (self.x + self.coss[0] * self.radius, self.y + self.sins[0] * self.radius, 0, 0, self.x + self.coss[1] * self.radius, self.y + self.sins[1] * self.radius, 0, 0, self.x + self.coss[2] * self.radius, self.y + self.sins[2] * self.radius, 0, 0, self.x + self.coss[3] * self.radius, self.y + self.sins[3] * self.radius, 0, 0, self.x + self.coss[4] * self.radius, self.y + self.sins[4] * self.radius, 0, 0, self.x + self.coss[5] * self.radius, self.y + self.sins[5] * self.radius, 0, 0)
+            indices: (0, 1, 2, 3, 4, 5)
+            mode: "triangle_fan"
 
 
 <Piece>
@@ -57,6 +56,14 @@
             angle: self.angle
             origin: root.pos
     canvas.after:
+        Color:
+            rgba: self.r + 0.1, self.g + 0.1, self.b + 0.1, self.a + 0.2
+        Line:
+            points: [self.x - self.radius / 2, self.y, self.x, self.y + self.radius / 2, self.x + self.radius / 2, self.y]
+            joint: 'bevel'
+            cap: 'none'
+            width: 3
+            close: False
         PopMatrix
 
 
