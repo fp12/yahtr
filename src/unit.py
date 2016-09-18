@@ -2,31 +2,17 @@ import copy
 
 from hex_lib import Hex
 import data_loader
+from utils import attr
 from actions import ActionType, actions_trees
 from rank import Rank
 from skill import RankedSkill
 from weapon import RankedWeapon
 
 
-def copy_attr(a, b, *args):
-    for arg in args:
-        attr = getattr(a, arg)
-        if isinstance(attr, list):
-            setattr(b, arg, attr[:])
-        else:
-            setattr(b, arg, copy.copy(attr))
-
-
-def get_attr_from_dic(a, data, *args):
-        for arg in args:
-            if arg in data:
-                setattr(a, arg, data[arg])
-
-
 class UnitTemplate:
     def __init__(self, name, data, get_skill):
         self.name = name
-        get_attr_from_dic(self, data, 'move', 'initiative', 'speed', 'shields', 'color', 'weapons')
+        attr.get_from_dic(self, data, 'move', 'initiative', 'speed', 'shields', 'color', 'weapons')
         self.actions_tree = actions_trees[data['actions_tree_name']]
 
         self.skills = []
@@ -44,7 +30,7 @@ class UnitTemplate:
 class Unit:
     def __init__(self, template):
         self.template = template
-        copy_attr(template, self, 'move', 'initiative', 'speed', 'shields', 'color', 'actions_tree', 'skills', 'shape')
+        attr.copy_from_instance(template, self, 'move', 'initiative', 'speed', 'shields', 'color', 'actions_tree', 'skills', 'shape')
         self.hex_coords = None
         self.orientation = None
         self.equipped_weapons = []
