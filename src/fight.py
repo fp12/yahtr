@@ -44,12 +44,14 @@ class Fight():
         self.start_turn()
 
     def resolve_skill(self, unit, rk_skill):
-        for hun in rk_skill.skill.huns:
-            for index, hit in enumerate(hun.H):
-                hitted_h = copy(hit.destination).rotate_to(unit.orientation) + unit.hex_coords
-                hitted_u = self.current_map.get_unit_on(hitted_h)
-                if hitted_u:
-                    print('{0} has been hit by {1}'.format(hitted_u, unit))
+        for hun_index, hun in enumerate(rk_skill.skill.huns):
+            for hit_index, hit in enumerate(hun.H):
+                hit_direction = copy(hit.destination).rotate_to(unit.orientation)
+                hitted_tile = hit_direction + unit.hex_coords
+                hitted_unit = self.current_map.get_unit_on(hitted_tile)
+                if hitted_unit:
+                    damage = rk_skill.get_damage(hun_index, hit_index)
+                    hitted_unit.health_change(-damage, unit, hit)
 
     def notify_action_change(self, action_type, rk_skill):
         if action_type == actions.ActionType.EndTurn:

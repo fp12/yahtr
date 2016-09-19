@@ -1,6 +1,6 @@
 from math import sqrt
 
-from kivy.uix.scatterlayout import ScatterLayout
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.label import Label
 from kivy.properties import StringProperty
 from kivy.uix.behaviors import ButtonBehavior
@@ -37,7 +37,7 @@ class UnitInfoWidget(ButtonBehavior, HexWidget):
         self.add_widget(Label(text='[b]{0}[/b]'.format(unit.template.name), center=self.pos, halign='center', markup=True))
 
 
-class TimedWidgetBar(ScatterLayout):
+class TimedWidgetBar(RelativeLayout):
     Coords = [(0, 0), (1, 0), (1, 1), (0, 2), (0, 3), (1, 3), (1, 4), (0, 5), (0, 6), (1, 6)]
 
     def __init__(self, **kwargs):
@@ -63,7 +63,7 @@ class TimedWidgetBar(ScatterLayout):
         self.info_widget.set_unit(current_unit)
 
         # killing them now, but may be animated later
-        for child in self.content.children[:]:
+        for child in self.children[:]:
             if child != self.info_widget:
                 self.remove_widget(child)
         simulation = game_instance.current_fight.time_bar.simulate_for(len(TimedWidgetBar.Coords) + 1)

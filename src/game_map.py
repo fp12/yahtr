@@ -24,16 +24,16 @@ class Map():
 
         # checks
         if data['type'] == MapType.Parallelogram.name:
-            attr.get_from_dic(self, data['info'], 'q1', 'q2', 'r1', 'r2')
+            attr.get_from_dict(self, data['info'], 'q1', 'q2', 'r1', 'r2')
             self.get_tiles = self._get_tiles_parallelogram
         elif data['type'] == MapType.Triangle.name:
-            attr.get_from_dic(self, data['info'], 'size')
+            attr.get_from_dict(self, data['info'], 'size')
             self.get_tiles = self._get_tiles_triangle
         elif data['type'] == MapType.Hexagon.name:
-            attr.get_from_dic(self, data['info'], 'radius')
+            attr.get_from_dict(self, data['info'], 'radius')
             self.get_tiles = self._get_tiles_hexagon
         elif data['type'] == MapType.Rectangle.name:
-            attr.get_from_dic(self, data['info'], 'height', 'width')
+            attr.get_from_dict(self, data['info'], 'height', 'width')
             self.get_tiles = self._get_tiles_rectangle
 
         self.holes = data['holes'] if 'holes' in data else None

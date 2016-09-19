@@ -1,4 +1,4 @@
-from kivy.uix.scatterlayout import ScatterLayout
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.properties import StringProperty
 
@@ -11,16 +11,18 @@ from hex_lib import Layout
 
 class UnitActionTile(ButtonBehavior, HexWidget):
     action = StringProperty()
+    key = StringProperty()
 
     def __init__(self, index, action_type, text, rk_skill=None, **kwargs):
         self.index = index
         self.action_type = action_type
         self.rk_skill = rk_skill
         self.action = text
+        self.key = '[b]{0}[/b]'.format(index)
         super(UnitActionTile, self).__init__(**kwargs)
 
 
-class ActionsBar(ScatterLayout):
+class ActionsBar(RelativeLayout):
     __Layouts__ = [[(0, -1)],
                    [(-1, 0), (0, -1)],
                    [(-1, 0), (0, 0), (0, -1)],
@@ -64,7 +66,7 @@ class ActionsBar(ScatterLayout):
 
     def _on_action_selected(self, index=None, button=None):
         if not button:
-            for child in self.content.children:
+            for child in self.children:
                 if child.index == index:
                     button = child
                     break
@@ -76,7 +78,8 @@ class ActionsBar(ScatterLayout):
 
     def on_touch_down(self, touch):
         hover_hex = self.hex_layout.pixel_to_hex(touch.pos).get_round()
-        for child in self.content.children:
+        for child in self.children:
             if child.hex_coords == hover_hex:
                 self._on_action_selected(button=child)
                 return True
+        return False

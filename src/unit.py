@@ -3,6 +3,7 @@ import copy
 from hex_lib import Hex
 import data_loader
 from utils import attr
+from utils.event import Event
 from actions import ActionType, actions_trees
 from rank import Rank
 from skill import RankedSkill
@@ -10,9 +11,11 @@ from weapon import RankedWeapon
 
 
 class UnitTemplate:
+    __attributes = ['move', 'initiative', 'speed', 'shields', 'color', 'weapons', 'health']
+
     def __init__(self, name, data, get_skill):
         self.name = name
-        attr.get_from_dic(self, data, 'move', 'initiative', 'speed', 'shields', 'color', 'weapons')
+        attr.get_from_dict(self, data, *UnitTemplate.__attributes)
         self.actions_tree = actions_trees[data['actions_tree_name']]
 
         self.skills = []
@@ -28,14 +31,19 @@ class UnitTemplate:
 
 
 class Unit:
+    __attributes = ['move', 'initiative', 'speed', 'shields', 'color', 'actions_tree', 'skills', 'shape', 'health']
+
     def __init__(self, template):
         self.template = template
-        attr.copy_from_instance(template, self, 'move', 'initiative', 'speed', 'shields', 'color', 'actions_tree', 'skills', 'shape')
+        attr.copy_from_instance(template, self, *Unit.__attributes)
         self.hex_coords = None
         self.orientation = None
         self.equipped_weapons = []
         self.owner = None
         self._current_shape = []
+
+        # events
+        self.on_health_change = Event('health', 'unit_source', 'skill_dir')
 
     @property
     def current_shape(self):
@@ -76,6 +84,10 @@ class Unit:
     def hex_test(self, hex_coords):
         if hex_coords in self.current_shape:
             return True
+
+    def health_change(self, health, unit_source, skill_dir):
+        self.health += health
+        self.on_health_change(health, unit_source, skill_dir)
 
 
 def load_all(root_path, get_skill):

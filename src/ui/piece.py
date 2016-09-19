@@ -72,6 +72,9 @@ class Piece(HexWidget):
         self._shields = [{} for _ in range(len(unit.shields))]
         self.update_shields()
 
+        # events
+        self.unit.on_health_change += self.on_unit_health_change
+
     def do_rotate(self):
         self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
 
@@ -113,6 +116,16 @@ class Piece(HexWidget):
         for shield_data in self._shields:
             for shield_part, offset in shield_data.items():
                 shield_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
+
+    def on_unit_health_change(self, health, unit_source, skill_dir):
+        direction = (skill_dir.destination - skill_dir.origin).rotate_to(unit_source.orientation)
+        pt = self.hex_layout.hex_to_pixel(self.hex_coords + direction)
+        target_pos_x = self.x + (pt.x - self.x) / 10
+        target_pos_y = self.y + (pt.y - self.y) / 10
+        duration = 0.2
+        anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3)
+        anim += Animation(pos=(self.x, self.y), duration=duration)
+        anim.start(self)
 
     def hex_test(self, hex_coords):
         return self.unit.hex_test(hex_coords)

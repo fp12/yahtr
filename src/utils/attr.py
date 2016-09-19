@@ -10,7 +10,7 @@ def copy_from_instance(a, b, *args):
             setattr(b, arg, copy.copy(attr))
 
 
-def get_from_dic(a, data, *args):
+def get_from_dict(a, data, *args):
     for arg in args:
         if arg in data:
             setattr(a, arg, data[arg])

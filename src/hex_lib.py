@@ -205,7 +205,7 @@ class Layout:
     def polygon_corners(self, h, add_margin=False):
         corners = []
         center = self.hex_to_pixel(h)
-        for i in range(0, 6):
+        for i in range(6):
             offset = self.hex_corner_offset(i, add_margin)
             corners.append(Point(center.x + offset.x, center.y + offset.y))
         return corners

@@ -29,7 +29,7 @@ class HUN:
                 self.ennemy_moves.append(HexDir(n_def))
         if 'D' in hun:
             for d_def in hun['D']:
-                self.ennemy_moves.append(d_def)
+                self.damage.append(d_def)
 
     @property
     def H(self):
@@ -70,6 +70,11 @@ class RankedSkill:
 
     def __repr__(self):
         return 'RkSk<{0}:{1}>'.format(self.skill.name, self.rank.name)
+
+    def get_damage(self, hun_index, hit_index):
+        hun = self.skill.huns[hun_index]
+        damage = hun.D[hit_index]
+        return damage[self.rank.value]
 
 
 def load_all(root_path):
