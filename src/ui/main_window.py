@@ -24,25 +24,26 @@ class MainWindow(App):
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
 
-        self._layout = None
+        self.layout = None
         self.game_view = None
-        self.time_bar = TimedWidgetBar(max_widgets=10, size_hint=(None, 1), width=100)
+        self.time_bar = None
         self.actions_bar = None
         self._key_binder = {}
         Window.bind(on_key_down=self._on_keyboard_down)
 
     def on_start(self):
-        # prepare UI
+        # prepare game logic
         game_instance.load()
+
+        # prepare UI
         self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size)
-        self._layout.add_widget(self.game_view)
+        self.layout.add_widget(self.game_view)
 
-        anchor_tr = AnchorLayout(anchor_x='right', anchor_y='top')
-        anchor_tr.add_widget(self.time_bar)
-        self._layout.add_widget(anchor_tr)
+        self.time_bar = TimedWidgetBar(pos=(Window.width/2 - 60, 75), size_hint=(None, 1), width=75)
+        self.layout.add_widget(self.time_bar)
 
-        self.actions_bar = ActionsBar(pos=(0, 0), size_hint=(None, None), size=(200, 200))
-        self._layout.add_widget(self.actions_bar)
+        self.actions_bar = ActionsBar(pos=self.time_bar.get_pos_for_actions_bar(), size_hint=(None, None))
+        self.layout.add_widget(self.actions_bar)
 
         # prepare fight
         p1 = Player(game_instance, 'Player 1')
@@ -102,9 +103,9 @@ class MainWindow(App):
         game_instance.current_fight.start()
 
     def build(self):
-        self._layout = FloatLayout()
+        self.layout = FloatLayout()
         self.title = 'Yet Another Hex Tactical RPG'
-        return self._layout
+        return self.layout
 
     def _on_keyboard_down(self, sdl_thing, code, thing, key, modifiers, *args):
         if key in self._key_binder:

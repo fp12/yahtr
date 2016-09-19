@@ -6,7 +6,7 @@ from ui.hex_widget import HexWidget
 
 from game import game_instance
 from actions import ActionType
-from hex_lib import Hex, Layout
+from hex_lib import Layout
 
 
 class UnitActionTile(ButtonBehavior, HexWidget):
@@ -21,24 +21,24 @@ class UnitActionTile(ButtonBehavior, HexWidget):
 
 
 class ActionsBar(ScatterLayout):
-    __Layouts__ = [[Hex(0, 0)],
-                   [Hex(0, 0), Hex(1, -1)],
-                   [Hex(-1, 0), Hex(0, 0), Hex(1, -1)],
-                   [Hex(-1, 0), Hex(0, 0), Hex(1, -1), Hex(0, -1)],
-                   [Hex(-1, 0), Hex(0, 0), Hex(1, -1), Hex(0, -1), Hex(2, -2)],
-                   [Hex(-1, 0), Hex(-1, 1), Hex(0, 1), Hex(1, 0), Hex(1, -1), Hex(0, 0)],
-                   [Hex(-1, 1), Hex(0, 1), Hex(1, 0), Hex(-1, 0), Hex(0, 0), Hex(1, -1), Hex(0, -1)]]
+    __Layouts__ = [[(0, -1)],
+                   [(-1, 0), (0, -1)],
+                   [(-1, 0), (0, 0), (0, -1)],
+                   [(-1, 1), (0, 0), (-1, 0), (0, -1)],
+                   [(-1, 1), (0, 0), (-1, 0), (0, -1), (-1, -1)],
+                   [(-2, 1), (-1, 1), (0, 0), (-2, 0), (-1, 0), (0, -1)],
+                   [(-2, 1), (-1, 1), (0, 0), (-2, 0), (-1, 0), (0, -1), (-1, -1)]]
 
     def __init__(self, **kwargs):
         super(ActionsBar, self).__init__(**kwargs)
-        self.hex_layout = Layout(origin=self.center, size=35, flat=True, margin=3)
+        self.hex_layout = Layout(origin=self.pos, size=40, flat=True, margin=1)
 
     def create(self):
         game_instance.current_fight.on_next_turn += lambda unit: self.on_new_action(unit, None, unit.actions_tree)
         game_instance.current_fight.on_action_change += self.on_new_action
 
-    def create_action_widget(self, hex_coords, index, action_type, text, rk_skill=None):
-        new_widget = UnitActionTile(index, action_type, text, rk_skill, q=hex_coords.q, r=hex_coords.r, layout=self.hex_layout)
+    def create_action_widget(self, q, r, index, action_type, text, rk_skill=None):
+        new_widget = UnitActionTile(index, action_type, text, rk_skill, q=q, r=r, layout=self.hex_layout)
         self.add_widget(new_widget)
 
     def on_new_action(self, unit, action_type, action_node, _rk_skill=None):
@@ -57,8 +57,10 @@ class ActionsBar(ScatterLayout):
         assert(count < len(ActionsBar.__Layouts__))
         for i, w_data in enumerate(widget_data):
             index, action_type, text, rk_skill = w_data
-            self.create_action_widget(ActionsBar.__Layouts__[count][i], index, action_type, text, rk_skill)
-        self.create_action_widget(ActionsBar.__Layouts__[count][count], 0, ActionType.EndTurn, 'End Turn')
+            q, r = ActionsBar.__Layouts__[count][i]
+            self.create_action_widget(q, r, index, action_type, text, rk_skill)
+        q, r = ActionsBar.__Layouts__[count][count]
+        self.create_action_widget(q, r, 0, ActionType.EndTurn, 'End Turn')
 
     def _on_action_selected(self, index=None, button=None):
         if not button:
