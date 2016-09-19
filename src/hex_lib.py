@@ -118,7 +118,39 @@ class Hex:
         return Hex(q, r)
 
 
-Point = collections.namedtuple("Point", ["x", "y"])
+class Point:
+    def __init__(self, x, y):
+        self._x = x
+        self._y = y
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+
+    def __str__(self):
+        return 'P<{0}, {1}>'.format(self._x, self._y)
+
+    def __repr__(self):
+        return 'P<{0}, {1}>'.format(self._x, self._y)
+
+    def __hash__(self):
+        return hash(str(self))
+
+    def __eq__(self, other):
+        other = other if type(other) is Point else Point(*other)
+        return self._x == other.x and self._y == other.y
+
+    def __sub__(self, other):
+        return Point(self._x - other.x, self._y - other.y)
+
+    def __isub__(self, other):
+        self._x -= other.x
+        self._y -= other.y
+        return self
 
 
 def to_point(x):
