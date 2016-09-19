@@ -35,6 +35,11 @@ class Unit:
         self.orientation = None
         self.equipped_weapons = []
         self.owner = None
+        self._current_shape = []
+
+    @property
+    def current_shape(self):
+        return self._current_shape
 
     def __repr__(self):
         return 'U<{0}>'.format(self.template.name)
@@ -44,6 +49,7 @@ class Unit:
             self.hex_coords = hex_coords
         if orientation:
             self.orientation = orientation
+        self._current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
 
     def equip(self, weapon):
         if weapon.wp_type.name in self.template.weapons:
@@ -68,7 +74,7 @@ class Unit:
         return shape
 
     def hex_test(self, hex_coords):
-        if hex_coords in self.calc_shape_at(self.hex_coords, self.orientation):
+        if hex_coords in self.current_shape:
             return True
 
 

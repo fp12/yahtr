@@ -91,9 +91,11 @@ class Map():
                         self.tiles.append(Hex(q, r))
                         yield q, r
 
-    def get_unit_on(self, hex_coords):
+    def get_unit_on(self, hex_coords, include_shape=True):
         for u in self.units:
             if u.hex_coords == hex_coords:
+                return u
+            if include_shape and hex_coords in u.current_shape:
                 return u
         return None
 
@@ -101,7 +103,7 @@ class Map():
         units_hexes = []
         for u in self.units:
             if u != unit:
-                units_hexes.extend(u.calc_shape_at(u.hex_coords, u.orientation))
+                units_hexes.extend(u.current_shape)
         for neighbour in hex_coords.get_neighbours():
             orientation = neighbour - hex_coords
             shape_can_fit = True
@@ -116,7 +118,7 @@ class Map():
         units_hexes = []
         for u in self.units:
             if u != unit:
-                units_hexes.extend(u.calc_shape_at(u.hex_coords, u.orientation))
+                units_hexes.extend(u.current_shape)
         for shape_part in unit.calc_shape_at(hex_coords, orientation):
             if shape_part not in self.tiles or shape_part in units_hexes:
                 return False
@@ -138,13 +140,9 @@ class Map():
         if goal not in self.tiles:
             return []
 
-        unit = self.get_unit_on(start)
+        unit = self.get_unit_on(start, False)
         if not unit:
             return []
-
-        for direction in Hex.directions:
-            if not self.unit_can_fit(unit, goal, Hex(qrs=direction)):
-                return []
 
         def heuristic(a, b):
             return a.distance(b)
@@ -156,7 +154,11 @@ class Map():
         def get_neighbours(a):
             return self.get_free_neighbours(unit, a)
 
-        return pathfinding.get_best_path(start, goal, heuristic, get_neighbours, get_cost)
+        # if the unit can fit in at least 1 direction, go!
+        for direction in Hex.directions:
+            if self.unit_can_fit(unit, goal, Hex(qrs=direction)):
+                return pathfinding.get_best_path(start, goal, heuristic, get_neighbours, get_cost)
+        return []
 
     def get_reachable(self, unit):
         def get_cost(a):
