@@ -2,7 +2,6 @@ from collections import OrderedDict
 
 from kivy.lang import Builder
 from kivy.app import App
-from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.core.window import Window
 
@@ -39,7 +38,7 @@ class MainWindow(App):
         self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size)
         self.layout.add_widget(self.game_view)
 
-        self.time_bar = TimedWidgetBar(pos=(Window.width/2 - 60, 75), size_hint=(None, 1), width=75)
+        self.time_bar = TimedWidgetBar(pos=(Window.width / 2 - 60, 75), size_hint=(None, 1), width=75)
         self.layout.add_widget(self.time_bar)
 
         self.actions_bar = ActionsBar(pos=self.time_bar.get_pos_for_actions_bar(), size_hint=(None, None))

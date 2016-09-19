@@ -2,13 +2,12 @@ from enum import Enum
 
 from kivy.properties import NumericProperty
 from kivy.animation import Animation
-from kivy.graphics import Color, Mesh, Rectangle, PushMatrix, PopMatrix, Rotate, Line
 
 from ui.hex_widget import HexWidget
 from ui.tile import Tile
 from ui.action_arrow import ActionArrow
 from ui.shield_widget import ShieldWidget
-from ui.selector import Selector
+from ui.contour import Contour
 from ui.colored_widget import ColoredWidget
 
 from game import game_instance
@@ -66,8 +65,8 @@ class Piece(HexWidget):
                     self._shape_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
                     self.add_widget(w)
 
-        self._selection_widget = Selector(q=unit.hex_coords.q, r=unit.hex_coords.r, layout=self.hex_layout, margin=2.5, color=[0.1, 0.9, 0.2, 0])
-        self.add_widget(self._selection_widget)
+        self.contour = Contour(unit.shape, layout=self.hex_layout, color=[0.1, 0.9, 0.2, 0], pos=self.pos)
+        self.add_widget(self.contour)
 
         self.do_rotate()
         self._shields = [{} for _ in range(len(unit.shields))]
@@ -108,7 +107,7 @@ class Piece(HexWidget):
         if not self.get_root_window():
             return False
 
-        self._selection_widget.pos = self.pos
+        self.contour.pos = self.pos
         for shape_part, offset in self._shape_parts.items():
             shape_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
         for shield_data in self._shields:
@@ -214,9 +213,9 @@ class Piece(HexWidget):
         if self.selected != select:
             if select:
                 self.display_reachable_tiles()
-                self._selection_widget.a = 1
+                self.contour.a = 1
             else:
                 self.clean_skill()
                 self.clean_reachable_tiles()
-                self._selection_widget.a = 0
+                self.contour.a = 0
             self.selected = select

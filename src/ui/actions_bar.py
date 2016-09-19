@@ -53,7 +53,7 @@ class ActionsBar(ScatterLayout):
             elif a.data != ActionType.EndTurn:
                 widget_data.append((index, a.data, a.data.name, None))
                 index += 1
-        count = len(widget_data) # not including the mandatory End Turn !
+        count = len(widget_data)  # not including the mandatory End Turn !
         assert(count < len(ActionsBar.__Layouts__))
         for i, w_data in enumerate(widget_data):
             index, action_type, text, rk_skill = w_data

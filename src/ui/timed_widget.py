@@ -38,7 +38,7 @@ class UnitInfoWidget(ButtonBehavior, HexWidget):
 
 
 class TimedWidgetBar(ScatterLayout):
-    Coords = [(0,0), (1,0), (1,1), (0,2), (0,3), (1,3), (1,4), (0,5), (0,6), (1,6)]
+    Coords = [(0, 0), (1, 0), (1, 1), (0, 2), (0, 3), (1, 3), (1, 4), (0, 5), (0, 6), (1, 6)]
 
     def __init__(self, **kwargs):
         super(TimedWidgetBar, self).__init__(**kwargs)

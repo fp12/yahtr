@@ -196,15 +196,17 @@ class Layout:
         r = self._orientation.b2 * pt.x + self._orientation.b3 * pt.y
         return Hex(q, r)
 
-    def hex_corner_offset(self, corner):
+    def hex_corner_offset(self, corner, add_margin=False):
         angle = (self._orientation.start_angle - corner) * _2PIdiv6
-        return Point(self._size.x * cos(angle), self._size.y * sin(angle))
+        size_x = self._size.x + self._margin if add_margin else 0
+        size_y = self._size.y + self._margin if add_margin else 0
+        return Point(size_x * cos(angle), size_y * sin(angle))
 
-    def polygon_corners(self, h):
+    def polygon_corners(self, h, add_margin=False):
         corners = []
         center = self.hex_to_pixel(h)
         for i in range(0, 6):
-            offset = self.hex_corner_offset(i)
+            offset = self.hex_corner_offset(i, add_margin)
             corners.append(Point(center.x + offset.x, center.y + offset.y))
         return corners
 
