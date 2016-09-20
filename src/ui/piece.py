@@ -117,8 +117,8 @@ class Piece(HexWidget):
             for shield_part, offset in shield_data.items():
                 shield_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
 
-    def on_unit_health_change(self, health, unit_source, skill_dir):
-        direction = (skill_dir.destination - skill_dir.origin).rotate_to(unit_source.orientation)
+    def on_unit_health_change(self, health, unit_source, hit):
+        direction = (hit.direction.destination - hit.direction.origin).rotate_to(unit_source.orientation)
         pt = self.hex_layout.hex_to_pixel(self.hex_coords + direction)
         target_pos_x = self.x + (pt.x - self.x) / 10
         target_pos_y = self.y + (pt.y - self.y) / 10
@@ -170,10 +170,10 @@ class Piece(HexWidget):
         self.current_skill = rk_skill
         for hun in rk_skill.skill.huns:
             for hit in hun.H:
-                pos = self.hex_layout.get_mid_edge_position(hit.origin, hit.destination)
+                pos = self.hex_layout.get_mid_edge_position(hit.direction.origin, hit.direction.destination)
                 x = self.x + pos.x - self.hex_layout.origin.x
                 y = self.y + pos.y - self.hex_layout.origin.y
-                arrow = ActionArrow(angle=hit.angle, pos=(x, y))
+                arrow = ActionArrow(angle=hit.direction.angle, pos=(x, y))
                 self._skill_widgets.append(arrow)
                 self.add_widget(arrow)
 

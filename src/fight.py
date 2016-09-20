@@ -15,7 +15,7 @@ class Fight():
         self.time_bar = TimeBar()
         self.started = False
         self.actions_history = []  # (unit, [ actions ])
-        self.on_action_change = Event('unit', 'action_type', 'action_node', 'skill')
+        self.on_action_change = Event('unit', 'action_type', 'action_node', 'hit')
         self.on_next_turn = Event('unit')
 
     def deploy(self, squads):
@@ -46,12 +46,14 @@ class Fight():
     def resolve_skill(self, unit, rk_skill):
         for hun_index, hun in enumerate(rk_skill.skill.huns):
             for hit_index, hit in enumerate(hun.H):
-                hit_direction = copy(hit.destination).rotate_to(unit.orientation)
+                hit_direction = copy(hit.direction.destination).rotate_to(unit.orientation)
                 hitted_tile = hit_direction + unit.hex_coords
                 hitted_unit = self.current_map.get_unit_on(hitted_tile)
                 if hitted_unit:
-                    damage = rk_skill.get_damage(hun_index, hit_index)
-                    hitted_unit.health_change(-damage, unit, hit)
+                    damage = rk_skill.get_damage(hit)
+                    if damage != 0:
+                        hitted_unit.health_change(-damage, unit, hit)
+            # here goes the hit pause
 
     def notify_action_change(self, action_type, rk_skill):
         if action_type == actions.ActionType.EndTurn:

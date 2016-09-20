@@ -1,5 +1,11 @@
+from enum import Enum
+
 import data_loader
 from hex_lib import Hex
+
+
+class Effect(Enum):
+    damage = 0
 
 
 class HexDir:
@@ -13,23 +19,18 @@ class HexDir:
         return 'From {0} To {1}'.format(self.origin, self.destination)
 
 
+class Hit:
+    def __init__(self, data):
+        self.direction = HexDir(data['dir']) if 'dir' in data else None
+        self.effects = [Effect[e] for e in data['effects']] if 'effects' in data else []
+        self.values = data.get('values', [])
+
+
 class HUN:
     def __init__(self, hun):
-        self.hits = []
-        self.unit_move = None
-        self.ennemy_moves = []
-        self.damage = []
-        if 'H' in hun:
-            for h_def in hun['H']:
-                self.hits.append(HexDir(h_def))
-        if 'U' in hun:
-            self.unit_move = HexDir(hun['U'])
-        if 'N' in hun:
-            for n_def in hun['N']:
-                self.ennemy_moves.append(HexDir(n_def))
-        if 'D' in hun:
-            for d_def in hun['D']:
-                self.damage.append(d_def)
+        self.hits = [Hit(h) for h in hun['H']] if 'H' in hun else []
+        self.unit_move = HexDir(hun['U']) if 'U' in hun else None
+        self.ennemy_moves = [HexDir(d) for d in hun['N']] if 'N' in hun else []
 
     @property
     def H(self):
@@ -43,10 +44,6 @@ class HUN:
     def N(self):
         return self.ennemy_moves
 
-    @property
-    def D(self):
-        return self.damage
-
     def __repr__(self):
         return 'Hits: {0}\n\tUnit move: {1}\n\tNMIs moves: {2}'.format(self.hits, self.unit_move, self.ennemy_moves)
 
@@ -54,10 +51,7 @@ class HUN:
 class Skill:
     def __init__(self, name, data):
         self.name = name
-        self.huns = []
-        if 'HUN' in data:
-            for hun in data['HUN']:
-                self.huns.append(HUN(hun))
+        self.huns = [HUN(hun) for hun in data['HUN']] if 'HUN' in data else []
 
     def __repr__(self):
         return 'Sk<{0}>\n\t{1}'.format(self.name, '\n\t'.join(map(repr, self.huns)))
@@ -71,10 +65,10 @@ class RankedSkill:
     def __repr__(self):
         return 'RkSk<{0}:{1}>'.format(self.skill.name, self.rank.name)
 
-    def get_damage(self, hun_index, hit_index):
-        hun = self.skill.huns[hun_index]
-        damage = hun.D[hit_index]
-        return damage[self.rank.value]
+    def get_damage(self, hit):
+        if Effect.damage in hit.effects:
+            return hit.values[self.rank.value]
+        return 0
 
 
 def load_all(root_path):
