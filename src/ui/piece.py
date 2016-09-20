@@ -1,16 +1,18 @@
 from enum import Enum
+from copy import copy
 
 from kivy.properties import NumericProperty
 from kivy.animation import Animation
 
 from ui.hex_widget import HexWidget
 from ui.tile import Tile
-from ui.action_arrow import ActionArrow
+from ui.action_widgets import ActionArrow, ActionUnitMove
 from ui.shield_widget import ShieldWidget
 from ui.contour import Contour
 from ui.colored_widget import ColoredWidget
 
 from game import game_instance
+from skill import MoveType
 from hex_lib import Hex
 import actions
 
@@ -74,6 +76,7 @@ class Piece(HexWidget):
 
         # events
         self.unit.on_health_change += self.on_unit_health_change
+        self.unit.on_skill_move += self.on_unit_skill_move
 
     def do_rotate(self):
         self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
@@ -130,8 +133,28 @@ class Piece(HexWidget):
     def hex_test(self, hex_coords):
         return self.unit.hex_test(hex_coords)
 
-    # override
+    def on_unit_skill_move(self, unit_move):
+        def on_end_skill_move(hex_coords, orientation):
+            self.hex_coords = hex_coords
+            self.unit.move_to(hex_coords, orientation)
+
+        corrected_coord = copy(unit_move.move.destination).rotate_to(self.unit.orientation)
+        end_coords = self.hex_coords + corrected_coord
+        pos = self.hex_layout.hex_to_pixel(end_coords)
+
+        anim = None
+        if unit_move.move_type == MoveType.none:
+            anim = Animation(pos=pos.tup, angle=unit_move.orientation.angle, duration=0)
+        elif unit_move.move_type == MoveType.blink:
+            anim = Animation(a=0, duration=0.1)
+            anim += Animation(pos=pos.tup, angle=self.angle + unit_move.orientation.angle, duration=0)
+            anim += Animation(a=1, duration=0.2)
+
+        anim.bind(on_complete=lambda *args: on_end_skill_move(end_coords, unit_move.orientation.destination))
+        anim.start(self)
+
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
+        """ override from HexWidget """
         if trajectory:
             self.clean_reachable_tiles()
             duration_per_tile = 0.2
@@ -142,8 +165,8 @@ class Piece(HexWidget):
             anim = Animation(duration=0)
             prev_state = self.hex_coords, self.angle
             for h in trajectory:
-                pt = self.hex_layout.hex_to_pixel(h)
-                step_anim = Animation(pos=(pt.x, pt.y), duration=duration_per_tile)
+                pos = self.hex_layout.hex_to_pixel(h)
+                step_anim = Animation(pos=pos.tup, duration=duration_per_tile)
                 prev_hex, prev_angle = prev_state
                 angle = prev_hex.angle_to_neighbour(h - prev_hex)
                 if angle != prev_angle:
@@ -167,6 +190,7 @@ class Piece(HexWidget):
         self.current_skill = None
 
     def load_skill(self, rk_skill):
+        """ /!\ Spawning widgets NOT taking piece orientation into account !!! """
         self.current_skill = rk_skill
         for hun in rk_skill.skill.huns:
             for hit in hun.H:
@@ -176,6 +200,14 @@ class Piece(HexWidget):
                 arrow = ActionArrow(angle=hit.direction.angle, pos=(x, y))
                 self._skill_widgets.append(arrow)
                 self.add_widget(arrow)
+            if hun.U:
+                end_coords = self.hex_coords + hun.U.move.destination
+                pos = self.hex_layout.hex_to_pixel(end_coords)
+
+                color = [0.05, 0.05, 0.85]  # changed with checks
+                move_indic = ActionUnitMove(angle=hun.U.orientation.angle, pos=pos.tup, color=color, size=(self.hex_layout.size.x / 2, self.hex_layout.size.y / 2))
+                self._skill_widgets.append(move_indic)
+                self.add_widget(move_indic)
 
     def display_reachable_tiles(self):
         if not self.reachable_tiles:

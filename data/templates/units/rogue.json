@@ -10,5 +10,9 @@
 	"weapons": 
 	{
 		"daggers": "B"
+	},
+	"skills":
+	{
+		"blink_stab": "C"
 	}
 }

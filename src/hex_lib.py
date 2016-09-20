@@ -131,6 +131,10 @@ class Point:
     def y(self):
         return self._y
 
+    @property
+    def tup(self):
+        return (self._x, self._y)
+
     def __str__(self):
         return 'P<{0}, {1}>'.format(self._x, self._y)
 

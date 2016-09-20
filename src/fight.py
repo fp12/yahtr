@@ -44,8 +44,8 @@ class Fight():
         self.start_turn()
 
     def resolve_skill(self, unit, rk_skill):
-        for hun_index, hun in enumerate(rk_skill.skill.huns):
-            for hit_index, hit in enumerate(hun.H):
+        for hun in rk_skill.skill.huns:
+            for hit in hun.H:
                 hit_direction = copy(hit.direction.destination).rotate_to(unit.orientation)
                 hitted_tile = hit_direction + unit.hex_coords
                 hitted_unit = self.current_map.get_unit_on(hitted_tile)
@@ -53,6 +53,8 @@ class Fight():
                     damage = rk_skill.get_damage(hit)
                     if damage != 0:
                         hitted_unit.health_change(-damage, unit, hit)
+            if hun.U:
+                unit.skill_move(hun.U)
             # here goes the hit pause
 
     def notify_action_change(self, action_type, rk_skill):

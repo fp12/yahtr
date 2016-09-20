@@ -8,6 +8,16 @@ class Effect(Enum):
     damage = 0
 
 
+class MoveCheck(Enum):
+    none = 0  # should that even exist?
+    goal_free = 1  # just making sure end point is not occupied
+
+
+class MoveType(Enum):
+    none = 0
+    blink = 1
+
+
 class HexDir:
     def __init__(self, data):
         q0, r0, q1, r1 = data
@@ -26,10 +36,18 @@ class Hit:
         self.values = data.get('values', [])
 
 
+class UnitMove:
+    def __init__(self, data):
+        self.move = HexDir(data['move']) if 'move' in data else None
+        self.orientation = HexDir(data['orientation']) if 'orientation' in data else HexDir([0, 0, 0, 1])
+        self.move_type = MoveType[data['type']] if 'type' in data else MoveType.none
+        self.check = MoveCheck[data.get('check')] if 'check' in data else MoveCheck.none
+
+
 class HUN:
     def __init__(self, hun):
         self.hits = [Hit(h) for h in hun['H']] if 'H' in hun else []
-        self.unit_move = HexDir(hun['U']) if 'U' in hun else None
+        self.unit_move = UnitMove(hun['U']) if 'U' in hun else None
         self.ennemy_moves = [HexDir(d) for d in hun['N']] if 'N' in hun else []
 
     @property

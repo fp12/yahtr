@@ -7,10 +7,7 @@
 			[
 				{ 
 					"dir": [0, 0, 0, 1],
-					"effects":
-					[
-						"damage"
-					],
+					"effects": ["damage"],
 					"values" : [25, 20, 18, 15, 10]
 				}
 			]
