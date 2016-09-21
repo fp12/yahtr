@@ -77,7 +77,8 @@ class ActionsBar(RelativeLayout):
         self._on_action_selected(index=int(key))
 
     def on_touch_down(self, touch):
-        hover_hex = self.hex_layout.pixel_to_hex(touch.pos).get_round()
+        local_pos = self.to_local(*touch.pos)
+        hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
         for child in self.children:
             if child.hex_coords == hover_hex:
                 self._on_action_selected(button=child)
