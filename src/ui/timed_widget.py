@@ -2,7 +2,7 @@ from math import sqrt
 
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.label import Label
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.behaviors import ButtonBehavior
 
 from ui.hex_widget import HexWidget
@@ -23,18 +23,15 @@ class TimedWidget(ButtonBehavior, HexWidget):
 
 
 class UnitInfoWidget(ButtonBehavior, HexWidget):
+    unit = ObjectProperty()
     Radius = TimedWidget.Radius * 3
 
     def __init__(self, **kwargs):
         super(UnitInfoWidget, self).__init__(**kwargs)
-        self.unit = None
 
     def set_unit(self, unit):
         self.unit = unit
         self.color = unit.color + [1]
-
-        self.clear_widgets()
-        self.add_widget(Label(text='[b]{0}[/b]'.format(unit.template.name), center=self.pos, halign='center', markup=True))
 
 
 class TimedWidgetBar(RelativeLayout):
@@ -48,7 +45,6 @@ class TimedWidgetBar(RelativeLayout):
         info_pos_x = self.x - UnitInfoWidget.Radius - TimedWidget.Radius / 2 - self.margin
         info_pos_y = self.y - sqrt(3) / 2 * TimedWidget.Radius
         self.info_layout = Layout(origin=(info_pos_x, info_pos_y), size=UnitInfoWidget.Radius, flat=True, margin=self.margin)
-
         self.info_widget = UnitInfoWidget(q=0, r=0, layout=self.info_layout)
         self.add_widget(self.info_widget)
 

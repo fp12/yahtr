@@ -1,0 +1,55 @@
+#:kivy 1.9.1
+
+
+<TimedWidget>:
+    canvas:
+        Color:
+            rgba: self.r, self.g, self.b, self.a
+        Mesh:
+            vertices: (self.x + self.coss[0] * self.radius, self.y + self.sins[0] * self.radius, 0, 0, self.x + self.coss[1] * self.radius, self.y + self.sins[1] * self.radius, 0, 0, self.x + self.coss[2] * self.radius, self.y + self.sins[2] * self.radius, 0, 0, self.x + self.coss[3] * self.radius, self.y + self.sins[3] * self.radius, 0, 0, self.x + self.coss[4] * self.radius, self.y + self.sins[4] * self.radius, 0, 0, self.x + self.coss[5] * self.radius, self.y + self.sins[5] * self.radius, 0, 0)
+            indices: (0, 1, 2, 3, 4, 5)
+            mode: "triangle_fan"
+    Label:
+        size: root.size
+        center: root.pos
+        text: root.UnitText
+        halign: 'center'
+        valign: 'middle'
+        color: 1, 0, 0, 1
+
+
+<UnitInfoWidget>:
+    canvas:
+        Color:
+            rgba: self.r, self.g, self.b, self.a
+        Mesh:
+            vertices: (self.x + self.coss[0] * self.radius, self.y + self.sins[0] * self.radius, 0, 0, self.x + self.coss[1] * self.radius, self.y + self.sins[1] * self.radius, 0, 0, self.x + self.coss[2] * self.radius, self.y + self.sins[2] * self.radius, 0, 0, self.x + self.coss[3] * self.radius, self.y + self.sins[3] * self.radius, 0, 0, self.x + self.coss[4] * self.radius, self.y + self.sins[4] * self.radius, 0, 0, self.x + self.coss[5] * self.radius, self.y + self.sins[5] * self.radius, 0, 0)
+            indices: (0, 1, 2, 3, 4, 5)
+            mode: "triangle_fan"
+    Label:
+        text: '[b]{0.template.name}[/b]'.format(root.unit) if root.unit else ''
+        markup: True
+        size: root.size
+        center_x: root.x
+        center_y: root.y + root.height - 10
+        font_size: '30sp'
+        halign: 'center'
+        valign: 'middle'
+        color: 1, 1, 1, 1
+    Label:
+        text: 'I:{0.initiative}\nS:{0.speed}'.format(root.unit) if root.unit else ''
+        markup: True
+        size: root.size
+        center_x: root.x - root.width + 10
+        center_y: root.y
+        halign: 'left'
+        valign: 'middle'
+        color: 1, 1, 1, 1
+    Label:
+        text: 'HP: {0.health}/{0.template.health}'.format(root.unit) if root.unit else ''
+        markup: True
+        size: root.size
+        center: root.pos
+        halign: 'center'
+        valign: 'middle'
+        color: 1, 1, 1, 1

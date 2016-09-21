@@ -1,7 +1,7 @@
 #:kivy 1.9.1
 ##:include src/ui/kv/debug.kv
 #:include src/ui/kv/piece.kv
-#:import math math
+#:include src/ui/kv/time_bar.kv
 
 
 <Tile>
@@ -37,7 +37,7 @@
         Color:
             rgba: self.r, self.g, self.b, self.a
         Mesh:
-            vertices: (self.x + math.cos(math.pi/3 * 0) * self.radius, self.y + math.sin(math.pi/3 * 0) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 1) * self.radius, self.y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * self.radius, self.y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 3) * self.radius, self.y + math.sin(math.pi/3 * 3) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 4) * self.radius, self.y + math.sin(math.pi/3 * 4) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 5) * self.radius, self.y + math.sin(math.pi/3 * 5) * self.radius, 0, 0)
+            vertices: (self.x + self.coss[0] * self.radius, self.y + self.sins[0] * self.radius, 0, 0, self.x + self.coss[1] * self.radius, self.y + self.sins[1] * self.radius, 0, 0, self.x + self.coss[2] * self.radius, self.y + self.sins[2] * self.radius, 0, 0, self.x + self.coss[3] * self.radius, self.y + self.sins[3] * self.radius, 0, 0, self.x + self.coss[4] * self.radius, self.y + self.sins[4] * self.radius, 0, 0, self.x + self.coss[5] * self.radius, self.y + self.sins[5] * self.radius, 0, 0)
             indices: (0, 1, 2, 3, 4, 5)
             mode: "triangle_fan"
     Label:
@@ -52,33 +52,6 @@
         center: root.pos
         text: root.action
         color: 1, 0, 0, 1
-
-
-<TimedWidget>:
-    canvas:
-        Color:
-            rgba: self.r, self.g, self.b, self.a
-        Mesh:
-            vertices: (self.x + math.cos(math.pi/3 * 0) * self.radius, self.y + math.sin(math.pi/3 * 0) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 1) * self.radius, self.y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * self.radius, self.y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 3) * self.radius, self.y + math.sin(math.pi/3 * 3) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 4) * self.radius, self.y + math.sin(math.pi/3 * 4) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 5) * self.radius, self.y + math.sin(math.pi/3 * 5) * self.radius, 0, 0)
-            indices: (0, 1, 2, 3, 4, 5)
-            mode: "triangle_fan"
-    Label:
-        size: root.size
-        center: root.pos
-        text: root.UnitText
-        halign: 'center'
-        valign: 'middle'
-        color: 1, 0, 0, 1
-
-
-<UnitInfoWidget>:
-    canvas:
-        Color:
-            rgba: self.r, self.g, self.b, self.a
-        Mesh:
-            vertices: (self.x + math.cos(math.pi/3 * 0) * self.radius, self.y + math.sin(math.pi/3 * 0) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 1) * self.radius, self.y + math.sin(math.pi/3 * 1) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 2) * self.radius, self.y + math.sin(math.pi/3 * 2) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 3) * self.radius, self.y + math.sin(math.pi/3 * 3) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 4) * self.radius, self.y + math.sin(math.pi/3 * 4) * self.radius, 0, 0, self.x + math.cos(math.pi/3 * 5) * self.radius, self.y + math.sin(math.pi/3 * 5) * self.radius, 0, 0)
-            indices: (0, 1, 2, 3, 4, 5)
-            mode: "triangle_fan"
 
 
 <ActionArrow>:
@@ -110,7 +83,7 @@
         Color:
             rgba: self.r, self.g, self.b, self.a
         Line:
-            points: [self.x - self.width / 2, self.y + self.height / 2, self.x, self.y + self.height * 3 / 4, self.x + self.width / 2, self.y + self.height / 2]
+            points: [self.x - self.width / 2, self.y + self.height / 2, self.x, self.y + self.height, self.x + self.width / 2, self.y + self.height / 2]
             joint: 'bevel'
             cap: 'none'
             width: 3

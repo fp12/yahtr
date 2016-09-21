@@ -61,7 +61,7 @@ class Unit:
         self._current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
 
     def skill_move(self, unit_move):
-        """ Skill move is not directly management by the unit because UI may want to do something
+        """ Skill move is not directly managed by the unit because UI may want to do something
         UI must call move_to after"""
         self.on_skill_move(unit_move)
 
