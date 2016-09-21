@@ -1,6 +1,7 @@
 from enum import Enum
 from copy import copy
 
+from kivy.app import App
 from kivy.properties import NumericProperty
 from kivy.animation import Animation
 
@@ -128,7 +129,9 @@ class Piece(HexWidget):
         duration = 0.2
         anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3)
         anim += Animation(pos=(self.x, self.y), duration=duration)
-        anim.start(self)
+
+        app = App.get_running_app()
+        app.anim_scheduler.add(anim, self, auto_start=True)
 
     def hex_test(self, hex_coords):
         return self.unit.hex_test(hex_coords)
@@ -150,8 +153,8 @@ class Piece(HexWidget):
             anim += Animation(pos=pos.tup, angle=self.angle + unit_move.orientation.angle, duration=0)
             anim += Animation(a=1, duration=0.2)
 
-        anim.bind(on_complete=lambda *args: on_end_skill_move(end_coords, unit_move.orientation.destination))
-        anim.start(self)
+        app = App.get_running_app()
+        app.anim_scheduler.add(anim, self, lambda *args: on_end_skill_move(end_coords, unit_move.orientation.destination), auto_start=True)
 
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
         """ override from HexWidget """

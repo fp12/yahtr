@@ -8,6 +8,7 @@ from kivy.core.window import Window
 from ui.game_view import GameView
 from ui.timed_widget import TimedWidgetBar
 from ui.actions_bar import ActionsBar
+from ui.anim_scheduler import AnimScheduler
 
 from game import game_instance
 from player import Player
@@ -28,6 +29,8 @@ class MainWindow(App):
         self.time_bar = None
         self.actions_bar = None
         self._key_binder = {}
+        self.anim_scheduler = AnimScheduler()
+
         Window.bind(on_key_down=self._on_keyboard_down)
 
     def on_start(self):
