@@ -1,6 +1,7 @@
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.properties import StringProperty
+from kivy.core.window import Window
 
 from ui.hex_widget import HexWidget
 
@@ -34,6 +35,7 @@ class ActionsBar(RelativeLayout):
     def __init__(self, **kwargs):
         super(ActionsBar, self).__init__(**kwargs)
         self.hex_layout = Layout(origin=self.pos, size=40, flat=True, margin=1)
+        Window.bind(mouse_pos=self.on_mouse_pos)
 
     def create(self):
         game_instance.current_fight.on_next_turn += lambda unit: self.on_new_action(unit, None, unit.actions_tree)
@@ -82,5 +84,17 @@ class ActionsBar(RelativeLayout):
         for child in self.children:
             if child.hex_coords == hover_hex:
                 self._on_action_selected(button=child)
+                return True
+        return False
+
+    def on_mouse_pos(self, stuff, pos):
+        # do proceed if not displayed and/or no parent
+        if not self.get_root_window():
+            return False
+
+        local_pos = self.to_local(*pos)
+        hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
+        for child in self.children:
+            if child.hex_coords == hover_hex:
                 return True
         return False

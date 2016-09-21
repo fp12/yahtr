@@ -19,15 +19,11 @@ class Contour(ColoredWidget):
                     corner2 = corners[corrected_index2] - self.hex_layout.origin
                     edges_points.update({corner1: corner2})
 
-        # print(edges_points)
         step = 0
         self.lines = []
         current_point = None
         current_line = []
         while len(edges_points) > 0:
-            # print('Step#{0}\ncurrent_point={1}\ncurrent_line={2}'.format(step, current_point, current_line))
-            # print('current_point in edges_points={0} ({1})'.format(current_point in edges_points, edges_points.keys()))
-            # assert(not current_point or current_point in edges_points)
             if not current_point:
                 if current_line:
                     current_line.append(current_line[0])
@@ -70,7 +66,6 @@ class Contour(ColoredWidget):
                 Line(points=points, width=3, joint='bevel')
 
     def on_pos(self, *args):
-        # do proceed if not displayed and/or no parent
         if not self.get_root_window():
             return False
         self.redraw()

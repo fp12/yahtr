@@ -4,6 +4,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.label import Label
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.behaviors import ButtonBehavior
+from kivy.core.window import Window
 
 from ui.hex_widget import HexWidget
 
@@ -13,6 +14,9 @@ from hex_lib import Layout
 
 class TimedWidget(ButtonBehavior, HexWidget):
     UnitText = StringProperty()
+    unit = ObjectProperty(None)
+    selector = ObjectProperty(None)
+
     Radius = 40
 
     def __init__(self, unit, prio, **kwargs):
@@ -23,11 +27,10 @@ class TimedWidget(ButtonBehavior, HexWidget):
 
 
 class UnitInfoWidget(ButtonBehavior, HexWidget):
-    unit = ObjectProperty()
-    Radius = TimedWidget.Radius * 3
+    unit = ObjectProperty(None)
+    selector = ObjectProperty(None)
 
-    def __init__(self, **kwargs):
-        super(UnitInfoWidget, self).__init__(**kwargs)
+    Radius = TimedWidget.Radius * 3
 
     def set_unit(self, unit):
         self.unit = unit
@@ -47,6 +50,10 @@ class TimedWidgetBar(RelativeLayout):
         self.info_layout = Layout(origin=(info_pos_x, info_pos_y), size=UnitInfoWidget.Radius, flat=True, margin=self.margin)
         self.info_widget = UnitInfoWidget(q=0, r=0, layout=self.info_layout)
         self.add_widget(self.info_widget)
+
+        self.last_hovered_unit = None
+
+        Window.bind(mouse_pos=self.on_mouse_pos)
 
     def get_pos_for_actions_bar(self):
         return (self.info_layout.origin.x - self.margin, self.y)
@@ -68,3 +75,29 @@ class TimedWidgetBar(RelativeLayout):
                 q, r = TimedWidgetBar.Coords[index - 1]
                 new_widget = TimedWidget(unit, priority, q=q, r=r, layout=self.hex_layout)
                 self.add_widget(new_widget)
+
+    def on_mouse_pos(self, stuff, pos):
+        # do proceed if not displayed and/or no parent
+        if not self.get_root_window():
+            return False
+
+        local_pos = self.to_local(*pos)
+        hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
+        hovered_unit = None
+        for child in self.children:
+            if child.hex_coords == hover_hex:
+                hovered_unit = child.unit
+                break
+        if not hovered_unit:
+            hover_hex = self.info_layout.pixel_to_hex(local_pos).get_round()
+            if hover_hex == (0, 0):
+                hovered_unit = self.info_widget.unit
+        if hovered_unit != self.last_hovered_unit:
+            for child in self.children:
+                if child.unit == hovered_unit:
+                    child.selector.a = 1
+                else:
+                    child.selector.a = 0
+            self.last_hovered_unit = hovered_unit
+            return True
+        return False

@@ -12,13 +12,19 @@ class HexWidget(ColoredWidget):
     coss = ListProperty([cos(pi / 3 * i) for i in range(6)])
     sins = ListProperty([sin(pi / 3 * i) for i in range(6)])
 
-    def __init__(self, q, r, layout, radius=None, **kwargs):
+    def __init__(self, q=0, r=0, layout=None, radius=None, **kwargs):
         self.hex_coords = Hex(q, r)
         self.hex_layout = layout
-        self.radius = radius or layout.size.x
+        self.radius = radius or layout.size.x if layout else 0
 
-        hex_pos = layout.hex_to_pixel(self.hex_coords)
-        super(HexWidget, self).__init__(pos=(hex_pos.x, hex_pos.y), size_hint=(None, None), **kwargs)
+        super(HexWidget, self).__init__(size_hint=(None, None), **kwargs)
+        self.pos = layout.hex_to_pixel(self.hex_coords).tup if layout and self.hex_coords else self.pos
+
+    def setup(self, q, r, layout, radius=None):
+        self.hex_coords = Hex(q, r)
+        self.hex_layout = layout
+        self.radius = radius or layout.size.x if layout else 0
+        self.pos = layout.hex_to_pixel(self.hex_coords)
 
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
         self.hex_coords = hex_coords

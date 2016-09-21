@@ -7,8 +7,8 @@ from ui.hex_widget import HexWidget
 class Selector(HexWidget):
     margin = NumericProperty(2)
 
-    def __init__(self, margin=None, **kwargs):
-        super(Selector, self).__init__(**kwargs)
+    def setup(self, q, r, layout, radius=None):
+        super(Selector, self).setup(q, r, layout, radius)
         self.margin = margin or self.hex_layout.margin
         self.animate()
 
