@@ -64,13 +64,14 @@ class MainWindow(App):
         w12 = p1.add_weapon('default_spear')
         w21 = p2.add_weapon('default_daggers')
         w22 = p2.add_weapon('default_sword')
+        w31 = p1.add_weapon('default_scythe')
 
-        u11 = Unit(game_instance.get_unit_template('mounted_knight'))
+        u11 = Unit(game_instance.get_unit_template('reaper'))
         u12 = Unit(game_instance.get_unit_template('lancer'))
         u21 = Unit(game_instance.get_unit_template('rogue'))
         u22 = Unit(game_instance.get_unit_template('boss'))
 
-        u11.equip(w11)
+        u11.equip(w31)
         u12.equip(w12)
         u21.equip(w21)
         u22.equip(w22)

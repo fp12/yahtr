@@ -1,22 +1,21 @@
-from collections import deque
-import threading
-
 from kivy.clock import mainthread
+
+from utils import EqualPriorityQueue
 
 
 class AnimScheduler:
     """Anims may need to be scheduled in some occasions like when resolving skills effects"""
 
     def __init__(self):
-        self.anims = deque([])
+        self.anims = EqualPriorityQueue()
         self.animation_pending = False
         self.thread_event = None
 
     def ready_to_start(self):
-        return not self.animation_pending and len(self.anims) > 0
+        return not self.animation_pending and not self.anims.empty()
 
-    def add(self, anim, widget, on_end=None):
-        self.anims.append((anim, widget, on_end))
+    def add(self, anim, widget, priority, on_end=None):
+        self.anims.put((anim, widget, on_end), priority)
 
     def _on_end(self, external_cb=None, *args):
         if external_cb:
@@ -24,10 +23,11 @@ class AnimScheduler:
         self._start()
 
     def _start(self):
-        if len(self.anims) > 0:
-            anim, widget, on_end = self.anims.popleft()
-            anim.bind(on_complete=lambda *args: self._on_end(on_end, *args))
-            anim.start(widget)
+        if not self.anims.empty():
+            anims = self.anims.get()
+            for anim, widget, on_end in anims:
+                anim.bind(on_complete=lambda *args: self._on_end(on_end, *args))
+                anim.start(widget)
         else:
             self.animation_pending = False
             self.thread_event.set()

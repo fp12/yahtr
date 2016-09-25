@@ -34,6 +34,7 @@ class Hit:
         self.direction = HexDir(data['dir']) if 'dir' in data else None
         self.effects = [Effect[e] for e in data['effects']] if 'effects' in data else []
         self.values = data.get('values', [])
+        self.order = data['order'] if 'order' in data else 0
 
 
 class UnitMove:
@@ -42,6 +43,7 @@ class UnitMove:
         self.orientation = HexDir(data['orientation']) if 'orientation' in data else HexDir([0, 0, 0, 1])
         self.move_type = MoveType[data['type']] if 'type' in data else MoveType.none
         self.check = MoveCheck[data.get('check')] if 'check' in data else MoveCheck.none
+        self.order = data['order'] if 'order' in data else 0
 
 
 class HUN:

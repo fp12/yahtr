@@ -8,15 +8,17 @@
 				{ 
 					"dir": [0, 2, 0, 1],
 					"effects": ["damage"],
-					"values" : [25, 20, 18, 15, 10]
+					"values": [25, 20, 18, 15, 10],
+					"order": 1
 				}
 			],
 			"U": 
 			{
-				"move" : [0, 0, 0, 2],
+				"move": [0, 0, 0, 2],
 				"orientation" : [0, 0, 0, -1],
 				"type": "blink",
-				"check" : "goal_free"				
+				"check": "goal_free",
+				"order": 0
 			}
 		}
 	]

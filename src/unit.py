@@ -41,6 +41,8 @@ class Unit:
         self.equipped_weapons = []
         self.owner = None
         self._current_shape = []
+        if not self.shields:
+            self.shields = [0 for _ in range(6)]
 
         # events
         self.on_health_change = Event('health', 'unit_source', 'skill_dir')

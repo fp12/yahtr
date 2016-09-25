@@ -12,5 +12,4 @@ def copy_from_instance(a, b, *args):
 
 def get_from_dict(a, data, *args):
     for arg in args:
-        if arg in data:
-            setattr(a, arg, data[arg])
+        setattr(a, arg, data[arg] if arg in data else None)
