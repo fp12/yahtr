@@ -1,9 +1,10 @@
+import threading
 from copy import copy
 
 from game_map import Map
 from time_bar import TimeBar
 import actions
-from utils.event import Event
+from utils.event import Event, UniqueEvent
 import tie
 
 
@@ -15,8 +16,19 @@ class Fight():
         self.time_bar = TimeBar()
         self.started = False
         self.actions_history = []  # (unit, [ actions ])
+        self.thread_event = ()  # (threading.Event, callback)
+
+        # events
         self.on_action_change = Event('unit', 'action_type', 'action_node', 'hit')
         self.on_next_turn = Event('unit')
+        self.on_skill_turn = UniqueEvent()
+
+    def update(self, *args):
+        if self.thread_event:
+            evt, cb = self.thread_event
+            if evt.is_set():
+                cb()
+                self.thread_event = ()
 
     def deploy(self, squads):
         for squad_owner, units in squads.items():
@@ -43,6 +55,15 @@ class Fight():
         self.time_bar.next()
         self.start_turn()
 
+    def _end_action_end(self, unit, history):
+        new_action = unit.actions_tree.get_node_from_history(history)
+        if new_action.default.data == actions.ActionType.EndTurn:
+            self.end_turn()
+        else:
+            rk_skills = unit.get_skills(new_action.default.data)
+            rk_skill = rk_skills[0] if rk_skills else None
+            self.on_action_change(unit, new_action.default.data, new_action, rk_skill)
+
     def resolve_skill(self, unit, rk_skill):
         for hun in rk_skill.skill.huns:
             if hun.U:
@@ -56,7 +77,12 @@ class Fight():
                     damage = rk_skill.get_damage(hit)
                     if damage != 0:
                         hitted_unit.health_change(-damage, unit, hit)
-            # here goes the hit pause
+
+            ui_thread_event = self.on_skill_turn()
+            if ui_thread_event:
+                ui_thread_event.wait()
+
+        self.thread_event[0].set()
 
     def notify_action_change(self, action_type, rk_skill):
         if action_type == actions.ActionType.EndTurn:
@@ -71,15 +97,13 @@ class Fight():
     def notify_action_end(self, action_type, rk_skill=None):
         unit, history = self.actions_history[-1]
         history.append(action_type)
+
+        self.thread_event = (threading.Event(), lambda: self._end_action_end(unit, history))
         if rk_skill:
-            self.resolve_skill(unit, rk_skill)
-        new_action = unit.actions_tree.get_node_from_history(history)
-        if new_action.default.data == actions.ActionType.EndTurn:
-            self.end_turn()
+            skill_thread = threading.Thread(target=self.resolve_skill, args=(unit, rk_skill))
+            skill_thread.start()
         else:
-            rk_skills = unit.get_skills(new_action.default.data)
-            rk_skill = rk_skills[0] if rk_skills else None
-            self.on_action_change(unit, new_action.default.data, new_action, rk_skill)
+            self.thread_event[0].set()
 
     def set_tie(self, p1, p2, tie_type):
         for t in self.ties:

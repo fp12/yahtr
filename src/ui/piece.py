@@ -131,7 +131,7 @@ class Piece(HexWidget):
         anim += Animation(pos=(self.x, self.y), duration=duration)
 
         app = App.get_running_app()
-        app.anim_scheduler.add(anim, self, auto_start=True)
+        app.anim_scheduler.add(anim, self)
 
     def hex_test(self, hex_coords):
         return self.unit.hex_test(hex_coords)
@@ -154,7 +154,7 @@ class Piece(HexWidget):
             anim += Animation(a=1, duration=0.2)
 
         app = App.get_running_app()
-        app.anim_scheduler.add(anim, self, lambda *args: on_end_skill_move(end_coords, unit_move.orientation.destination), auto_start=True)
+        app.anim_scheduler.add(anim, self, lambda *args: on_end_skill_move(end_coords, unit_move.orientation.destination))
 
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
         """ override from HexWidget """

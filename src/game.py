@@ -25,6 +25,10 @@ class Game():
         print(added, changed, removed)
         # print(self._classes.classes)
 
+    def update(self, *args):
+        if self.current_fight:
+            self.current_fight.update(*args)
+
     def register_player(self, player):
         self.players.append(player)
 

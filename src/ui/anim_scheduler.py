@@ -1,4 +1,7 @@
 from collections import deque
+import threading
+
+from kivy.clock import mainthread
 
 
 class AnimScheduler:
@@ -7,22 +10,31 @@ class AnimScheduler:
     def __init__(self):
         self.anims = deque([])
         self.animation_pending = False
+        self.thread_event = None
 
-    def add(self, anim, widget, on_end=None, auto_start=False):
+    def ready_to_start(self):
+        return not self.animation_pending and len(self.anims) > 0
+
+    def add(self, anim, widget, on_end=None):
         self.anims.append((anim, widget, on_end))
-        if auto_start and not self.animation_pending:
-            self.start()
 
-    def _on_end(self, external_cb, *args):
-        self.animation_pending = False
+    def _on_end(self, external_cb=None, *args):
         if external_cb:
             external_cb()
-        self.start()
+        self._start()
 
-    def start(self):
-        assert(not self.animation_pending)
+    def _start(self):
         if len(self.anims) > 0:
-            self.animation_pending = True
             anim, widget, on_end = self.anims.popleft()
             anim.bind(on_complete=lambda *args: self._on_end(on_end, *args))
             anim.start(widget)
+        else:
+            self.animation_pending = False
+            self.thread_event.set()
+
+    @mainthread
+    def start(self, thread_event):
+        assert(not self.animation_pending)
+        self.animation_pending = True
+        self.thread_event = thread_event
+        self._start()

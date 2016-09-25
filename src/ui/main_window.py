@@ -1,9 +1,11 @@
 from collections import OrderedDict
+import threading
 
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.core.window import Window
+from kivy.clock import Clock
 
 from ui.game_view import GameView
 from ui.timed_widget import TimedWidgetBar
@@ -50,8 +52,11 @@ class MainWindow(App):
         # prepare fight
         p1 = Player(game_instance, 'Player 1')
         p2 = Player(game_instance, 'Player 2')
+
         game_instance.prepare_new_fight(fight_map='hexagon_default', players=[p1, p2])
         game_instance.current_fight.set_tie(p1, p2, tie.Type.Enemy)
+        game_instance.current_fight.on_skill_turn += self.on_fight_skill_turn
+        
         self.game_view.load_map()
 
         # deployment
@@ -103,6 +108,15 @@ class MainWindow(App):
                                  })
 
         game_instance.current_fight.start()
+
+        Clock.schedule_interval(game_instance.update, 1 / 30.)
+
+    def on_fight_skill_turn(self):
+        if self.anim_scheduler.ready_to_start():
+            event = threading.Event()
+            self.anim_scheduler.start(event)
+            return event
+        return None
 
     def build(self):
         self.layout = FloatLayout()
