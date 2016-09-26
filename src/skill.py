@@ -16,6 +16,7 @@ class MoveCheck(Enum):
 class MoveType(Enum):
     none = 0
     blink = 1
+    pushed = 2
 
 
 class HexDir:
@@ -40,7 +41,7 @@ class Hit:
 class UnitMove:
     def __init__(self, data):
         self.move = HexDir(data['move']) if 'move' in data else None
-        self.orientation = HexDir(data['orientation']) if 'orientation' in data else HexDir([0, 0, 0, 1])
+        self.orientation = HexDir(data['orientation']) if 'orientation' in data else None
         self.move_type = MoveType[data['type']] if 'type' in data else MoveType.none
         self.check = MoveCheck[data.get('check')] if 'check' in data else MoveCheck.none
         self.order = data['order'] if 'order' in data else 0
@@ -50,7 +51,7 @@ class HUN:
     def __init__(self, hun):
         self.hits = [Hit(h) for h in hun['H']] if 'H' in hun else []
         self.unit_move = UnitMove(hun['U']) if 'U' in hun else None
-        self.ennemy_moves = [HexDir(d) for d in hun['N']] if 'N' in hun else []
+        self.ennemy_moves = [UnitMove(m) for m in hun['N']] if 'N' in hun else []
 
     @property
     def H(self):

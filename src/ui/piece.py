@@ -7,10 +7,10 @@ from kivy.animation import Animation
 
 from ui.hex_widget import HexWidget
 from ui.tile import Tile
-from ui.action_widgets import ActionArrow, ActionUnitMove
+from ui.action_widgets import ActionArrow, ActionUnitMove, ActionNMIMove
 from ui.shield_widget import ShieldWidget
 from ui.contour import Contour
-from ui.colored_widget import ColoredWidget
+from ui.colored_widget import AngledColoredWidget
 
 from game import game_instance
 from skill import MoveType
@@ -27,8 +27,8 @@ class PieceBody(HexWidget):
     pass
 
 
-class PieceInterBody(ColoredWidget):
-    angle = NumericProperty(0)
+class PieceInterBody(AngledColoredWidget):
+    pass
 
 
 class Piece(HexWidget):
@@ -133,17 +133,16 @@ class Piece(HexWidget):
         app = App.get_running_app()
         app.anim_scheduler.add(anim, self, hit.order)
 
-    def hex_test(self, hex_coords):
-        return self.unit.hex_test(hex_coords)
-
-    def on_unit_skill_move(self, unit_move):
+    def on_unit_skill_move(self, unit_move, unit):
         def on_end_skill_move(hex_coords, orientation):
             self.hex_coords = hex_coords
             self.unit.move_to(hex_coords, orientation)
 
-        corrected_coord = copy(unit_move.move.destination).rotate_to(self.unit.orientation)
-        end_coords = self.hex_coords + corrected_coord
+        unit_orientation = unit.orientation if unit else self.unit.orientation
+        corrected_coords = copy(unit_move.move.destination).rotate_to(unit_orientation)
+        end_coords = (unit.hex_coords if unit else self.hex_coords) + corrected_coords
         pos = self.hex_layout.hex_to_pixel(end_coords)
+        end_orientation = unit_move.orientation.destination if unit_move.orientation else unit_orientation
 
         anim = None
         if unit_move.move_type == MoveType.none:
@@ -152,9 +151,11 @@ class Piece(HexWidget):
             anim = Animation(a=0, duration=0.1)
             anim += Animation(pos=pos.tup, angle=self.angle + unit_move.orientation.angle, duration=0)
             anim += Animation(a=1, duration=0.2)
+        elif unit_move.move_type == MoveType.pushed:
+            anim = Animation(pos=pos.tup, duration=0.3, t='out_back')
 
         app = App.get_running_app()
-        app.anim_scheduler.add(anim, self, unit_move.order, lambda *args: on_end_skill_move(end_coords, unit_move.orientation.destination))
+        app.anim_scheduler.add(anim, self, unit_move.order, lambda *args: on_end_skill_move(end_coords, end_orientation))
 
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
         """ override from HexWidget """
@@ -183,6 +184,9 @@ class Piece(HexWidget):
         else:
             super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
 
+    def hex_test(self, hex_coords):
+        return self.unit.hex_test(hex_coords)
+
     def load(self):
         self.update_shields()
 
@@ -208,7 +212,24 @@ class Piece(HexWidget):
                 pos = self.hex_layout.hex_to_pixel(end_coords)
 
                 color = [0.05, 0.05, 0.85]  # changed with checks
-                move_indic = ActionUnitMove(angle=hun.U.orientation.angle, pos=pos.tup, color=color, size=(self.hex_layout.size.x / 2, self.hex_layout.size.y / 2))
+                move_indic = ActionUnitMove(angle=hun.U.orientation.angle,
+                                            pos=pos.tup,
+                                            color=color,
+                                            size=(self.hex_layout.size.x / 2, self.hex_layout.size.y / 2))
+                self._skill_widgets.append(move_indic)
+                self.add_widget(move_indic)
+            for move_info in hun.N:
+                origin_coords = self.hex_coords + move_info.move.origin
+                origin_pos = self.hex_layout.hex_to_pixel(origin_coords)
+                end_coords = self.hex_coords + move_info.move.destination
+                end_pos = self.hex_layout.hex_to_pixel(end_coords)
+
+                color = [0.85, 0.05, 0.05]  # changed with checks
+                move_indic = ActionNMIMove(angle=0,
+                                           pos=end_pos.tup,
+                                           origin_x=origin_pos.x, origin_y=origin_pos.y,
+                                           color=color,
+                                           size=(self.hex_layout.size.x / 2, self.hex_layout.size.y / 2))
                 self._skill_widgets.append(move_indic)
                 self.add_widget(move_indic)
 

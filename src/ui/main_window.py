@@ -67,12 +67,12 @@ class MainWindow(App):
         w31 = p1.add_weapon('default_scythe')
 
         u11 = Unit(game_instance.get_unit_template('reaper'))
-        u12 = Unit(game_instance.get_unit_template('lancer'))
+        u12 = Unit(game_instance.get_unit_template('guard'))
         u21 = Unit(game_instance.get_unit_template('rogue'))
         u22 = Unit(game_instance.get_unit_template('boss'))
 
         u11.equip(w31)
-        u12.equip(w12)
+        u12.equip(w11)
         u21.equip(w21)
         u22.equip(w22)
 

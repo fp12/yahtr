@@ -2,6 +2,7 @@
 ##:include src/ui/kv/debug.kv
 #:include src/ui/kv/piece.kv
 #:include src/ui/kv/time_bar.kv
+#:include src/ui/kv/action_widgets.kv
 
 
 <Tile>
@@ -52,44 +53,3 @@
         center: root.pos
         text: root.action
         color: 1, 0, 0, 1
-
-
-<ActionArrow>:
-    canvas:
-        Color:
-            rgba: self.r, self.g, self.b, self.a
-        Line:
-            points: [self.x, self.y-20, self.x, self.y+10, self.x-10, self.y, self.x+10, self.y, self.x, self.y+10]
-            joint: 'round'
-            cap: 'none'
-            width: 3
-            close: False
-    canvas.before:
-        PushMatrix
-        Rotate:
-            angle: self.angle
-            origin: self.pos
-    canvas.after:
-        PopMatrix   
-
-
-<ActionUnitMove>:
-    canvas.before:
-        PushMatrix
-        Rotate:
-            angle: self.angle
-            origin: self.pos
-    canvas:
-        Color:
-            rgba: self.r, self.g, self.b, self.a
-        Line:
-            points: [self.x - self.width / 2, self.y + self.height / 2, self.x, self.y + self.height, self.x + self.width / 2, self.y + self.height / 2]
-            joint: 'bevel'
-            cap: 'none'
-            width: 3
-            close: False
-        Ellipse:
-            size: self.size
-            pos: (self.x - self.width / 2, self.y - self.height / 2)
-    canvas.after:
-        PopMatrix

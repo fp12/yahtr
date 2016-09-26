@@ -36,3 +36,7 @@ class ColoredWidget(Widget):
 
     def hide(self, do_hide=True):
         self.a = 0 if do_hide else 1
+
+
+class AngledColoredWidget(ColoredWidget):
+    angle = NumericProperty(0)

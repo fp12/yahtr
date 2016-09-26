@@ -65,10 +65,8 @@ class Fight():
             self.on_action_change(unit, new_action.default.data, new_action, rk_skill)
 
     def resolve_skill(self, unit, rk_skill):
+        """ Notes: NOT executed on main thread """
         for hun in rk_skill.skill.huns:
-            if hun.U:
-                unit.skill_move(hun.U)
-
             for hit in hun.H:
                 hit_direction = copy(hit.direction.destination).rotate_to(unit.orientation)
                 hitted_tile = hit_direction + unit.hex_coords
@@ -77,6 +75,16 @@ class Fight():
                     damage = rk_skill.get_damage(hit)
                     if damage != 0:
                         hitted_unit.health_change(-damage, unit, hit)
+
+            if hun.U:
+                unit.skill_move(hun.U)
+
+            for move_info in hun.N:
+                move_origin = copy(move_info.move.origin).rotate_to(unit.orientation)
+                move_on_tile = move_origin + unit.hex_coords
+                moved_unit = self.current_map.get_unit_on(move_on_tile)
+                if moved_unit:
+                    moved_unit.skill_move(move_info, unit)
 
             ui_thread_event = self.on_skill_turn()
             if ui_thread_event:

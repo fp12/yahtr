@@ -40,17 +40,13 @@ class Unit:
         self.orientation = None
         self.equipped_weapons = []
         self.owner = None
-        self._current_shape = []
+        self.current_shape = []
         if not self.shields:
             self.shields = [0 for _ in range(6)]
 
         # events
         self.on_health_change = Event('health', 'unit_source', 'skill_dir')
-        self.on_skill_move = Event('skill_move')
-
-    @property
-    def current_shape(self):
-        return self._current_shape
+        self.on_skill_move = Event('skill_move', 'unit')
 
     def __repr__(self):
         return 'U<{0}>'.format(self.template.name)
@@ -60,12 +56,12 @@ class Unit:
             self.hex_coords = hex_coords
         if orientation:
             self.orientation = orientation
-        self._current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
+        self.current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
 
-    def skill_move(self, unit_move):
+    def skill_move(self, unit_move, unit=None):
         """ Skill move is not directly managed by the unit because UI may want to do something
         UI must call move_to after"""
-        self.on_skill_move(unit_move)
+        self.on_skill_move(unit_move, unit)
 
     def equip(self, weapon):
         if weapon.wp_type.name in self.template.weapons:
