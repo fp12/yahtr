@@ -145,13 +145,25 @@ class Point:
         return hash(str(self))
 
     def __eq__(self, other):
-        other = other if type(other) is Point else Point(*other)
+        other = other if isinstance(other, Point) else Point(*other)
         return self._x == other.x and self._y == other.y
 
+    def __add__(self, other):
+        other = other if isinstance(other, Point) else Point(*other)
+        return Point(self._x + other.x, self._y + other.y)
+
+    def __iadd__(self, other):
+        other = other if isinstance(other, Point) else Point(*other)
+        self._x += other.x
+        self._y += other.y
+        return self
+
     def __sub__(self, other):
+        other = other if isinstance(other, Point) else Point(*other)
         return Point(self._x - other.x, self._y - other.y)
 
     def __isub__(self, other):
+        other = other if isinstance(other, Point) else Point(*other)
         self._x -= other.x
         self._y -= other.y
         return self

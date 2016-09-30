@@ -9,5 +9,17 @@
 		[1, 0],
 		[2, -1],
 		[2, -2]
+	],
+	"walls":
+	[
+		{
+			"origin": [0, 0],
+			"destination": [0, 1],
+			"type": ["breakable"]
+		},
+		{
+			"origin": [0, 0],
+			"destination": [-1, 1]
+		}
 	]
 }

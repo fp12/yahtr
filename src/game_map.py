@@ -16,6 +16,21 @@ class MapType(Enum):
     Rectangle = 4
 
 
+class WallType(Enum):
+    breakable = 0
+
+
+class Wall:
+    def __init__(self, data):
+        self.origin = Hex(qrs=data['origin'])
+        self.destination = Hex(qrs=data['destination'])
+        self.types = [WallType[d] for d in data['type']] if 'type' in data else []
+
+    def __eq__(self, other):
+        o1, o2 = other
+        return (o1 == self.origin and o2 == self.destination) or (o1 == self.destination and o2 == self.origin)
+
+
 class Map():
     def __init__(self, fight, name):
         self.fight = fight
@@ -37,6 +52,7 @@ class Map():
             self.get_tiles = self._get_tiles_rectangle
 
         self.holes = data['holes'] if 'holes' in data else None
+        self.walls = [Wall(d) for d in data['walls']] if 'walls' in data else []
         self.tiles = []  # lazy loaded
         self.units = []  # ref
 
@@ -47,6 +63,9 @@ class Map():
         if self.holes and [q, r] in self.holes:
             return False
         return True
+
+    def has_wall_between(self, origin, destination):
+        return (origin, destination) in self.walls
 
     def _get_tiles_parallelogram(self):
         if self.tiles:
@@ -105,6 +124,9 @@ class Map():
             if u != unit:
                 units_hexes.extend(u.current_shape)
         for neighbour in hex_coords.get_neighbours():
+            if self.has_wall_between(hex_coords, neighbour):
+                break
+
             orientation = neighbour - hex_coords
             shape_can_fit = True
             for shape_part in unit.calc_shape_at(neighbour, orientation):

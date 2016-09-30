@@ -202,9 +202,9 @@ class Piece(HexWidget):
         for hun in rk_skill.skill.huns:
             for hit in hun.H:
                 pos = self.hex_layout.get_mid_edge_position(hit.direction.origin, hit.direction.destination)
-                x = self.x + pos.x - self.hex_layout.origin.x
-                y = self.y + pos.y - self.hex_layout.origin.y
-                arrow = ActionArrow(angle=hit.direction.angle, pos=(x, y))
+                pos -= self.hex_layout.origin
+                pos += self.pos
+                arrow = ActionArrow(angle=hit.direction.angle, pos=pos.tup)
                 self._skill_widgets.append(arrow)
                 self.add_widget(arrow)
             if hun.U:

@@ -21,7 +21,23 @@
         color: 1, 0, 0, 1
 
 
-<Selector>:
+<WallWidget>
+    canvas.before:
+        PushMatrix
+        Rotate:
+            angle: self.angle
+            origin: self.pos
+    canvas:
+        Color:
+            rgba: self.r, self.g, self.b, self.a
+        Rectangle:
+            pos: (self.x - self.width / 2, self.y - self.height / 2)
+            size: self.size
+    canvas.after:
+        PopMatrix
+
+
+<Selector>
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a
@@ -33,7 +49,7 @@
             close: True
 
 
-<UnitActionTile>:
+<UnitActionTile>
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a

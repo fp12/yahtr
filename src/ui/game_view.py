@@ -5,10 +5,15 @@ from ui.tile import Tile
 from ui.piece import Piece, Status
 from ui.selector import Selector
 from ui.trajectory import Trajectory
+from ui.colored_widget import AngledColoredWidget
 
 from hex_lib import Layout
 from game import game_instance
 from actions import ActionType
+
+
+class WallWidget(AngledColoredWidget):
+    pass
 
 
 class GameView(ScatterLayout):
@@ -21,6 +26,7 @@ class GameView(ScatterLayout):
         self.piece = None
         self.pieces = []
         self.tiles = []
+        self.walls = []
         self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=[0.560784, 0.737255, 0.560784, 0.5])
         self.trajectory = Trajectory(color=[0, 0.392157, 0, 0.5])
         self.current_action = None
@@ -31,6 +37,14 @@ class GameView(ScatterLayout):
             tile = Tile(q, r, layout=self.hex_layout, color=[0.8, 0.8, 0.8, 0.4], size=(self.hex_radius, self.hex_radius))
             self.add_widget(tile)
             self.tiles.append(tile)
+
+        for w in game_instance.current_fight.current_map.walls:
+            pos = self.hex_layout.get_mid_edge_position(w.origin, w.destination)
+            angle = w.origin.angle_to_neighbour(w.destination - w.origin)
+            wall = WallWidget(pos=pos.tup, angle=angle, size_hint=(None, None), size=(self.hex_radius * 2 / 3., self.hex_margin * 3), color=[0.9, 0.9, 0.9, 0.9])
+            self.add_widget(wall)
+            self.walls.append(wall)
+
         self.add_widget(self.selector)
         self.add_widget(self.trajectory)
 
