@@ -118,13 +118,13 @@ class GameView(ScatterLayout):
             piece_hovered.on_hovered_in()
         game_instance.current_fight.notify_action_end(ActionType.Move)
 
-    def on_mouse_pos(self, stuff, pos):
-        # do proceed if not displayed and/or no parent
+    def on_mouse_pos(self, *args):
         if not self.get_root_window():
             return False
 
         # get rounded hex coordinates and do nothing if we didn't change hex
-        hover_hex = self.hex_layout.pixel_to_hex(pos).get_round()
+        local_pos = self.to_local(*args[1])
+        hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
         if not self.selector.hidden and self.selector.hex_coords == hover_hex:
             return False
 
@@ -163,6 +163,17 @@ class GameView(ScatterLayout):
             return False
 
     def on_touch_down(self, touch):
+        ret = super(GameView, self).on_touch_down(touch)
+        touch.ud['frame_count'] = 1
+        return ret
+
+    def on_touch_up(self, touch):
+        if touch.grab_current is not self:
+            return super(GameView, self).on_touch_up(touch)
+
+        if touch.ud['frame_count'] > 2:
+            return
+
         piece_selected = self.get_selected_piece()
         if piece_selected and self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill]:
             game_instance.current_fight.notify_action_end(self.current_action, piece_selected.current_skill)
@@ -178,4 +189,14 @@ class GameView(ScatterLayout):
             if piece_selected and tile_touched and piece_selected.is_in_move_range(self.selector.hex_coords):
                 self.trajectory.hide()
                 piece_selected.move_to(self.selector.hex_coords, trajectory=self.trajectory.steps, on_move_end=self.on_piece_move_end)
-            return True
+                return True
+
+        return super(GameView, self).on_touch_up(touch)
+
+    def on_touch_move(self, touch):
+        if touch.grab_current is not self:
+            return super(GameView, self).on_touch_move(touch)
+
+        touch.ud['frame_count'] += 1
+        self.x += touch.dx
+        self.y += touch.dy

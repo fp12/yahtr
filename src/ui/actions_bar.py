@@ -85,10 +85,9 @@ class ActionsBar(RelativeLayout):
             if child.hex_coords == hover_hex:
                 self._on_action_selected(button=child)
                 return True
-        return False
+        return super(ActionsBar, self).on_touch_down(touch)
 
     def on_mouse_pos(self, stuff, pos):
-        # do proceed if not displayed and/or no parent
         if not self.get_root_window():
             return False
 

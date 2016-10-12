@@ -22,7 +22,7 @@ class TimedWidget(ButtonBehavior, HexWidget):
     def __init__(self, unit, prio, **kwargs):
         super(TimedWidget, self).__init__(**kwargs)
         self.unit = unit
-        self.color = unit.color + [1]
+        self.color = unit.color
         self.UnitText = '{0}\n({1})'.format(self.unit.template.name, prio)
 
 
@@ -34,7 +34,7 @@ class UnitInfoWidget(ButtonBehavior, HexWidget):
 
     def set_unit(self, unit):
         self.unit = unit
-        self.color = unit.color + [1]
+        self.color = unit.color
 
 
 class TimedWidgetBar(RelativeLayout):
@@ -76,22 +76,25 @@ class TimedWidgetBar(RelativeLayout):
                 new_widget = TimedWidget(unit, priority, q=q, r=r, layout=self.hex_layout)
                 self.add_widget(new_widget)
 
+    def get_unit_on_pos(self, pos):
+        local_pos = self.to_local(*pos)
+        local_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
+        unit_on_pos = None
+        for child in self.children:
+            if child.hex_coords == local_hex:
+                unit_on_pos = child.unit
+                break
+        if not unit_on_pos:
+            local_hex = self.info_layout.pixel_to_hex(local_pos).get_round()
+            if local_hex == (0, 0):
+                unit_on_pos = self.info_widget.unit
+        return unit_on_pos
+
     def on_mouse_pos(self, stuff, pos):
-        # do proceed if not displayed and/or no parent
         if not self.get_root_window():
             return False
 
-        local_pos = self.to_local(*pos)
-        hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
-        hovered_unit = None
-        for child in self.children:
-            if child.hex_coords == hover_hex:
-                hovered_unit = child.unit
-                break
-        if not hovered_unit:
-            hover_hex = self.info_layout.pixel_to_hex(local_pos).get_round()
-            if hover_hex == (0, 0):
-                hovered_unit = self.info_widget.unit
+        hovered_unit = self.get_unit_on_pos(pos)
         if hovered_unit != self.last_hovered_unit:
             for child in self.children:
                 if child.unit == hovered_unit:
@@ -101,3 +104,11 @@ class TimedWidgetBar(RelativeLayout):
             self.last_hovered_unit = hovered_unit
             return True
         return False
+
+    def on_touch_down(self, touch):
+        if not self.get_root_window():
+            return super(TimedWidgetBar, self).on_touch_down(touch)
+
+        clicked_unit = self.get_unit_on_pos(touch.pos)
+        if clicked_unit:
+            return True

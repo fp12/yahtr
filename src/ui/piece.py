@@ -110,7 +110,6 @@ class Piece(HexWidget):
             callback(self)
 
     def on_pos(self, *args):
-        # do proceed if not displayed and/or no parent
         if not self.get_root_window():
             return False
 
