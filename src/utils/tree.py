@@ -8,13 +8,11 @@ class Tree:
     def get_node_from_history(self, history):
         current_node = self
         for k in history:
-            found = False
             for n in current_node.nodes:
                 if k == n.data:
                     current_node = n
-                    found = True
                     break
-            if not found:
+            else:
                 return None
         return current_node
 

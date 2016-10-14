@@ -1,7 +1,6 @@
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.properties import StringProperty
-from kivy.core.window import Window
 
 from ui.hex_widget import HexWidget
 
@@ -35,7 +34,7 @@ class ActionsBar(RelativeLayout):
     def __init__(self, **kwargs):
         super(ActionsBar, self).__init__(**kwargs)
         self.hex_layout = Layout(origin=self.pos, size=40, flat=True, margin=1)
-        Window.bind(mouse_pos=self.on_mouse_pos)
+        self.last_hovered_child = None
 
     def create(self):
         game_instance.current_fight.on_next_turn += lambda unit: self.on_new_action(unit, None, unit.actions_tree)
@@ -57,10 +56,9 @@ class ActionsBar(RelativeLayout):
             elif a.data != ActionType.EndTurn:
                 widget_data.append((index, a.data, a.data.name, None))
                 index += 1
-        count = len(widget_data)  # not including the mandatory End Turn !
+        count = len(widget_data)  # not including the mandatory End Turn!
         assert(count < len(ActionsBar.__Layouts__))
-        for i, w_data in enumerate(widget_data):
-            index, action_type, text, rk_skill = w_data
+        for i, (index, action_type, text, rk_skill) in enumerate(widget_data):
             q, r = ActionsBar.__Layouts__[count][i]
             self.create_action_widget(q, r, index, action_type, text, rk_skill)
         q, r = ActionsBar.__Layouts__[count][count]
@@ -95,5 +93,17 @@ class ActionsBar(RelativeLayout):
         hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
         for child in self.children:
             if child.hex_coords == hover_hex:
+                if self.last_hovered_child != child:
+                    if self.last_hovered_child:
+                        self.last_hovered_child.selector.a = 0
+                    child.selector.a = 1
+                    self.last_hovered_child = child
                 return True
+        
+        self.on_no_mouse_pos()
         return False
+
+    def on_no_mouse_pos(self):
+        if self.last_hovered_child:
+            self.last_hovered_child.selector.a = 0
+            self.last_hovered_child = None

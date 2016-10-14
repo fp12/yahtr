@@ -33,7 +33,7 @@ class MainWindow(App):
         self._key_binder = {}
         self.anim_scheduler = AnimScheduler()
 
-        Window.bind(on_key_down=self._on_keyboard_down)
+        Window.bind(on_key_down=self.on_keyboard_down, mouse_pos=self.on_mouse_pos)
 
     def on_start(self):
         # prepare game logic
@@ -124,8 +124,22 @@ class MainWindow(App):
         self.title = 'Yet Another Hex Tactical RPG'
         return self.layout
 
-    def _on_keyboard_down(self, sdl_thing, code, thing, key, modifiers, *args):
+    def on_keyboard_down(self, sdl_thing, code, thing, key, modifiers, *args):
         if key in self._key_binder:
             for cb in self._key_binder[key]:
                 cb(code, key)
             return True
+
+    def on_mouse_pos(self, *args):
+        """dispatching mouse position by priority order
+        Note: Could be improved..."""
+        dispatch_success = self.time_bar.on_mouse_pos(*args)
+        if dispatch_success:
+            self.actions_bar.on_no_mouse_pos()
+            self.game_view.on_no_mouse_pos()
+        else:
+            dispatch_success = self.actions_bar.on_mouse_pos(*args)
+            if dispatch_success:
+                self.game_view.on_no_mouse_pos()
+            else:
+                self.game_view.on_mouse_pos(*args)

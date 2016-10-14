@@ -4,7 +4,6 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.label import Label
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.behaviors import ButtonBehavior
-from kivy.core.window import Window
 
 from ui.hex_widget import HexWidget
 
@@ -22,7 +21,7 @@ class TimedWidget(ButtonBehavior, HexWidget):
     def __init__(self, unit, prio, **kwargs):
         super(TimedWidget, self).__init__(**kwargs)
         self.unit = unit
-        self.color = unit.color
+        self.color = unit.color + [1]
         self.UnitText = '{0}\n({1})'.format(self.unit.template.name, prio)
 
 
@@ -34,7 +33,7 @@ class UnitInfoWidget(ButtonBehavior, HexWidget):
 
     def set_unit(self, unit):
         self.unit = unit
-        self.color = unit.color
+        self.color = unit.color + [1]
 
 
 class TimedWidgetBar(RelativeLayout):
@@ -52,8 +51,6 @@ class TimedWidgetBar(RelativeLayout):
         self.add_widget(self.info_widget)
 
         self.last_hovered_unit = None
-
-        Window.bind(mouse_pos=self.on_mouse_pos)
 
     def get_pos_for_actions_bar(self):
         return (self.info_layout.origin.x - self.margin, self.y)
@@ -84,7 +81,7 @@ class TimedWidgetBar(RelativeLayout):
             if child.hex_coords == local_hex:
                 unit_on_pos = child.unit
                 break
-        if not unit_on_pos:
+        else: # no break
             local_hex = self.info_layout.pixel_to_hex(local_pos).get_round()
             if local_hex == (0, 0):
                 unit_on_pos = self.info_widget.unit

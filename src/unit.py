@@ -46,7 +46,7 @@ class Unit:
 
         # events
         self.on_health_change = Event('health', 'context')
-        self.on_skill_move = Event('skill_move', 'unit')
+        self.on_skill_move = Event('context', 'unit')
 
     def __repr__(self):
         return 'U<{0}>'.format(self.template.name)
@@ -58,10 +58,10 @@ class Unit:
             self.orientation = orientation
         self.current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
 
-    def skill_move(self, unit_move, unit=None):
+    def skill_move(self, context, unit=None):
         """ Skill move is not directly managed by the unit because UI may want to do something
         UI must call move_to after"""
-        self.on_skill_move(unit_move, unit)
+        self.on_skill_move(context)
 
     def equip(self, weapon):
         if weapon.wp_type.name in self.template.weapons:

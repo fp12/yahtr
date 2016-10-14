@@ -50,6 +50,7 @@
 
 
 <UnitActionTile>
+    selector: selector
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a
@@ -57,6 +58,14 @@
             vertices: (self.x + self.coss[0] * self.radius, self.y + self.sins[0] * self.radius, 0, 0, self.x + self.coss[1] * self.radius, self.y + self.sins[1] * self.radius, 0, 0, self.x + self.coss[2] * self.radius, self.y + self.sins[2] * self.radius, 0, 0, self.x + self.coss[3] * self.radius, self.y + self.sins[3] * self.radius, 0, 0, self.x + self.coss[4] * self.radius, self.y + self.sins[4] * self.radius, 0, 0, self.x + self.coss[5] * self.radius, self.y + self.sins[5] * self.radius, 0, 0)
             indices: (0, 1, 2, 3, 4, 5)
             mode: "triangle_fan"
+    Selector:
+        id: selector
+        pos: root.pos
+        radius: root.radius
+        r: 0
+        g: 1
+        b: 0
+        a: 0
     Label:
         size: root.size
         center: root.pos

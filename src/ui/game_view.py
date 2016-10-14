@@ -1,5 +1,4 @@
 from kivy.uix.scatterlayout import ScatterLayout
-from kivy.core.window import Window
 
 from ui.tile import Tile
 from ui.piece import Piece, Status
@@ -30,7 +29,6 @@ class GameView(ScatterLayout):
         self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=[0.560784, 0.737255, 0.560784, 0.5])
         self.trajectory = Trajectory(color=[0, 0.392157, 0, 0.5])
         self.current_action = None
-        Window.bind(mouse_pos=self.on_mouse_pos)
 
     def load_map(self):
         for q, r in game_instance.current_fight.current_map.get_tiles():
@@ -156,11 +154,13 @@ class GameView(ScatterLayout):
             self.selector.move_to(hover_hex, tile_pos=tile.pos)
             self.selector.hide(False)
             return True
-        else:
-            # if we aren't on a tile, we reset the selector and trajectory
-            self.selector.hide()
-            self.trajectory.hide()
-            return False
+        
+        self.on_no_mouse_pos()
+        return False
+
+    def on_no_mouse_pos(self):
+        self.selector.hide()
+        self.trajectory.hide()
 
     def on_touch_down(self, touch):
         ret = super(GameView, self).on_touch_down(touch)
