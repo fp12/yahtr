@@ -1,0 +1,90 @@
+{
+	"comment": "A sweeping move that hits from the sides",
+	"HUN":
+	[
+		{
+			"H": 
+			[
+				{ 
+					"dir": [1, 0, 0, 1],
+					"effects": ["damage"],
+					"values" : [12, 10, 7, 5, 3]
+				}
+			],
+			"U":
+			{
+				"orientation" : [0, 0, -1, 1]
+			}
+		},
+		{
+			"H": 
+			[
+				{ 
+					"dir": [0, 1, -1, 1],
+					"effects": ["damage"],
+					"values" : [12, 10, 7, 5, 3]
+				}
+			],
+			"U":
+			{
+				"orientation" : [0, 0, -1, 1]
+			}
+		},
+		{
+			"H": 
+			[
+				{ 
+					"dir": [-1, 1, -1, 0],
+					"effects": ["damage"],
+					"values" : [12, 10, 7, 5, 3]
+				}
+			],
+			"U":
+			{
+				"orientation" : [0, 0, -1, 1]
+			}
+		},
+		{
+			"H": 
+			[
+				{ 
+					"dir": [-1, 0, 0, -1],
+					"effects": ["damage"],
+					"values" : [12, 10, 7, 5, 3]
+				}
+			],
+			"U":
+			{
+				"orientation" : [0, 0, -1, 1]
+			}
+		},
+		{
+			"H": 
+			[
+				{ 
+					"dir": [0, -1, 1, -1],
+					"effects": ["damage"],
+					"values" : [12, 10, 7, 5, 3]
+				}
+			],
+			"U":
+			{
+				"orientation" : [0, 0, -1, 1]
+			}
+		},
+		{
+			"H": 
+			[
+				{ 
+					"dir": [1, -1, 1, 0],
+					"effects": ["damage"],
+					"values" : [12, 10, 7, 5, 3]
+				}
+			],
+			"U":
+			{
+				"orientation" : [0, 0, -1, 1]
+			}
+		}
+	]
+}

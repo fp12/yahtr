@@ -8,7 +8,14 @@ from utils.event import Event, UniqueEvent
 import tie
 
 
-class Fight():
+class SkillContext:
+    def __init__(self, unit):
+        self.unit = unit
+        self.base_unit_coords = copy(unit.hex_coords)
+        self.base_unit_orientation = copy(unit.orientation)
+
+
+class Fight:
     def __init__(self, fight_map, players):
         self.current_map = Map(self, fight_map)
         self.squads = {p: [] for p in players}
@@ -65,23 +72,28 @@ class Fight():
             self.on_action_change(unit, new_action.default.data, new_action, rk_skill)
 
     def resolve_skill(self, unit, rk_skill):
-        """ Notes: NOT executed on main thread """
+        """ Note: NOT executed on main thread """
+
+        context = SkillContext(unit)
+
         for hun in rk_skill.skill.huns:
             for hit in hun.H:
-                hit_direction = copy(hit.direction.destination).rotate_to(unit.orientation)
-                hitted_tile = hit_direction + unit.hex_coords
+                base_direction = hit.direction.destination - hit.direction.origin
+                context.direction = base_direction.rotate_to(context.base_unit_orientation)
+                hitted_tile = context.base_unit_coords + copy(hit.direction.destination).rotate_to(context.base_unit_orientation)
                 hitted_unit = self.current_map.get_unit_on(hitted_tile)
                 if hitted_unit:
                     damage = rk_skill.get_damage(hit)
                     if damage != 0:
-                        hitted_unit.health_change(-damage, unit, hit)
+                        context.hit = hit
+                        hitted_unit.health_change(-damage, context)
 
             if hun.U:
                 unit.skill_move(hun.U)
 
             for move_info in hun.N:
-                move_origin = copy(move_info.move.origin).rotate_to(unit.orientation)
-                move_on_tile = move_origin + unit.hex_coords
+                move_origin = copy(move_info.move.origin).rotate_to(context.base_unit_orientation)
+                move_on_tile = context.base_unit_coords + move_origin
                 moved_unit = self.current_map.get_unit_on(move_on_tile)
                 if moved_unit:
                     moved_unit.skill_move(move_info, unit)

@@ -120,17 +120,18 @@ class Piece(HexWidget):
             for shield_part, offset in shield_data.items():
                 shield_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
 
-    def on_unit_health_change(self, health, unit_source, hit):
-        direction = (hit.direction.destination - hit.direction.origin).rotate_to(unit_source.orientation)
-        pt = self.hex_layout.hex_to_pixel(self.hex_coords + direction)
+    def on_unit_health_change(self, health, context):
+        pt = self.hex_layout.hex_to_pixel(self.hex_coords + context.direction)
         target_pos_x = self.x + (pt.x - self.x) / 10
         target_pos_y = self.y + (pt.y - self.y) / 10
         duration = 0.2
         anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3)
         anim += Animation(pos=(self.x, self.y), duration=duration)
 
+        # print(self.unit, hit.direction)
+
         app = App.get_running_app()
-        app.anim_scheduler.add(anim, self, hit.order)
+        app.anim_scheduler.add(anim, self, context.hit.order)
 
     def on_unit_skill_move(self, unit_move, unit):
         def on_end_skill_move(hex_coords, orientation):
@@ -138,20 +139,35 @@ class Piece(HexWidget):
             self.unit.move_to(hex_coords, orientation)
 
         unit_orientation = unit.orientation if unit else self.unit.orientation
-        corrected_coords = copy(unit_move.move.destination).rotate_to(unit_orientation)
-        end_coords = (unit.hex_coords if unit else self.hex_coords) + corrected_coords
-        pos = self.hex_layout.hex_to_pixel(end_coords)
+        if unit_move.move:
+            corrected_coords = copy(unit_move.move.destination).rotate_to(unit_orientation)
+            end_coords = (unit.hex_coords if unit else self.hex_coords) + corrected_coords
+            pos = self.hex_layout.hex_to_pixel(end_coords).tup
+        else:
+            end_coords = self.hex_coords
+            pos = None
         end_orientation = unit_move.orientation.destination if unit_move.orientation else unit_orientation
 
         anim = None
         if unit_move.move_type == MoveType.none:
-            anim = Animation(pos=pos.tup, angle=unit_move.orientation.angle, duration=0)
+            anim = Animation(duration=0)
+            if pos:
+                anim &= Animation(pos=pos, duration=0.1)
+            if unit_move.orientation and unit_move.orientation.angle != 0:
+                angle = copy(unit_move.orientation.angle)
+                if abs(angle) >= 180:
+                    angle += 360
+                # print('current: {:6} | target: {:6} | data: {:6}'.format(self.angle, self.angle + angle, unit_move.orientation.angle))
+                anim &= Animation(angle=self.angle + angle, duration=0.2)
         elif unit_move.move_type == MoveType.blink:
             anim = Animation(a=0, duration=0.1)
-            anim += Animation(pos=pos.tup, angle=self.angle + unit_move.orientation.angle, duration=0)
+            if pos:
+                anim += Animation(pos=pos, duration=0)
+            if unit_move.orientation and unit_move.orientation.angle != 0:
+                anim += Animation(angle=self.angle + unit_move.orientation.angle, duration=0)
             anim += Animation(a=1, duration=0.2)
         elif unit_move.move_type == MoveType.pushed:
-            anim = Animation(pos=pos.tup, duration=0.3, t='out_back')
+            anim = Animation(pos=pos, duration=0.3, t='out_back')
 
         app = App.get_running_app()
         app.anim_scheduler.add(anim, self, unit_move.order, lambda *args: on_end_skill_move(end_coords, end_orientation))
@@ -205,14 +221,17 @@ class Piece(HexWidget):
                 pos += self.pos
                 arrow = ActionArrow(angle=hit.direction.angle, pos=pos.tup)
                 self._skill_widgets.append(arrow)
-                self.add_widget(arrow)
+                self.add_widget(arrow, 0)
             if hun.U:
-                end_coords = self.hex_coords + hun.U.move.destination
-                pos = self.hex_layout.hex_to_pixel(end_coords)
+                if hun.U.move:
+                    end_coords = self.hex_coords + hun.U.move.destination
+                    pos = self.hex_layout.hex_to_pixel(end_coords).tup
+                else:
+                    pos = self.pos
 
                 color = [0.05, 0.05, 0.85]  # changed with checks
                 move_indic = ActionUnitMove(angle=hun.U.orientation.angle,
-                                            pos=pos.tup,
+                                            pos=pos,
                                             color=color,
                                             size=(self.hex_layout.size.x / 2, self.hex_layout.size.y / 2))
                 self._skill_widgets.append(move_indic)

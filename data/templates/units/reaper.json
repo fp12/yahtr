@@ -4,10 +4,14 @@
 	"speed": 10,
 	"attack": 10,
 	"health": 13,
-	"color": [0.4, 0.4, 0.4],
+	"color": [0.1, 0.1, 0.1],
 	"actions_tree_name": "base",
 	"weapons":
 	{
 		"scythe": "B"
+	},
+	"skills":
+	{
+		"scythe_sweep": "A"
 	}
 }

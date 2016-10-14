@@ -8,6 +8,7 @@ class AnimScheduler:
 
     def __init__(self):
         self.anims = EqualPriorityQueue()
+        self.anim_count = 0
         self.animation_pending = False
         self.thread_event = None
 
@@ -16,10 +17,12 @@ class AnimScheduler:
 
     def add(self, anim, widget, priority, on_end=None):
         self.anims.put((anim, widget, on_end), priority)
+        self.anim_count += 1
 
     def _on_end(self, external_cb=None, *args):
         if external_cb:
             external_cb()
+        self.anim_count -= 1
         self._start()
 
     def _start(self):
@@ -28,9 +31,9 @@ class AnimScheduler:
             for anim, widget, on_end in anims:
                 anim.bind(on_complete=lambda *args: self._on_end(on_end, *args))
                 anim.start(widget)
-        else:
-            self.animation_pending = False
+        elif self.anim_count <= 0:
             self.thread_event.set()
+            self.__init__()
 
     @mainthread
     def start(self, thread_event):

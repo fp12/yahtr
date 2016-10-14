@@ -45,7 +45,7 @@ class Unit:
             self.shields = [0 for _ in range(6)]
 
         # events
-        self.on_health_change = Event('health', 'unit_source', 'skill_dir')
+        self.on_health_change = Event('health', 'context')
         self.on_skill_move = Event('skill_move', 'unit')
 
     def __repr__(self):
@@ -89,9 +89,9 @@ class Unit:
         if hex_coords in self.current_shape:
             return True
 
-    def health_change(self, health, unit_source, skill_dir):
+    def health_change(self, health, context):
         self.health += health
-        self.on_health_change(health, unit_source, skill_dir)
+        self.on_health_change(health, context)
 
 
 def load_all(root_path, get_skill):
