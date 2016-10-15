@@ -7,7 +7,7 @@ from kivy.animation import Animation
 
 from ui.hex_widget import HexWidget
 from ui.tile import Tile
-from ui.action_widgets import ActionArrow, ActionUnitMove, ActionNMIMove
+from ui.action_widgets import ActionBuilder
 from ui.shield_widget import ShieldWidget
 from ui.contour import Contour
 from ui.colored_widget import AngledColoredWidget
@@ -39,7 +39,7 @@ class Piece(HexWidget):
         self.unit = unit
         self.color = unit.color
         self.current_skill = None
-        self._skill_widgets = []
+        self.skill_widget = None
         self.status = Status.Idle
         self.selected = False
         self.reachable_tiles = []
@@ -81,6 +81,8 @@ class Piece(HexWidget):
 
     def do_rotate(self):
         self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
+        if self.skill_widget:
+            self.skill_widget.angle = self.angle
 
     def update_shields(self):
         for shape_part_index, shape_part in enumerate(self.unit.shape):
@@ -206,50 +208,15 @@ class Piece(HexWidget):
         self.update_shields()
 
     def clean_skill(self):
-        for w in self._skill_widgets:
-            self.remove_widget(w)
-        self._skill_widgets = []
+        if self.skill_widget:
+            self.parent.remove_widget(self.skill_widget)
+            self.skill_widget = None
         self.current_skill = None
 
     def load_skill(self, rk_skill):
-        """ /!\ Spawning widgets NOT taking piece orientation into account !!! """
         self.current_skill = rk_skill
-        for hun in rk_skill.skill.huns:
-            for hit in hun.H:
-                pos = self.hex_layout.get_mid_edge_position(hit.direction.origin, hit.direction.destination)
-                pos -= self.hex_layout.origin
-                pos += self.pos
-                arrow = ActionArrow(angle=hit.direction.angle, pos=pos.tup)
-                self._skill_widgets.append(arrow)
-                self.add_widget(arrow, 0)
-            if hun.U:
-                if hun.U.move:
-                    end_coords = self.hex_coords + hun.U.move.destination
-                    pos = self.hex_layout.hex_to_pixel(end_coords).tup
-                else:
-                    pos = self.pos
-
-                color = [0.05, 0.05, 0.85]  # changed with checks
-                move_indic = ActionUnitMove(angle=hun.U.orientation.angle,
-                                            pos=pos,
-                                            color=color,
-                                            size=(self.hex_layout.size.x / 2, self.hex_layout.size.y / 2))
-                self._skill_widgets.append(move_indic)
-                self.add_widget(move_indic)
-            for move_info in hun.N:
-                origin_coords = self.hex_coords + move_info.move.origin
-                origin_pos = self.hex_layout.hex_to_pixel(origin_coords)
-                end_coords = self.hex_coords + move_info.move.destination
-                end_pos = self.hex_layout.hex_to_pixel(end_coords)
-
-                color = [0.85, 0.05, 0.05]  # changed with checks
-                move_indic = ActionNMIMove(angle=0,
-                                           pos=end_pos.tup,
-                                           origin_x=origin_pos.x, origin_y=origin_pos.y,
-                                           color=color,
-                                           size=(self.hex_layout.size.x / 2, self.hex_layout.size.y / 2))
-                self._skill_widgets.append(move_indic)
-                self.add_widget(move_indic)
+        self.skill_widget = ActionBuilder(rk_skill, self.hex_coords, self.hex_layout, pos=self.pos, angle=self.angle)
+        self.parent.add_widget(self.skill_widget)
 
     def display_reachable_tiles(self):
         if not self.reachable_tiles:

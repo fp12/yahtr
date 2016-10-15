@@ -5,6 +5,16 @@
 #:include src/ui/kv/action_widgets.kv
 
 
+<AngledWidget>
+    canvas.before:
+        PushMatrix
+        Rotate:
+            angle: self.angle
+            origin: self.pos
+    canvas.after:
+        PopMatrix
+
+
 <Tile>
     canvas:
         Color:
