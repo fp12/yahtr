@@ -10,7 +10,7 @@ from ui.tile import Tile
 from ui.action_widgets import ActionBuilder
 from ui.shield_widget import ShieldWidget
 from ui.contour import Contour
-from ui.colored_widget import AngledColoredWidget
+from ui.base_widgets import AngledColoredWidget
 
 from game import game_instance
 from skill import MoveType
@@ -64,7 +64,7 @@ class Piece(HexWidget):
                     pos = (hex_pos.x + (hex_pos_other.x - hex_pos.x) / 2 - size[0] / 2,
                            hex_pos.y + (hex_pos_other.y - hex_pos.y) / 2 - size[1] / 2)
                     angle = shape_part.angle_to_neighbour(shape_part_other - shape_part)
-                    w = PieceInterBody(pos=pos, size=size, angle=angle, color=self.color)
+                    w = PieceInterBody(pos=pos, size=size, angle=angle, color=self.color, rotate_from_center=True)
                     self._shape_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
                     self.add_widget(w)
 

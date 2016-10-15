@@ -1,8 +1,6 @@
-from kivy.uix.widget import Widget
 from kivy.properties import NumericProperty
 
-from ui.colored_widget import AngledColoredWidget
-from ui.base_widgets import AngledWidget
+from ui.base_widgets import AngledWidget, AngledColoredWidget
 
 
 class ActionArrow(AngledColoredWidget):

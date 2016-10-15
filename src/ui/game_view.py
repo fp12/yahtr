@@ -4,7 +4,7 @@ from ui.tile import Tile
 from ui.piece import Piece, Status
 from ui.selector import Selector
 from ui.trajectory import Trajectory
-from ui.colored_widget import AngledColoredWidget
+from ui.base_widgets import AngledColoredWidget
 
 from hex_lib import Layout
 from game import game_instance

@@ -1,6 +1,6 @@
 from kivy.graphics import Line, Color
 
-from ui.colored_widget import ColoredWidget
+from ui.base_widgets import ColoredWidget
 
 
 class Trajectory(ColoredWidget):

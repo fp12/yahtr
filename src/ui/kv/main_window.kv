@@ -10,7 +10,7 @@
         PushMatrix
         Rotate:
             angle: self.angle
-            origin: self.pos
+            origin: self.center if self.rotate_from_center else self.pos
     canvas.after:
         PopMatrix
 
@@ -32,19 +32,12 @@
 
 
 <WallWidget>
-    canvas.before:
-        PushMatrix
-        Rotate:
-            angle: self.angle
-            origin: self.pos
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a
         Rectangle:
             pos: (self.x - self.width / 2, self.y - self.height / 2)
             size: self.size
-    canvas.after:
-        PopMatrix
 
 
 <Selector>

@@ -11,19 +11,12 @@
 
 
 <PieceInterBody>
-    canvas.before:
-        PushMatrix
-        Rotate:
-            angle: self.angle
-            origin: self.center
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a
         Rectangle:
             pos: self.pos
             size: self.size
-    canvas.after:
-        PopMatrix
 
 
 <Piece>
@@ -45,11 +38,6 @@
 
 
 <ShieldWidget>
-    canvas.before:
-        PushMatrix
-        Rotate:
-            angle: self.angle
-            origin: self.pos
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a
@@ -57,5 +45,3 @@
             vertices:(self.x + self.coss[1] * self.radius, self.y + self.sins[1] * self.radius, 0, 0, self.x + self.coss[2] * self.radius, self.y + self.sins[2] * self.radius, 0, 0, self.x + self.coss[2] * (self.radius - self.thickness), self.y + self.sins[2] * (self.radius - self.thickness), 0, 0, self.x + self.coss[1] * (self.radius - self.thickness), self.y + self.sins[1] * (self.radius - self.thickness), 0, 0)
             indices: (0, 1, 2, 3)
             mode: "triangle_fan"
-    canvas.after:
-        PopMatrix
