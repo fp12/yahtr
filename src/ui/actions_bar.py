@@ -86,9 +86,6 @@ class ActionsBar(RelativeLayout):
         return super(ActionsBar, self).on_touch_down(touch)
 
     def on_mouse_pos(self, stuff, pos):
-        if not self.get_root_window():
-            return False
-
         local_pos = self.to_local(*pos)
         hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
         for child in self.children:
@@ -99,7 +96,7 @@ class ActionsBar(RelativeLayout):
                     child.selector.a = 1
                     self.last_hovered_child = child
                 return True
-        
+
         self.on_no_mouse_pos()
         return False
 

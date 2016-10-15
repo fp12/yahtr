@@ -11,6 +11,7 @@ from ui.action_widgets import ActionBuilder
 from ui.shield_widget import ShieldWidget
 from ui.contour import Contour
 from ui.base_widgets import AngledColoredWidget
+from ui.utils import check_root_window
 
 from game import game_instance
 from skill import MoveType
@@ -111,24 +112,28 @@ class Piece(HexWidget):
         if callback:
             callback(self)
 
+    @check_root_window
     def on_pos(self, *args):
-        if not self.get_root_window():
-            return False
-
         self.contour.pos = self.pos
         for shape_part, offset in self._shape_parts.items():
             shape_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
+
         for shield_data in self._shields:
             for shield_part, offset in shield_data.items():
                 shield_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
+
+    @check_root_window
+    def on_color_change(self, r, g, b, a):
+        for shape_part, _ in self._shape_parts.items():
+            shape_part.color = (r, g, b, a)
 
     def on_unit_health_change(self, health, context):
         pt = self.hex_layout.hex_to_pixel(self.hex_coords + context.direction)
         target_pos_x = self.x + (pt.x - self.x) / 10
         target_pos_y = self.y + (pt.y - self.y) / 10
         duration = 0.2
-        anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3)
-        anim += Animation(pos=(self.x, self.y), duration=duration)
+        anim = Animation(pos=(target_pos_x, target_pos_y), r=0.698039, g=0.133333, b=0.133333, duration=duration / 3)
+        anim += Animation(pos=(self.x, self.y), r=self.r, g=self.g, b=self.b, duration=duration)
 
         app = App.get_running_app()
         app.anim_scheduler.add(anim, self, context.hit.order)

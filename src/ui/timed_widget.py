@@ -88,9 +88,6 @@ class TimedWidgetBar(RelativeLayout):
         return unit_on_pos
 
     def on_mouse_pos(self, stuff, pos):
-        if not self.get_root_window():
-            return False
-
         hovered_unit = self.get_unit_on_pos(pos)
         if hovered_unit != self.last_hovered_unit:
             for child in self.children:
@@ -103,9 +100,6 @@ class TimedWidgetBar(RelativeLayout):
         return False
 
     def on_touch_down(self, touch):
-        if not self.get_root_window():
-            return super(TimedWidgetBar, self).on_touch_down(touch)
-
         clicked_unit = self.get_unit_on_pos(touch.pos)
         if clicked_unit:
             return True

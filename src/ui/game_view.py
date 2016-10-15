@@ -117,9 +117,6 @@ class GameView(ScatterLayout):
         game_instance.current_fight.notify_action_end(ActionType.Move)
 
     def on_mouse_pos(self, *args):
-        if not self.get_root_window():
-            return False
-
         # get rounded hex coordinates and do nothing if we didn't change hex
         local_pos = self.to_local(*args[1])
         hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()

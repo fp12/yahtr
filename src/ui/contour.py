@@ -1,6 +1,7 @@
 from kivy.graphics import Color, Line
 
 from ui.base_widgets import ColoredWidget
+from ui.utils import check_root_window
 
 
 class Contour(ColoredWidget):
@@ -65,12 +66,11 @@ class Contour(ColoredWidget):
                         points.append(offset + self.y)
                 Line(points=points, width=3, joint='bevel')
 
+    @check_root_window
     def on_pos(self, *args):
-        if not self.get_root_window():
-            return False
         self.redraw()
 
+    @check_root_window
     def on_a(self, *args):
-        if not self.get_root_window():
-            return False
         self.redraw()
+        super(Contour, self).on_a(*args)

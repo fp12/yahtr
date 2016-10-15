@@ -34,13 +34,28 @@ class ColoredWidget(Widget):
     def hidden(self):
         return self.a == 0
 
+    def hide(self, do_hide=True):
+        self.a = 0 if do_hide else 1
+
     def restore_old_color(self):
         if self._old_color:
             self.r, self.g, self.b, self.a = self._old_color
-        self._old_color = []
+        self._old_color = None
 
-    def hide(self, do_hide=True):
-        self.a = 0 if do_hide else 1
+    def on_color_change(self, r, g, b, a):
+        pass
+
+    def on_r(self, *args):
+        self.on_color_change(self.r, self.g, self.b, self.a)
+
+    def on_g(self, *args):
+        self.on_color_change(self.r, self.g, self.b, self.a)
+
+    def on_b(self, *args):
+        self.on_color_change(self.r, self.g, self.b, self.a)
+
+    def on_a(self, *args):
+        self.on_color_change(self.r, self.g, self.b, self.a)
 
 
 class AngledColoredWidget(ColoredWidget, AngledWidget):
