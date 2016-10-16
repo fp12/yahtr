@@ -1,6 +1,8 @@
 from kivy.properties import NumericProperty, BooleanProperty
 from kivy.uix.widget import Widget
 
+from utils import Color
+
 
 class AngledWidget(Widget):
     angle = NumericProperty(0)
@@ -25,6 +27,8 @@ class ColoredWidget(Widget):
 
     @color.setter
     def color(self, value):
+        if isinstance(value, Color):
+            value = value.color
         if len(value) == 3:
             value = value + [self.a]
         self._old_color = [self.r, self.g, self.b, self.a]

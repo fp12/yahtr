@@ -16,7 +16,15 @@ from ui.utils import check_root_window
 from game import game_instance
 from skill import MoveType
 from hex_lib import Hex
+from utils import Color
 import actions
+
+
+hit_color = Color.firebrick
+contour_color = Color.forestgreen
+contour_color.a = 0
+reachable_color = Color.olivedrab
+reachable_color.a = 0.5
 
 
 class Status(Enum):
@@ -69,7 +77,7 @@ class Piece(HexWidget):
                     self._shape_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
                     self.add_widget(w)
 
-        self.contour = Contour(unit.shape, layout=self.hex_layout, color=[0.1, 0.9, 0.2, 0], pos=self.pos)
+        self.contour = Contour(unit.shape, layout=self.hex_layout, color=contour_color, pos=self.pos)
         self.add_widget(self.contour)
 
         self.do_rotate()
@@ -132,7 +140,7 @@ class Piece(HexWidget):
         target_pos_x = self.x + (pt.x - self.x) / 10
         target_pos_y = self.y + (pt.y - self.y) / 10
         duration = 0.2
-        anim = Animation(pos=(target_pos_x, target_pos_y), r=0.698039, g=0.133333, b=0.133333, duration=duration / 3)
+        anim = Animation(pos=(target_pos_x, target_pos_y), r=hit_color.r, g=hit_color.g, b=hit_color.b, duration=duration / 3)
         anim += Animation(pos=(self.x, self.y), r=self.r, g=self.g, b=self.b, duration=duration)
 
         app = App.get_running_app()
@@ -221,7 +229,7 @@ class Piece(HexWidget):
             for hx in reachable_hexes:
                 tile = Tile(hx.q, hx.r,
                             layout=self.hex_layout,
-                            color=[0.678431, 0.88, 0.184314, 0.2],
+                            color=reachable_color,
                             radius=self.radius - 2,
                             size=(self.radius - 2, self.radius - 2))
                 self.parent.add_widget(tile)

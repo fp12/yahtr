@@ -9,7 +9,7 @@ class Selector(HexWidget):
 
     def setup(self, q, r, layout, radius=None):
         super(Selector, self).setup(q, r, layout, radius)
-        self.margin = margin or self.hex_layout.margin
+        self.margin = radius or self.hex_layout.margin
         self.animate()
 
     def animate(self, *args):

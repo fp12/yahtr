@@ -1,7 +1,6 @@
 from math import sqrt
 
 from kivy.uix.relativelayout import RelativeLayout
-from kivy.uix.label import Label
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.behaviors import ButtonBehavior
 

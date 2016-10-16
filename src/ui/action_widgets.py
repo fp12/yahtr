@@ -2,9 +2,16 @@ from kivy.properties import NumericProperty
 
 from ui.base_widgets import AngledWidget, AngledColoredWidget
 
+from utils import Color
+
+
+default_action_arrow_color = Color.red
+default_unit_move_color = Color(0.05, 0.05, 0.85)
+default_enemy_move_color = Color(0.85, 0.05, 0.05)
+
 
 class ActionArrow(AngledColoredWidget):
-    def __init__(self, color=[1, 0, 0], **kwargs):
+    def __init__(self, color=default_action_arrow_color, **kwargs):
         super(ActionArrow, self).__init__(size_hint=(None, None), color=color, **kwargs)
 
 
@@ -42,10 +49,10 @@ class ActionBuilder(AngledWidget):
                 else:
                     pos = self.pos
 
-                color = [0.05, 0.05, 0.85]  # changed with checks
+                move_color = default_unit_move_color  # changed with checks
                 move_indic = ActionUnitMove(angle=hun.U.orientation.angle,
                                             pos=pos,
-                                            color=color,
+                                            color=move_color,
                                             size=(self.hex_layout.size.x / 2, self.hex_layout.size.y / 2))
                 self.add_widget(move_indic)
 
@@ -55,10 +62,10 @@ class ActionBuilder(AngledWidget):
                 end_coords = self.hex_coords + move_info.move.destination
                 end_pos = self.hex_layout.hex_to_pixel(end_coords)
 
-                color = [0.85, 0.05, 0.05]  # changed with checks
+                move_color = default_enemy_move_color  # changed with checks
                 move_indic = ActionNMIMove(angle=0,
                                            pos=end_pos.tup,
                                            origin_x=origin_pos.x, origin_y=origin_pos.y,
-                                           color=color,
+                                           color=move_color,
                                            size=(self.hex_layout.size.x / 2, self.hex_layout.size.y / 2))
                 self.add_widget(move_indic)

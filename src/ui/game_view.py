@@ -9,6 +9,7 @@ from ui.base_widgets import AngledColoredWidget
 from hex_lib import Layout
 from game import game_instance
 from actions import ActionType
+from utils import Color
 
 
 class WallWidget(AngledColoredWidget):
@@ -18,6 +19,11 @@ class WallWidget(AngledColoredWidget):
 class GameView(ScatterLayout):
     hex_radius = 40
     hex_margin = 2
+    trajectory_color_ok = Color(0, 0.392157, 0, 0.85)
+    trajectory_color_error = Color(0.9, 0.12, 0, 0.85)
+    tile_color = Color(0.8, 0.8, 0.8, 0.4)
+    selector_color = Color.darkseagreen
+    wall_color = Color(0.9, 0.9, 0.9, 0.9)
 
     def __init__(self, **kwargs):
         super(GameView, self).__init__(**kwargs)
@@ -26,20 +32,20 @@ class GameView(ScatterLayout):
         self.pieces = []
         self.tiles = []
         self.walls = []
-        self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=[0.560784, 0.737255, 0.560784, 0.5])
-        self.trajectory = Trajectory(color=[0, 0.392157, 0, 0.5])
+        self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=self.selector_color)
+        self.trajectory = Trajectory(color=self.trajectory_color_ok)
         self.current_action = None
 
     def load_map(self):
         for q, r in game_instance.current_fight.current_map.get_tiles():
-            tile = Tile(q, r, layout=self.hex_layout, color=[0.8, 0.8, 0.8, 0.4], size=(self.hex_radius, self.hex_radius))
+            tile = Tile(q, r, layout=self.hex_layout, color=self.tile_color, size=(self.hex_radius, self.hex_radius))
             self.add_widget(tile)
             self.tiles.append(tile)
 
         for w in game_instance.current_fight.current_map.walls:
             pos = self.hex_layout.get_mid_edge_position(w.origin, w.destination)
             angle = w.origin.angle_to_neighbour(w.destination - w.origin)
-            wall = WallWidget(pos=pos.tup, angle=angle, size_hint=(None, None), size=(self.hex_radius * 2 / 3., self.hex_margin * 3), color=[0.9, 0.9, 0.9, 0.9])
+            wall = WallWidget(pos=pos.tup, angle=angle, size_hint=(None, None), size=(self.hex_radius * 2 / 3., self.hex_margin * 3), color=self.wall_color)
             self.add_widget(wall)
             self.walls.append(wall)
 
@@ -80,9 +86,9 @@ class GameView(ScatterLayout):
                 points.append(pt.x)
                 points.append(pt.y)
             if piece.is_in_move_range(hover_hex):
-                self.trajectory.color = [0, 0.392157, 0, 0.5]
+                self.trajectory.color = self.trajectory_color_ok
             else:
-                self.trajectory.color = [0.9, 0.12, 0, 0.75]
+                self.trajectory.color = self.trajectory_color_error
             self.trajectory.set(path, points)
 
     def get_tile_on_hex(self, hex_coords):
