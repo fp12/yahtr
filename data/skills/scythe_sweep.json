@@ -8,12 +8,14 @@
 				{ 
 					"dir": [1, 0, 0, 1],
 					"effects": ["damage"],
-					"values" : [12, 10, 7, 5, 3]
+					"values" : [12, 10, 7, 5, 3],
+					"order": 0
 				}
 			],
 			"U":
 			{
-				"orientation" : [0, 0, -1, 1]
+				"orientation" : [0, 0, -1, 1],
+				"order": 1
 			}
 		},
 		{
@@ -22,12 +24,14 @@
 				{ 
 					"dir": [0, 1, -1, 1],
 					"effects": ["damage"],
-					"values" : [12, 10, 7, 5, 3]
+					"values" : [12, 10, 7, 5, 3],
+					"order": 0
 				}
 			],
 			"U":
 			{
-				"orientation" : [0, 0, -1, 1]
+				"orientation" : [0, 0, -1, 0],
+				"order": 1
 			}
 		},
 		{
@@ -36,12 +40,14 @@
 				{ 
 					"dir": [-1, 1, -1, 0],
 					"effects": ["damage"],
-					"values" : [12, 10, 7, 5, 3]
+					"values" : [12, 10, 7, 5, 3],
+					"order": 0
 				}
 			],
 			"U":
 			{
-				"orientation" : [0, 0, -1, 1]
+				"orientation" : [0, 0, 0, -1],
+				"order": 1
 			}
 		},
 		{
@@ -50,12 +56,14 @@
 				{ 
 					"dir": [-1, 0, 0, -1],
 					"effects": ["damage"],
-					"values" : [12, 10, 7, 5, 3]
+					"values" : [12, 10, 7, 5, 3],
+					"order": 0
 				}
 			],
 			"U":
 			{
-				"orientation" : [0, 0, -1, 1]
+				"orientation" : [0, 0, 1, -1],
+				"order": 1
 			}
 		},
 		{
@@ -64,12 +72,14 @@
 				{ 
 					"dir": [0, -1, 1, -1],
 					"effects": ["damage"],
-					"values" : [12, 10, 7, 5, 3]
+					"values" : [12, 10, 7, 5, 3],
+					"order": 0
 				}
 			],
 			"U":
 			{
-				"orientation" : [0, 0, -1, 1]
+				"orientation" : [0, 0, 1, 0],
+				"order": 1
 			}
 		},
 		{
@@ -78,12 +88,14 @@
 				{ 
 					"dir": [1, -1, 1, 0],
 					"effects": ["damage"],
-					"values" : [12, 10, 7, 5, 3]
+					"values" : [12, 10, 7, 5, 3],
+					"order": 0
 				}
 			],
 			"U":
 			{
-				"orientation" : [0, 0, -1, 1]
+				"orientation" : [0, 0, 0, 1],
+				"order": 1
 			}
 		}
 	]

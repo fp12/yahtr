@@ -128,49 +128,41 @@ class Piece(HexWidget):
         anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3)
         anim += Animation(pos=(self.x, self.y), duration=duration)
 
-        # print(self.unit, hit.direction)
-
         app = App.get_running_app()
         app.anim_scheduler.add(anim, self, context.hit.order)
 
-    def on_unit_skill_move(self, unit_move, unit):
-        def on_end_skill_move(hex_coords, orientation):
+    def on_unit_skill_move(self, context):
+        def on_skill_move_end(hex_coords, orientation):
             self.hex_coords = hex_coords
             self.unit.move_to(hex_coords, orientation)
 
-        unit_orientation = unit.orientation if unit else self.unit.orientation
-        if unit_move.move:
-            corrected_coords = copy(unit_move.move.destination).rotate_to(unit_orientation)
-            end_coords = (unit.hex_coords if unit else self.hex_coords) + corrected_coords
-            pos = self.hex_layout.hex_to_pixel(end_coords).tup
-        else:
-            end_coords = self.hex_coords
-            pos = None
-        end_orientation = unit_move.orientation.destination if unit_move.orientation else unit_orientation
+        pos = self.hex_layout.hex_to_pixel(context.end_coords).tup if context.move_info.move else None
 
         anim = None
-        if unit_move.move_type == MoveType.none:
+        if context.move_info.move_type == MoveType.none:
             anim = Animation(duration=0)
             if pos:
                 anim &= Animation(pos=pos, duration=0.1)
-            if unit_move.orientation and unit_move.orientation.angle != 0:
-                angle = copy(unit_move.orientation.angle)
-                if abs(angle) >= 180:
-                    angle += 360
-                # print('current: {:6} | target: {:6} | data: {:6}'.format(self.angle, self.angle + angle, unit_move.orientation.angle))
-                anim &= Animation(angle=self.angle + angle, duration=0.2)
-        elif unit_move.move_type == MoveType.blink:
+            if context.move_info.orientation:
+                if abs(context.target_angle - self.angle) > 180:
+                    self.angle -= 360
+                print(self.angle, context.target_angle)
+                anim &= Animation(angle=context.target_angle, duration=0.2)
+        elif context.move_info.move_type == MoveType.blink:
             anim = Animation(a=0, duration=0.1)
             if pos:
                 anim += Animation(pos=pos, duration=0)
-            if unit_move.orientation and unit_move.orientation.angle != 0:
-                anim += Animation(angle=self.angle + unit_move.orientation.angle, duration=0)
+            if context.move_info.orientation:
+                if abs(context.target_angle - self.angle) > 180:
+                    self.angle -= 360
+                print(self.angle, context.target_angle)
+                anim += Animation(angle=context.target_angle, duration=0)
             anim += Animation(a=1, duration=0.2)
-        elif unit_move.move_type == MoveType.pushed:
+        elif context.move_info.move_type == MoveType.pushed:
             anim = Animation(pos=pos, duration=0.3, t='out_back')
 
         app = App.get_running_app()
-        app.anim_scheduler.add(anim, self, unit_move.order, lambda *args: on_end_skill_move(end_coords, end_orientation))
+        app.anim_scheduler.add(anim, self, context.move_info.order, lambda *args: on_skill_move_end(context.end_coords, context.end_orientation))
 
     def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
         """ override from HexWidget """

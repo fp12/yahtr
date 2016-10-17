@@ -13,6 +13,7 @@ class SkillContext:
         self.unit = unit
         self.base_unit_coords = copy(unit.hex_coords)
         self.base_unit_orientation = copy(unit.orientation)
+        self.previous_target_angle = None  # used for choosing the rotation direction
 
 
 class Fight:
@@ -73,6 +74,30 @@ class Fight:
 
     def resolve_skill(self, unit, rk_skill):
         """ Note: NOT executed on main thread """
+        def get_move_context(context, unit, move_info):
+            epsilon = 0.000001
+            context.move_info = move_info
+            context.end_coords = copy(unit.hex_coords)
+            if move_info.move:
+                move_direction = move_info.move.destination - move_info.move.origin
+                coords_offset = move_direction.rotate_to(context.base_unit_orientation)
+                context.end_coords += coords_offset
+
+            context.end_orientation = copy(context.base_unit_orientation)
+            context.target_angle = 0
+            if move_info.orientation:
+                context.end_orientation = copy(move_info.orientation.destination).rotate_to(context.base_unit_orientation)
+                base_angle = context.base_unit_coords.angle_to_neighbour(context.base_unit_orientation)
+                context.target_angle = base_angle + move_info.orientation.angle
+                if move_info.orientation.angle == -180 and context.previous_target_angle:
+                    if context.target_angle > context.previous_target_angle:
+                        context.previous_target_angle = context.target_angle
+                        context.target_angle -= epsilon
+                    else:
+                        context.previous_target_angle = context.target_angle
+                        context.target_angle += epsilon
+                else:
+                    context.previous_target_angle = context.target_angle
 
         context = SkillContext(unit)
 
@@ -89,14 +114,16 @@ class Fight:
                         hitted_unit.health_change(-damage, context)
 
             if hun.U:
-                unit.skill_move(hun.U)
+                get_move_context(context, unit, hun.U)
+                unit.skill_move(context)
 
             for move_info in hun.N:
-                move_origin = copy(move_info.move.origin).rotate_to(context.base_unit_orientation)
-                move_on_tile = context.base_unit_coords + move_origin
-                moved_unit = self.current_map.get_unit_on(move_on_tile)
+                move_origin_offset = copy(move_info.move.origin).rotate_to(context.base_unit_orientation)
+                move_origin = context.base_unit_coords + move_origin_offset
+                moved_unit = self.current_map.get_unit_on(move_origin)
                 if moved_unit:
-                    moved_unit.skill_move(move_info, unit)
+                    get_move_context(context, moved_unit, move_info)
+                    moved_unit.skill_move(context)
 
             ui_thread_event = self.on_skill_turn()
             if ui_thread_event:
