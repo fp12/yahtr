@@ -1,5 +1,10 @@
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, BooleanProperty
 from kivy.uix.widget import Widget
+
+
+class AngledWidget(Widget):
+    angle = NumericProperty(0)
+    rotate_from_center = BooleanProperty(False)
 
 
 class ColoredWidget(Widget):
@@ -38,5 +43,5 @@ class ColoredWidget(Widget):
         self.a = 0 if do_hide else 1
 
 
-class AngledColoredWidget(ColoredWidget):
-    angle = NumericProperty(0)
+class AngledColoredWidget(ColoredWidget, AngledWidget):
+    pass

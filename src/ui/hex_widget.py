@@ -2,7 +2,7 @@ from math import pi, cos, sin
 
 from kivy.properties import NumericProperty, ListProperty
 
-from ui.colored_widget import ColoredWidget
+from ui.base_widgets import ColoredWidget
 
 from hex_lib import Hex
 

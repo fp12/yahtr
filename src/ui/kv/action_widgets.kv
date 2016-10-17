@@ -7,22 +7,10 @@
             joint: 'round'
             cap: 'none'
             width: 3
-            close: False
-    canvas.before:
-        PushMatrix
-        Rotate:
-            angle: self.angle
-            origin: self.pos
-    canvas.after:
-        PopMatrix   
+            close: False 
 
 
 <ActionUnitMove>:
-    canvas.before:
-        PushMatrix
-        Rotate:
-            angle: self.angle
-            origin: self.pos
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a
@@ -35,16 +23,9 @@
         Ellipse:
             size: self.size
             pos: (self.x - self.width / 2, self.y - self.height / 2)
-    canvas.after:
-        PopMatrix
 
 
 <ActionNMIMove>:
-    canvas.before:
-        PushMatrix
-        Rotate:
-            angle: self.angle
-            origin: self.pos
     canvas:
         Color:
             rgba: self.r, self.g, self.b, self.a
@@ -62,5 +43,3 @@
         Ellipse:
             size: self.size
             pos: (self.origin_x - self.width / 2, self.origin_y - self.height / 2)
-    canvas.after:
-        PopMatrix

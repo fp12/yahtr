@@ -1,6 +1,6 @@
 from kivy.graphics import Color, Line
 
-from ui.colored_widget import ColoredWidget
+from ui.base_widgets import ColoredWidget
 
 
 class Contour(ColoredWidget):

@@ -4,7 +4,7 @@ from ui.tile import Tile
 from ui.piece import Piece, Status
 from ui.selector import Selector
 from ui.trajectory import Trajectory
-from ui.colored_widget import AngledColoredWidget
+from ui.base_widgets import AngledColoredWidget
 
 from hex_lib import Layout
 from game import game_instance
@@ -154,7 +154,7 @@ class GameView(ScatterLayout):
             self.selector.move_to(hover_hex, tile_pos=tile.pos)
             self.selector.hide(False)
             return True
-        
+
         self.on_no_mouse_pos()
         return False
 
