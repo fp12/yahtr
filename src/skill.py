@@ -6,6 +6,7 @@ from hex_lib import Hex
 
 class Effect(Enum):
     damage = 0
+    heal = 1
 
 
 class MoveCheck(Enum):

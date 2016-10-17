@@ -9,6 +9,7 @@ class Type(Enum):
     daggers = 2
     spear = 3
     scythe = 4
+    grimoire = 5
 
 
 class WeaponTemplate:

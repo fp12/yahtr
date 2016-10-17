@@ -56,7 +56,7 @@ class MainWindow(App):
         game_instance.prepare_new_fight(fight_map='hexagon_default', players=[p1, p2])
         game_instance.current_fight.set_tie(p1, p2, tie.Type.Enemy)
         game_instance.current_fight.on_skill_turn += self.on_fight_skill_turn
-        
+
         self.game_view.load_map()
 
         # deployment

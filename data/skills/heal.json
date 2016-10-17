@@ -1,0 +1,16 @@
+{
+	"comment": "Most basic healing magic",
+	"HUN":
+	[
+		{
+			"H": 
+			[
+				{ 
+					"dir": [0, 1, 0, 2],
+					"effects": ["heal"],
+					"values" : [25, 20, 18, 15, 10]
+				}
+			]
+		}
+	]
+}

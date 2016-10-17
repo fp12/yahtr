@@ -1,0 +1,19 @@
+{
+	"move": 4,
+	"initiative" : 11,
+	"speed": 8,
+	"attack": 10,
+	"health": 13,
+	"color": [0.9, 0.9, 0.7],
+	"shields": [1, 0, 0, 0, 0, 0],
+	"actions_tree_name": "base",
+	"weapons":
+	{
+		"grimoire": "C",
+		"daggers": "D"
+	},
+	"skills":
+	{
+		"heal" : "B"
+	}
+}
