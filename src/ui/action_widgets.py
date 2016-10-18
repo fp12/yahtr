@@ -1,8 +1,10 @@
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, StringProperty
+from kivy.uix.scatter import Scatter
 
 from ui.base_widgets import AngledWidget, AngledColoredWidget
 
 from utils import Color
+import skill
 
 
 default_action_arrow_color = Color.red
@@ -10,9 +12,15 @@ default_unit_move_color = Color(0.05, 0.05, 0.85)
 default_enemy_move_color = Color(0.85, 0.05, 0.05)
 
 
-class ActionArrow(AngledColoredWidget):
-    def __init__(self, color=default_action_arrow_color, **kwargs):
-        super(ActionArrow, self).__init__(size_hint=(None, None), color=color, **kwargs)
+class ActionArrow(Scatter):
+    source = StringProperty(None)
+
+    img_mapping = {skill.Effect.damage: '../data/img/red_arrow.png',
+                   skill.Effect.heal: '../data/img/green_arrow.png'}
+
+    def __init__(self, hit, **kwargs):
+        source = ActionArrow.img_mapping[hit.effects[0]]
+        super(ActionArrow, self).__init__(source=source, rotation=hit.direction.angle, scale=.4, **kwargs)
 
 
 class ActionUnitMove(AngledColoredWidget):
@@ -39,7 +47,7 @@ class ActionBuilder(AngledWidget):
                 pos = self.hex_layout.get_mid_edge_position(hit.direction.origin, hit.direction.destination)
                 pos -= self.hex_layout.origin
                 pos += self.pos
-                arrow = ActionArrow(angle=hit.direction.angle, pos=pos.tup)
+                arrow = ActionArrow(hit, center=pos.tup)
                 self.add_widget(arrow)
 
             if hun.U:
