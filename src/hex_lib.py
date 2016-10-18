@@ -100,7 +100,7 @@ class Hex:
         step = 1.0 / max(self.distance(other), 1)
         direction = Hex(q=self._q * (1 - step) + other.q * step, r=self._r * (1 - step) + other.r * step).get_round()
         direction -= self
-        assert(direction in Hex.directions)
+        assert (direction in Hex.directions), '{} to {} = {}'.format(self, other, direction)
         return direction
 
     def get_round(self):

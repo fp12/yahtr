@@ -147,6 +147,10 @@ class GameView(ScatterLayout):
                             self.trajectory.hide()
                         else:
                             self.display_trajectory(piece_selected, hover_hex)
+                            if self.trajectory and self.trajectory.steps:
+                                orientation = piece_selected.hex_coords.direction_to_distant(self.trajectory.steps[-2])
+                                piece_selected.unit.orientation = orientation
+                                piece_selected.do_rotate()
                     elif self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill] and piece_selected.hex_coords != hover_hex:
                         orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
                         if game_instance.current_fight.current_map.unit_can_fit(piece_selected.unit, piece_selected.unit.hex_coords, orientation):
