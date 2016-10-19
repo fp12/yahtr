@@ -5,15 +5,12 @@ from ui.piece import Piece, Status
 from ui.selector import Selector
 from ui.trajectory import Trajectory
 from ui.base_widgets import AngledColoredWidget
+from ui.wall_widget import WallWidget
 
 from hex_lib import Layout
 from game import game_instance
 from actions import ActionType
 from utils import Color
-
-
-class WallWidget(AngledColoredWidget):
-    pass
 
 
 class GameView(ScatterLayout):
@@ -23,7 +20,6 @@ class GameView(ScatterLayout):
     trajectory_color_error = Color(0.9, 0.12, 0, 0.85)
     tile_color = Color(0.8, 0.8, 0.8, 0.4)
     selector_color = Color.darkseagreen
-    wall_color = Color(0.9, 0.9, 0.9, 0.9)
 
     def __init__(self, **kwargs):
         super(GameView, self).__init__(**kwargs)
@@ -45,9 +41,11 @@ class GameView(ScatterLayout):
         for w in game_instance.current_fight.current_map.walls:
             pos = self.hex_layout.get_mid_edge_position(w.origin, w.destination)
             angle = w.origin.angle_to_neighbour(w.destination - w.origin)
-            wall = WallWidget(pos=pos.tup, angle=angle, size_hint=(None, None), size=(self.hex_radius * 2 / 3., self.hex_margin * 3), color=self.wall_color)
+            wall = WallWidget(w, pos=pos.tup, angle=angle, size=(self.hex_radius * 2 / 3., self.hex_margin * 3))
             self.add_widget(wall)
             self.walls.append(wall)
+
+        game_instance.current_fight.current_map.on_wall_hit += self.on_wall_hit
 
         self.add_widget(self.selector)
         self.add_widget(self.trajectory)
@@ -121,6 +119,14 @@ class GameView(ScatterLayout):
         if piece == piece_hovered:
             piece_hovered.on_hovered_in()
         game_instance.current_fight.notify_action_end(ActionType.Move)
+
+    def on_wall_hit(self, origin, destination, destroyed):
+        for w in self.walls:
+            if w.origin == origin and w.destination == destination or w.origin == destination and w.destination == origin:
+                if destroyed:
+                    self.remove_widget(w)
+                    self.walls.remove(w)
+                return
 
     def on_mouse_pos(self, *args):
         # get rounded hex coordinates and do nothing if we didn't change hex

@@ -3,6 +3,7 @@ from math import floor
 
 import data_loader
 from hex_lib import Hex
+from utils.event import Event
 from utils import attr
 import pathfinding
 import tie
@@ -56,6 +57,8 @@ class Map():
         self.tiles = []  # lazy loaded
         self.units = []  # ref
 
+        self.on_wall_hit = Event('origin', 'destination', 'destroyed')
+
     def register_units(self, units):
         self.units.extend(units)
 
@@ -64,8 +67,15 @@ class Map():
             return False
         return True
 
-    def has_wall_between(self, origin, destination):
-        return (origin, destination) in self.walls
+    def get_wall_between(self, origin, destination):
+        return next((w for w in self.walls if w == (origin, destination)), None)
+
+    def wall_damage(self, wall, damage):
+        if WallType.breakable in wall.types:
+            self.on_wall_hit(wall.origin, wall.destination, destroyed=True)
+            self.walls.remove(wall)
+        else:
+            self.on_wall_hit(wall.origin, wall.destination, destroyed=False)
 
     def _get_tiles_parallelogram(self):
         if self.tiles:
@@ -124,7 +134,7 @@ class Map():
             if u != unit:
                 units_hexes.extend(u.current_shape)
         for neighbour in hex_coords.get_neighbours():
-            if self.has_wall_between(hex_coords, neighbour):
+            if self.get_wall_between(hex_coords, neighbour):
                 break
 
             orientation = neighbour - hex_coords

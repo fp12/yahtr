@@ -103,13 +103,17 @@ class Fight:
 
         for hun in rk_skill.skill.huns:
             for hit in hun.H:
+                damage = rk_skill.get_damage(hit)
+
                 base_direction = hit.direction.destination - hit.direction.origin
                 context.direction = base_direction.rotate_to(context.base_unit_orientation)
                 hitted_tile = context.base_unit_coords + copy(hit.direction.destination).rotate_to(context.base_unit_orientation)
-                hitted_unit = self.current_map.get_unit_on(hitted_tile)
-                if hitted_unit:
-                    damage = rk_skill.get_damage(hit)
-                    if damage != 0:
+                hitted_wall = self.current_map.get_wall_between(hitted_tile, hitted_tile - context.direction)
+                if hitted_wall:
+                    self.current_map.wall_damage(hitted_wall, damage)
+                else:
+                    hitted_unit = self.current_map.get_unit_on(hitted_tile)
+                    if hitted_unit and damage != 0:
                         context.hit = hit
                         hitted_unit.health_change(-damage, context)
 
