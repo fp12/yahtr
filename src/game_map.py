@@ -124,7 +124,7 @@ class Map():
         for u in self.units:
             if u.hex_coords == hex_coords:
                 return u
-            if include_shape and hex_coords in u.current_shape:
+            if include_shape and u.hex_test(hex_coords):
                 return u
         return None
 

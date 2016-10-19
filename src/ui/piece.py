@@ -1,5 +1,4 @@
 from enum import Enum
-from copy import copy
 
 from kivy.app import App
 from kivy.properties import NumericProperty
@@ -86,6 +85,7 @@ class Piece(HexWidget):
 
         # events
         self.unit.on_health_change += self.on_unit_health_change
+        self.unit.on_shield_change += self.update_shields
         self.unit.on_skill_move += self.on_unit_skill_move
 
     def do_rotate(self):
@@ -110,7 +110,16 @@ class Piece(HexWidget):
                                          radius=self.radius - (2 + 4) * i, thickness=8 - i * 2,
                                          angle=Hex.angles[shield_index])
                         self.add_widget(w)
-                        self._shields[linear_index].update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
+                        self._shields[linear_index].update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1], i)})
+                elif diff < 0:
+                    to_del = []
+                    for shield_part, (_, _, order) in self._shields[linear_index].items():
+                        print(shield_value, order, old_size)
+                        if shield_value <= order < old_size:
+                            self.remove_widget(shield_part)
+                            to_del.append(shield_part)
+                    for x in to_del:
+                        del self._shields[linear_index][x]
 
     def on_finished_moving(self, trajectory, callback):
         self.status = Status.Idle
@@ -127,8 +136,8 @@ class Piece(HexWidget):
             shape_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
 
         for shield_data in self._shields:
-            for shield_part, offset in shield_data.items():
-                shield_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
+            for shield_part, (dx, dy, _) in shield_data.items():
+                shield_part.pos = (self.pos[0] + dx, self.pos[1] + dy)
 
     @check_root_window
     def on_color_change(self, r, g, b, a):

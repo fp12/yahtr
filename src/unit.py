@@ -46,17 +46,23 @@ class Unit:
 
         # events
         self.on_health_change = Event('health', 'context')
+        self.on_shield_change = Event()
         self.on_skill_move = Event('context', 'unit')
 
     def __repr__(self):
         return 'U<{0}>'.format(self.template.name)
 
     def move_to(self, hex_coords=None, orientation=None):
-        if hex_coords:
+        calc_shape = False
+        if hex_coords and hex_coords != self.hex_coords:
             self.hex_coords = hex_coords
-        if orientation:
+            calc_shape = True
+        if orientation and orientation != self.orientation:
             self.orientation = orientation
-        self.current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
+            calc_shape = True
+
+        if calc_shape:
+            self.current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
 
     def skill_move(self, context, unit=None):
         """ Skill move is not directly managed by the unit because UI may want to do something
@@ -88,10 +94,26 @@ class Unit:
     def hex_test(self, hex_coords):
         if hex_coords in self.current_shape:
             return True
+        return False
 
     def health_change(self, health, context):
         self.health += health
         self.on_health_change(health, context)
+
+    def shield_change(self, shield_index, context):
+        self.shields[shield_index] -= 1
+        self.on_shield_change()
+
+    def get_shield(self, origin, destination):
+        for shape_part_index, shape_part in enumerate(self.current_shape):
+            if shape_part == destination:
+                dir_index = Hex.directions.index(self.orientation)
+                hit_index = Hex.directions.index(origin - destination)
+                shield_index = shape_part_index * 6 + (6 - dir_index + hit_index) % 6
+                print(shape_part_index, dir_index, hit_index, shield_index)
+                if self.shields[shield_index] > 0:
+                    return shield_index
+        return -1
 
 
 def load_all(root_path, get_skill):

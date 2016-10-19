@@ -108,14 +108,19 @@ class Fight:
                 base_direction = hit.direction.destination - hit.direction.origin
                 context.direction = base_direction.rotate_to(context.base_unit_orientation)
                 hitted_tile = context.base_unit_coords + copy(hit.direction.destination).rotate_to(context.base_unit_orientation)
-                hitted_wall = self.current_map.get_wall_between(hitted_tile, hitted_tile - context.direction)
+                origin_tile = hitted_tile - context.direction
+                hitted_wall = self.current_map.get_wall_between(hitted_tile, origin_tile)
                 if hitted_wall:
                     self.current_map.wall_damage(hitted_wall, damage)
                 else:
                     hitted_unit = self.current_map.get_unit_on(hitted_tile)
                     if hitted_unit and damage != 0:
-                        context.hit = hit
-                        hitted_unit.health_change(-damage, context)
+                        shield_index = hitted_unit.get_shield(origin_tile, hitted_tile)
+                        if shield_index != -1:
+                            hitted_unit.shield_change(shield_index, context)
+                        else:
+                            context.hit = hit
+                            hitted_unit.health_change(-damage, context)
 
             if hun.U:
                 get_move_context(context, unit, hun.U)
