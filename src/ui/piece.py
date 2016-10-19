@@ -14,7 +14,7 @@ from ui.utils import check_root_window
 
 from game import game_instance
 from skill import MoveType
-from hex_lib import Hex
+from core.hex_lib import Hex, hex_angle, index_of_direction
 from utils import Color
 import actions
 
@@ -63,7 +63,7 @@ class Piece(HexWidget):
             for shape_part_other in self.unit.shape:
                 same_shape_parts = shape_part == shape_part_other
                 processed = (shape_part, shape_part_other) in done_list or (shape_part_other, shape_part) in done_list
-                if not same_shape_parts and not processed and (shape_part_other - shape_part) in Hex.directions:
+                if not same_shape_parts and not processed and index_of_direction(shape_part_other - shape_part) != -1:
                     done_list.append((shape_part, shape_part_other))
                     hex_pos = self.hex_layout.hex_to_pixel(part_hex)
                     part_hex_other = self.hex_coords + shape_part_other
@@ -108,7 +108,7 @@ class Piece(HexWidget):
                                          layout=self.hex_layout,
                                          color=[col, col, col, 1],
                                          radius=self.radius - (2 + 4) * i, thickness=8 - i * 2,
-                                         angle=Hex.angles[shield_index])
+                                         angle=hex_angle(shield_index))
                         self.add_widget(w)
                         self._shields[linear_index].update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1], i)})
                 elif diff < 0:

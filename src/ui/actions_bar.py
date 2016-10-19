@@ -6,7 +6,7 @@ from ui.hex_widget import HexWidget
 
 from game import game_instance
 from actions import ActionType
-from hex_lib import Layout
+from core.hex_lib import Layout
 
 
 class UnitActionTile(ButtonBehavior, HexWidget):
@@ -78,7 +78,7 @@ class ActionsBar(RelativeLayout):
 
     def on_touch_down(self, touch):
         local_pos = self.to_local(*touch.pos)
-        hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
+        hover_hex = self.hex_layout.pixel_to_hex(local_pos)
         for child in self.children:
             if child.hex_coords == hover_hex:
                 self._on_action_selected(button=child)
@@ -87,7 +87,7 @@ class ActionsBar(RelativeLayout):
 
     def on_mouse_pos(self, stuff, pos):
         local_pos = self.to_local(*pos)
-        hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
+        hover_hex = self.hex_layout.pixel_to_hex(local_pos)
         for child in self.children:
             if child.hex_coords == hover_hex:
                 if self.last_hovered_child != child:

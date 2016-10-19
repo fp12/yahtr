@@ -1,4 +1,6 @@
-
 *.pyc
-
+*.pyd
+*.c
 .DS_Store
+build
+dist

@@ -1,7 +1,7 @@
 from enum import Enum
 
 import data_loader
-from hex_lib import Hex
+from core.hex_lib import Hex
 
 
 class Effect(Enum):

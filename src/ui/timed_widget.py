@@ -7,7 +7,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from ui.hex_widget import HexWidget
 
 from game import game_instance
-from hex_lib import Layout
+from core.hex_lib import Layout
 
 
 class TimedWidget(ButtonBehavior, HexWidget):
@@ -74,14 +74,14 @@ class TimedWidgetBar(RelativeLayout):
 
     def get_unit_on_pos(self, pos):
         local_pos = self.to_local(*pos)
-        local_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
+        local_hex = self.hex_layout.pixel_to_hex(local_pos)
         unit_on_pos = None
         for child in self.children:
             if child.hex_coords == local_hex:
                 unit_on_pos = child.unit
                 break
         else: # no break
-            local_hex = self.info_layout.pixel_to_hex(local_pos).get_round()
+            local_hex = self.info_layout.pixel_to_hex(local_pos)
             if local_hex == (0, 0):
                 unit_on_pos = self.info_widget.unit
         return unit_on_pos

@@ -4,7 +4,7 @@ from kivy.properties import NumericProperty, ListProperty
 
 from ui.base_widgets import ColoredWidget
 
-from hex_lib import Hex
+from core.hex_lib import Hex
 
 
 class HexWidget(ColoredWidget):

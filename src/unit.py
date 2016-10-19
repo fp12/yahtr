@@ -1,6 +1,6 @@
 import copy
 
-from hex_lib import Hex
+from core.hex_lib import Hex, index_of_direction
 import data_loader
 from utils import attr
 from utils.event import Event
@@ -60,7 +60,6 @@ class Unit:
         if orientation and orientation != self.orientation:
             self.orientation = orientation
             calc_shape = True
-
         if calc_shape:
             self.current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
 
@@ -107,10 +106,9 @@ class Unit:
     def get_shield(self, origin, destination):
         for shape_part_index, shape_part in enumerate(self.current_shape):
             if shape_part == destination:
-                dir_index = Hex.directions.index(self.orientation)
-                hit_index = Hex.directions.index(origin - destination)
+                dir_index = index_of_direction(self.orientation)
+                hit_index = index_of_direction(origin - destination)
                 shield_index = shape_part_index * 6 + (6 - dir_index + hit_index) % 6
-                print(shape_part_index, dir_index, hit_index, shield_index)
                 if self.shields[shield_index] > 0:
                     return shield_index
         return -1

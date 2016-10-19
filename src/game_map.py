@@ -2,10 +2,11 @@ from enum import Enum
 from math import floor
 
 import data_loader
-from hex_lib import Hex
+from core.hex_lib import Hex, get_hex_direction
+from core import pathfinding
 from utils.event import Event
 from utils import attr
-import pathfinding
+
 import tie
 
 
@@ -18,14 +19,14 @@ class MapType(Enum):
 
 
 class WallType(Enum):
-    breakable = 0
+    breakable = 1
 
 
 class Wall:
     def __init__(self, data):
-        self.origin = Hex(qrs=data['origin'])
-        self.destination = Hex(qrs=data['destination'])
-        self.types = [WallType[d] for d in data['type']] if 'type' in data else []
+        self.origin = Hex(*data[0:2])
+        self.destination = Hex(*data[2:4])
+        self.types = [WallType[x] for x in data[4:-1]] if len(data) > 4 else []
 
     def __eq__(self, other):
         o1, o2 = other
@@ -187,8 +188,8 @@ class Map():
             return self.get_free_neighbours(unit, a)
 
         # if the unit can fit in at least 1 direction, go!
-        for direction in Hex.directions:
-            if self.unit_can_fit(unit, goal, Hex(qrs=direction)):
+        for i in range(6):
+            if self.unit_can_fit(unit, goal, get_hex_direction(i)):
                 return pathfinding.get_best_path(start, goal, heuristic, get_neighbours, get_cost)
         return []
 

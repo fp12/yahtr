@@ -16,7 +16,7 @@ from game import game_instance
 from player import Player
 from unit import Unit
 import tie
-from hex_lib import Hex
+from core.hex_lib import Hex
 
 
 Builder.load_file('src/ui/kv/main_window.kv')
@@ -53,7 +53,7 @@ class MainWindow(App):
         p1 = Player(game_instance, 'Player 1')
         p2 = Player(game_instance, 'Player 2')
 
-        game_instance.prepare_new_fight(fight_map='hexagon_default', players=[p1, p2])
+        game_instance.prepare_new_fight(fight_map='demo_map', players=[p1, p2])
         game_instance.current_fight.set_tie(p1, p2, tie.Type.Enemy)
         game_instance.current_fight.on_skill_turn += self.on_fight_skill_turn
 

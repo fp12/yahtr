@@ -7,7 +7,7 @@ from ui.trajectory import Trajectory
 from ui.base_widgets import AngledColoredWidget
 from ui.wall_widget import WallWidget
 
-from hex_lib import Layout
+from core.hex_lib import Layout
 from game import game_instance
 from actions import ActionType
 from utils import Color
@@ -131,7 +131,7 @@ class GameView(ScatterLayout):
     def on_mouse_pos(self, *args):
         # get rounded hex coordinates and do nothing if we didn't change hex
         local_pos = self.to_local(*args[1])
-        hover_hex = self.hex_layout.pixel_to_hex(local_pos).get_round()
+        hover_hex = self.hex_layout.pixel_to_hex(local_pos)
         if not self.selector.hidden and self.selector.hex_coords == hover_hex:
             return False
 
