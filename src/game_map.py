@@ -26,9 +26,11 @@ class Wall:
     def __init__(self, data):
         self.origin = Hex(*data[0:2])
         self.destination = Hex(*data[2:4])
-        self.types = [WallType[x] for x in data[4:-1]] if len(data) > 4 else []
+        self.types = [WallType(x) for x in data[4:]]
 
     def __eq__(self, other):
+        if isinstance(other, Wall):
+            return other.origin == self.origin and other.destination == self.destination
         o1, o2 = other
         return (o1 == self.origin and o2 == self.destination) or (o1 == self.destination and o2 == self.origin)
 
@@ -134,17 +136,15 @@ class Map():
         for u in self.units:
             if u != unit:
                 units_hexes.extend(u.current_shape)
+
         for neighbour in hex_coords.get_neighbours():
             if self.get_wall_between(hex_coords, neighbour):
-                break
-
+                continue
             orientation = neighbour - hex_coords
-            shape_can_fit = True
             for shape_part in unit.calc_shape_at(neighbour, orientation):
                 if shape_part not in self.tiles or shape_part in units_hexes:
-                    shape_can_fit = False
                     break
-            if shape_can_fit:
+            else:
                 yield neighbour
 
     def unit_can_fit(self, unit, hex_coords, orientation):

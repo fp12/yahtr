@@ -27,7 +27,7 @@ cpdef Hex get_hex_direction(size_t i):
 
 
 cdef class Hex:
-    def __cinit__(self, int q=0, int r=0):
+    def __cinit__(self, int q, int r):
         self._q, self._r = q, r
 
     @property
@@ -89,8 +89,7 @@ cdef class Hex:
 
     def __reduce__(self):
         # needed for copy and deepcopy:
-        # a tuple as specified in the pickle docs - (class_or_constructor, 
-        # (tuple, of, args, to, constructor))
+        # a tuple as specified in the pickle docs - (class_or_constructor, (tuple, of, args, to, constructor))
         return (self.__class__, (self._q, self._r))
 
     cpdef distance(self, Hex other):
@@ -202,6 +201,11 @@ cdef class Point:
         self._x -= other.x
         self._y -= other.y
         return self
+
+    def __reduce__(self):
+        # needed for copy and deepcopy:
+        # a tuple as specified in the pickle docs - (class_or_constructor, (tuple, of, args, to, constructor))
+        return (self.__class__, (self._x, self._y))
 
 
 cdef Point to_point(x):

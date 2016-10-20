@@ -2,7 +2,7 @@ from utils import PriorityQueue
 from .hex_lib cimport Hex
 
 
-cpdef get_best_path(Hex start, Hex goal, heuristic, get_neighbours, get_cost):
+cpdef list get_best_path(Hex start, Hex goal, heuristic, get_neighbours, get_cost):
     frontier = PriorityQueue()
     frontier.put(start, 0)
     cdef dict came_from = {}
@@ -11,7 +11,7 @@ cpdef get_best_path(Hex start, Hex goal, heuristic, get_neighbours, get_cost):
     cost_so_far[start] = 0
 
     cdef Hex current
-    cdef int new_cost, priority
+    cdef unsigned int new_cost, priority
 
     while not frontier.empty():
         current = frontier.get()
@@ -29,9 +29,10 @@ cpdef get_best_path(Hex start, Hex goal, heuristic, get_neighbours, get_cost):
 
     # something wrong happened?!
     if goal not in came_from:
+        print('couldnt find a path between {} and {}'.format(start, goal))
         return []
 
-    path = [goal]
+    cdef list path = [goal]
     cdef Hex backtrack_end = goal
     while backtrack_end != start:
         backtrack_end = came_from[backtrack_end]
@@ -62,5 +63,7 @@ def get_reachable(start, move_max, get_neighbours, get_cost):
         openList.sort(key=lambda h: movementPoints[h])
         h = openList.pop(-1)
         expand(h)
+    
+    closedList.remove(start)
 
     return closedList

@@ -64,7 +64,7 @@ class Contour(ColoredWidget):
                         points.append(offset + self.x)
                     else:
                         points.append(offset + self.y)
-                Line(points=points, width=3, joint='bevel')
+                Line(points=points, width=2, joint='bevel')
 
     @check_root_window
     def on_pos(self, *args):

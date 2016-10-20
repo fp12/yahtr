@@ -5,8 +5,8 @@ from game_map import WallType
 
 
 class WallWidget(AngledColoredWidget):
-    color_solid = Color(0.9, 0.9, 0.9, 0.9)
-    color_breakable = Color(0.9, 0.9, 0.9, 0.9)
+    color_solid = Color(1., 1., 1., 1.)
+    color_breakable = Color(0.6, 0.6, 0.6, 1.)
 
     def __init__(self, wall, **kwargs):
         self.origin = wall.origin

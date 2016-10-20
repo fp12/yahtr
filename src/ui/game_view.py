@@ -14,8 +14,8 @@ from utils import Color
 
 
 class GameView(ScatterLayout):
-    hex_radius = 40
-    hex_margin = 2
+    hex_radius = 60
+    hex_margin = 3
     trajectory_color_ok = Color(0, 0.392157, 0, 0.85)
     trajectory_color_error = Color(0.9, 0.12, 0, 0.85)
     tile_color = Color(0.8, 0.8, 0.8, 0.4)
@@ -41,7 +41,7 @@ class GameView(ScatterLayout):
         for w in game_instance.current_fight.current_map.walls:
             pos = self.hex_layout.get_mid_edge_position(w.origin, w.destination)
             angle = w.origin.angle_to_neighbour(w.destination - w.origin)
-            wall = WallWidget(w, pos=pos.tup, angle=angle, size=(self.hex_radius * 2 / 3., self.hex_margin * 3))
+            wall = WallWidget(w, pos=pos.tup, angle=angle, size=(self.hex_radius * 7. / 9., self.hex_margin * 0.9))
             self.add_widget(wall)
             self.walls.append(wall)
 
@@ -152,9 +152,15 @@ class GameView(ScatterLayout):
                         if piece_selected.status == Status.Moving or new_piece_hovered:
                             self.trajectory.hide()
                         else:
-                            self.display_trajectory(piece_selected, hover_hex)
-                            if self.trajectory and len(self.trajectory.steps) > 1:
-                                orientation = piece_selected.hex_coords.direction_to_distant(self.trajectory.steps[-2])
+                            orientation = None
+                            if piece_selected.is_in_move_range(hover_hex):
+                                self.display_trajectory(piece_selected, hover_hex)
+                                if self.trajectory and len(self.trajectory.steps) > 1:
+                                    orientation = piece_selected.hex_coords.direction_to_distant(self.trajectory.steps[-2])
+                            else:
+                                self.trajectory.hide()
+                                orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
+                            if orientation:
                                 piece_selected.unit.move_to(orientation=orientation)
                                 piece_selected.do_rotate()
                     elif self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill] and piece_selected.hex_coords != hover_hex:
@@ -181,7 +187,7 @@ class GameView(ScatterLayout):
         return ret
 
     def on_touch_up(self, touch):
-        if touch.grab_current is not self:
+        if touch.grab_current and touch.grab_current is not self:
             return super(GameView, self).on_touch_up(touch)
 
         if touch.ud['frame_count'] > 2:
