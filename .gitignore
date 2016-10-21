@@ -1,6 +1,7 @@
 *.pyc
 *.pyd
 *.c
+*.so
 .DS_Store
 build
 dist
