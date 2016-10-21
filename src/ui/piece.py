@@ -95,6 +95,13 @@ class Piece(HexWidget):
             self.skill_widget.angle = self.angle
 
     def update_shields(self):
+        def del_part(anim, widget):
+            self.remove_widget(widget)
+            for d in self._shields:
+                if widget in d:
+                    del d[widget]
+                    return
+
         for shape_part_index, shape_part in enumerate(self.unit.shape):
             for shield_index in range(6):
                 linear_index = shape_part_index * 6 + shield_index
@@ -113,13 +120,13 @@ class Piece(HexWidget):
                         self.add_widget(w)
                         self._shields[linear_index].update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1], i)})
                 elif diff < 0:
-                    to_del = []
                     for shield_part, (_, _, order) in self._shields[linear_index].items():
                         if shield_value <= order < old_size:
-                            self.remove_widget(shield_part)
-                            to_del.append(shield_part)
-                    for x in to_del:
-                        del self._shields[linear_index][x]
+                            shield_part.color = hit_color
+                            anim = Animation(thickness=shield_part.thickness * 2, a=0, duration=0.5, t='in_out_circ')
+
+                            app = App.get_running_app()
+                            app.anim_scheduler.add(anim, shield_part, 0, del_part)
 
     def on_finished_moving(self, trajectory, callback):
         self.status = Status.Idle

@@ -21,7 +21,7 @@ class AnimScheduler:
 
     def _on_end(self, external_cb=None, *args):
         if external_cb:
-            external_cb()
+            external_cb(*args)
         self.anim_count -= 1
         self._start()
 
