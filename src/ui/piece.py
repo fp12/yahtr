@@ -4,6 +4,13 @@ from kivy.app import App
 from kivy.properties import NumericProperty
 from kivy.animation import Animation
 
+from core.hex_lib import hex_angle, index_of_direction
+
+from game import game_instance
+from skill import MoveType
+from utils import Color
+import actions
+
 from ui.hex_widget import HexWidget
 from ui.tile import Tile
 from ui.action_widgets import ActionBuilder
@@ -11,12 +18,6 @@ from ui.shield_widget import ShieldWidget
 from ui.contour import Contour
 from ui.base_widgets import AngledColoredWidget
 from ui.utils import check_root_window
-
-from game import game_instance
-from skill import MoveType
-from core.hex_lib import Hex, hex_angle, index_of_direction
-from utils import Color
-import actions
 
 
 hit_color = Color.firebrick

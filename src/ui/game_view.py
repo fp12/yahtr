@@ -1,4 +1,5 @@
 from kivy.uix.scatterlayout import ScatterLayout
+from kivy.animation import Animation
 
 from ui.tile import Tile
 from ui.piece import Piece, Status
@@ -106,11 +107,18 @@ class GameView(ScatterLayout):
             if piece.selected:
                 return piece
 
+    def center_game_view(self, pos):
+        Animation.cancel_all(self)
+        pos = (self.hex_layout.origin.x - pos[0], self.hex_layout.origin.y - pos[1])
+        anim = Animation(pos=pos, duration=1.)
+        anim.start(self)
+
     def on_next_turn(self, unit):
         self.trajectory.hide()
         for piece in self.pieces:
             if piece.unit == unit:
                 piece.do_select(True)
+                self.center_game_view(piece.pos)
             elif piece.selected:
                 piece.do_select(False)
 
