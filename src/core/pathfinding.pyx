@@ -27,9 +27,9 @@ cpdef list get_best_path(Hex start, Hex goal, heuristic, get_neighbours, get_cos
                 frontier.put(neighbour, priority)
                 came_from[neighbour] = current
 
-    # something wrong happened?!
+    # Maybe the goal was behind a wall...
+    # it can happen, so no real error notification
     if goal not in came_from:
-        print('couldnt find a path between {} and {}'.format(start, goal))
         return []
 
     cdef list path = [goal]
@@ -40,30 +40,42 @@ cpdef list get_best_path(Hex start, Hex goal, heuristic, get_neighbours, get_cos
     return path
 
 
-def get_reachable(start, move_max, get_neighbours, get_cost):
-    def expand(h):
-        parentPoints = movementPoints[h]
-        closedList.append(h)
-        for neighbour in get_neighbours(h):
-            if neighbour in closedList or neighbour in openList:
+cdef class Reachable:
+    cdef list openList, closedList
+    cdef dict movementPoints
+    cdef Hex start
+    cdef object get_neighbours, get_cost
+    cdef object sort_lambda
+
+    def __init__(self, Hex start, unsigned int move_max, get_neighbours, get_cost):
+        self.start = start
+        self.openList = []
+        self.closedList = []
+        self.movementPoints = {start: move_max}
+        self.get_neighbours = get_neighbours
+        self.get_cost = get_cost
+        self.sort_lambda = lambda h: self.movementPoints[h]
+
+    cpdef list get(self):
+        self.expand(self.start)
+        cdef Hex next
+        while len(self.openList) > 0:
+            self.openList.sort(key=self.sort_lambda)
+            next = self.openList.pop(-1)
+            self.expand(next)
+
+        self.closedList.remove(self.start)
+        return self.closedList
+
+    cdef void expand(self, h):
+        cdef unsigned int parentPoints = self.movementPoints[h]
+        cdef int points
+        self.closedList.append(h)
+        for neighbour in self.get_neighbours(h):
+            if neighbour in self.closedList or neighbour in self.openList:
                 continue
-            points = parentPoints - get_cost(neighbour)
+            points = parentPoints - self.get_cost(neighbour)
             if points < 0:
                 continue  # hex is outside of the reachable area
-            openList.append(neighbour)
-            movementPoints[neighbour] = points
-
-    openList = []
-    closedList = []
-    movementPoints = {start: move_max}
-
-    expand(start)
-
-    while len(openList) > 0:
-        openList.sort(key=lambda h: movementPoints[h])
-        h = openList.pop(-1)
-        expand(h)
-    
-    closedList.remove(start)
-
-    return closedList
+            self.openList.append(neighbour)
+            self.movementPoints[neighbour] = points

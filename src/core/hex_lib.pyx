@@ -1,6 +1,11 @@
 from cpython cimport array
-from math import sqrt, pi, cos, sin
+from math import pi
 
+cdef extern from "math.h":
+    double sin(double)
+    double cos(double)
+    double sqrt(double)
+ 
 
 DEF NHEX = 6
 

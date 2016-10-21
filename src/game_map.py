@@ -201,4 +201,4 @@ class Map():
         def get_neighbours(a):
             return self.get_free_neighbours(unit, a)
 
-        return pathfinding.get_reachable(unit.hex_coords, unit.move, get_neighbours, get_cost)
+        return pathfinding.Reachable(unit.hex_coords, unit.move, get_neighbours, get_cost).get()
