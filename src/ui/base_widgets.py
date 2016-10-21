@@ -10,10 +10,10 @@ class AngledWidget(Widget):
 
 
 class ColoredWidget(Widget):
-    r = NumericProperty(1)
-    g = NumericProperty(1)
-    b = NumericProperty(1)
-    a = NumericProperty(1)
+    r = NumericProperty(1.)
+    g = NumericProperty(1.)
+    b = NumericProperty(1.)
+    a = NumericProperty(1.)
 
     def __init__(self, color=None, **kwargs):
         if color:
@@ -39,7 +39,10 @@ class ColoredWidget(Widget):
         return self.a == 0
 
     def hide(self, do_hide=True):
-        self.a = 0 if do_hide else 1
+        self.a = 0 if do_hide else 1.
+
+    def show(self):
+        self.a = 1.
 
     def restore_old_color(self):
         if self._old_color:

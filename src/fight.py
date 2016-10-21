@@ -65,7 +65,7 @@ class Fight:
 
     def _end_action_end(self, unit, history):
         new_action = unit.actions_tree.get_node_from_history(history)
-        if not new_action or new_action.default.data == actions.ActionType.EndTurn:
+        if new_action.default.data == actions.ActionType.EndTurn:
             self.end_turn()
         else:
             rk_skills = unit.get_skills(new_action.default.data)

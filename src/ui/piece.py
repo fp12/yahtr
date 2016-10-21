@@ -115,7 +115,6 @@ class Piece(HexWidget):
                 elif diff < 0:
                     to_del = []
                     for shield_part, (_, _, order) in self._shields[linear_index].items():
-                        print(shield_value, order, old_size)
                         if shield_value <= order < old_size:
                             self.remove_widget(shield_part)
                             to_del.append(shield_part)
@@ -171,7 +170,6 @@ class Piece(HexWidget):
             if context.move_info.orientation:
                 if abs(context.target_angle - self.angle) > 180:
                     self.angle -= 360
-                print(self.angle, context.target_angle)
                 anim &= Animation(angle=context.target_angle, duration=0.2)
         elif context.move_info.move_type == MoveType.blink:
             anim = Animation(a=0, duration=0.1)
@@ -180,7 +178,6 @@ class Piece(HexWidget):
             if context.move_info.orientation:
                 if abs(context.target_angle - self.angle) > 180:
                     self.angle -= 360
-                print(self.angle, context.target_angle)
                 anim += Animation(angle=context.target_angle, duration=0)
             anim += Animation(a=1, duration=0.2)
         elif context.move_info.move_type == MoveType.pushed:
@@ -282,9 +279,9 @@ class Piece(HexWidget):
         if self.selected != select:
             if select:
                 self.display_reachable_tiles()
-                self.contour.a = 1
+                self.contour.show()
             else:
                 self.clean_skill()
                 self.clean_reachable_tiles()
-                self.contour.a = 0
+                self.contour.hide()
             self.selected = select

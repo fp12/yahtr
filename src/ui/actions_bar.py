@@ -92,8 +92,8 @@ class ActionsBar(RelativeLayout):
             if child.hex_coords == hover_hex:
                 if self.last_hovered_child != child:
                     if self.last_hovered_child:
-                        self.last_hovered_child.selector.a = 0
-                    child.selector.a = 1
+                        self.last_hovered_child.selector.hide()
+                    child.selector.show()
                     self.last_hovered_child = child
                 return True
 
@@ -102,5 +102,5 @@ class ActionsBar(RelativeLayout):
 
     def on_no_mouse_pos(self):
         if self.last_hovered_child:
-            self.last_hovered_child.selector.a = 0
+            self.last_hovered_child.selector.hide()
             self.last_hovered_child = None

@@ -40,14 +40,14 @@ class MainWindow(App):
         game_instance.load()
 
         # prepare UI
-        self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size)
-        self.layout.add_widget(self.game_view)
-
         self.time_bar = TimedWidgetBar(pos=(Window.width / 2 - 60, 75), size_hint=(None, 1), width=75)
-        self.layout.add_widget(self.time_bar)
+        self.layout.add_widget(self.time_bar, 0)
 
         self.actions_bar = ActionsBar(pos=self.time_bar.get_pos_for_actions_bar(), size_hint=(None, None))
-        self.layout.add_widget(self.actions_bar)
+        self.layout.add_widget(self.actions_bar, 1)
+
+        self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size, auto_bring_to_front=False)
+        self.layout.add_widget(self.game_view, 2)
 
         # prepare fight
         p1 = Player(game_instance, 'Player 1')
@@ -96,6 +96,7 @@ class MainWindow(App):
         self.actions_bar.create()
 
         self._key_binder.update({'d': [self.game_view.on_debug_key],
+                                 'c': [self.print_children],
                                  '0': [self.actions_bar.on_key_pressed],
                                  '1': [self.actions_bar.on_key_pressed],
                                  '2': [self.actions_bar.on_key_pressed],
@@ -143,3 +144,10 @@ class MainWindow(App):
                 self.game_view.on_no_mouse_pos()
             else:
                 self.game_view.on_mouse_pos(*args)
+
+    def print_children(self, *args):
+        def recurse(w, tab):
+            for c in w.children:
+                print('\t' * tab, c)
+                recurse(c, tab + 1)
+        recurse(self.layout, 0)

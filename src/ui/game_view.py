@@ -5,7 +5,6 @@ from ui.tile import Tile
 from ui.piece import Piece, Status
 from ui.selector import Selector
 from ui.trajectory import Trajectory
-from ui.base_widgets import AngledColoredWidget
 from ui.wall_widget import WallWidget
 
 from core.hex_lib import Layout
@@ -137,7 +136,6 @@ class GameView(ScatterLayout):
                 return
 
     def on_mouse_pos(self, *args):
-        # get rounded hex coordinates and do nothing if we didn't change hex
         local_pos = self.to_local(*args[1])
         hover_hex = self.hex_layout.pixel_to_hex(local_pos)
         if not self.selector.hidden and self.selector.hex_coords == hover_hex:
@@ -179,7 +177,7 @@ class GameView(ScatterLayout):
 
             # finally move the selector
             self.selector.move_to(hover_hex, tile_pos=tile.pos)
-            self.selector.hide(False)
+            self.selector.show()
             return True
 
         self.on_no_mouse_pos()
@@ -190,15 +188,19 @@ class GameView(ScatterLayout):
         self.trajectory.hide()
 
     def on_touch_down(self, touch):
-        ret = super(GameView, self).on_touch_down(touch)
-        touch.ud['frame_count'] = 1
-        return ret
+        if not touch.is_mouse_scrolling:
+            touch.grab(self)
+            touch.ud['frame_count'] = 1
 
     def on_touch_up(self, touch):
-        if touch.grab_current and touch.grab_current is not self:
-            return super(GameView, self).on_touch_up(touch)
+        if touch.is_mouse_scrolling:
+            return
 
-        if touch.ud['frame_count'] > 2:
+        if touch.grab_current is self:
+            touch.ungrab(self)
+            return
+
+        if 'frame_count' in touch.ud and touch.ud['frame_count'] > 2:
             return
 
         piece_selected = self.get_selected_piece()
@@ -217,8 +219,6 @@ class GameView(ScatterLayout):
                 self.trajectory.hide()
                 piece_selected.move_to(self.selector.hex_coords, trajectory=self.trajectory.steps, on_move_end=self.on_piece_move_end)
                 return True
-
-        return super(GameView, self).on_touch_up(touch)
 
     def on_touch_move(self, touch):
         if touch.grab_current is not self:

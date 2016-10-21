@@ -20,7 +20,7 @@ class TimedWidget(ButtonBehavior, HexWidget):
     def __init__(self, unit, prio, **kwargs):
         super(TimedWidget, self).__init__(**kwargs)
         self.unit = unit
-        self.color = unit.color + [1]
+        self.color = unit.color
         self.UnitText = '{0}\n({1})'.format(self.unit.template.name, prio)
 
 
@@ -32,7 +32,7 @@ class UnitInfoWidget(ButtonBehavior, HexWidget):
 
     def set_unit(self, unit):
         self.unit = unit
-        self.color = unit.color + [1]
+        self.color = unit.color
 
 
 class TimedWidgetBar(RelativeLayout):
@@ -80,7 +80,7 @@ class TimedWidgetBar(RelativeLayout):
             if child.hex_coords == local_hex:
                 unit_on_pos = child.unit
                 break
-        else: # no break
+        else:
             local_hex = self.info_layout.pixel_to_hex(local_pos)
             if local_hex == (0, 0):
                 unit_on_pos = self.info_widget.unit
@@ -91,9 +91,9 @@ class TimedWidgetBar(RelativeLayout):
         if hovered_unit != self.last_hovered_unit:
             for child in self.children:
                 if child.unit == hovered_unit:
-                    child.selector.a = 1
+                    child.selector.show()
                 else:
-                    child.selector.a = 0
+                    child.selector.hide()
             self.last_hovered_unit = hovered_unit
             return True
         return False
