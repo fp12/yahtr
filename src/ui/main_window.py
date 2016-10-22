@@ -61,7 +61,7 @@ class MainWindow(App):
 
         # deployment
         w11 = p1.add_weapon('default_sword')
-        w12 = p1.add_weapon('default_spear')
+        w12 = p1.add_weapon('default_grimoire')
         w21 = p2.add_weapon('default_daggers')
         w22 = p2.add_weapon('default_sword')
         w31 = p1.add_weapon('default_scythe')
@@ -69,12 +69,12 @@ class MainWindow(App):
         u11 = Unit(game_instance.get_unit_template('reaper'))
         u12 = Unit(game_instance.get_unit_template('guard'))
         u21 = Unit(game_instance.get_unit_template('rogue'))
-        u22 = Unit(game_instance.get_unit_template('boss'))
+        u22 = Unit(game_instance.get_unit_template('white_mage'))
 
         u11.equip(w31)
         u12.equip(w11)
         u21.equip(w21)
-        u22.equip(w22)
+        u22.equip(w12)
 
         p1.add_unit(u11)
         p1.add_unit(u12)

@@ -21,6 +21,7 @@ from ui.utils import check_root_window
 
 
 hit_color = Color.firebrick
+heal_color = Color.lightgreen
 contour_color = Color.forestgreen
 contour_color.a = 0
 reachable_color = Color.olivedrab
@@ -94,6 +95,15 @@ class Piece(HexWidget):
         if self.skill_widget:
             self.skill_widget.angle = self.angle
 
+
+#    ######  ##     ## #### ######## ##       ########   ######
+#   ##    ## ##     ##  ##  ##       ##       ##     ## ##    ##
+#   ##       ##     ##  ##  ##       ##       ##     ## ##
+#    ######  #########  ##  ######   ##       ##     ##  ######
+#         ## ##     ##  ##  ##       ##       ##     ##       ##
+#   ##    ## ##     ##  ##  ##       ##       ##     ## ##    ##
+#    ######  ##     ## #### ######## ######## ########   ######
+#   ############################################################
     def update_shields(self):
         def del_part(anim, widget):
             self.remove_widget(widget)
@@ -151,13 +161,18 @@ class Piece(HexWidget):
         for shape_part, _ in self._shape_parts.items():
             shape_part.color = (r, g, b, a)
 
-    def on_unit_health_change(self, health, context):
-        pt = self.hex_layout.hex_to_pixel(self.hex_coords + context.direction)
-        target_pos_x = self.x + (pt.x - self.x) / 10
-        target_pos_y = self.y + (pt.y - self.y) / 10
+    def on_unit_health_change(self, health_change, context):
         duration = 0.2
-        anim = Animation(pos=(target_pos_x, target_pos_y), r=hit_color.r, g=hit_color.g, b=hit_color.b, duration=duration / 3)
-        anim += Animation(pos=(self.x, self.y), r=self.r, g=self.g, b=self.b, duration=duration)
+        anim = None
+        if health_change < 0:
+            pt = self.hex_layout.hex_to_pixel(self.hex_coords + context.direction)
+            target_pos_x = self.x + (pt.x - self.x) / 10
+            target_pos_y = self.y + (pt.y - self.y) / 10
+            anim = Animation(pos=(target_pos_x, target_pos_y), **hit_color.rgb_dict, duration=duration / 3)
+            anim += Animation(pos=(self.x, self.y), r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
+        else:
+            anim = Animation(radius=self.radius * 1.1, **heal_color.rgb_dict, duration=duration / 3.)
+            anim += Animation(radius=self.radius, r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
 
         app = App.get_running_app()
         app.anim_scheduler.add(anim, self, context.hit.order)
@@ -226,6 +241,14 @@ class Piece(HexWidget):
     def load(self):
         self.update_shields()
 
+#    ######  ##    ## #### ##       ##        ######
+#   ##    ## ##   ##   ##  ##       ##       ##    ##
+#   ##       ##  ##    ##  ##       ##       ##
+#    ######  #####     ##  ##       ##        ######
+#         ## ##  ##    ##  ##       ##             ##
+#   ##    ## ##   ##   ##  ##       ##       ##    ##
+#    ######  ##    ## #### ######## ########  ######
+#   #################################################
     def clean_skill(self):
         if self.skill_widget:
             self.parent.remove_widget(self.skill_widget)

@@ -10,6 +10,7 @@ __colors = {
     'forestgreen': (0.133333, 0.545098, 0.13333),
     'olivedrab': (0.419608, 0.556863, 0.137255),
     'darkseagreen': (0.560784, 0.737255, 0.560784),
+    'lightgreen': (0.564706, 0.933333, 0.564706)
 }
 
 
@@ -76,6 +77,10 @@ class Color(metaclass=__MetaColor):
     @a.setter
     def a(self, value):
         self.color[3] = value
+
+    @property
+    def rgb_dict(self):
+        return {'r': self.color[0], 'g': self.color[1], 'b': self.color[2]}
 
 
 def __add_metacolor_property(name, value):

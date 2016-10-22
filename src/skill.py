@@ -87,8 +87,10 @@ class RankedSkill:
     def __repr__(self):
         return 'RkSk<{0}:{1}>'.format(self.skill.name, self.rank.name)
 
-    def get_damage(self, hit):
+    def get_skill_health_change(self, hit):
         if Effect.damage in hit.effects:
+            return -hit.values[self.rank.value]
+        if Effect.heal in hit.effects:
             return hit.values[self.rank.value]
         return 0
 

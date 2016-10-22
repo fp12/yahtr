@@ -2,7 +2,7 @@ import copy
 
 from core.hex_lib import Hex, index_of_direction
 import data_loader
-from utils import attr
+from utils import attr, clamp
 from utils.event import Event
 from actions import ActionType, actions_trees
 from rank import Rank
@@ -96,7 +96,7 @@ class Unit:
         return False
 
     def health_change(self, health, context):
-        self.health += health
+        self.health = clamp(0, self.health + health, self.template.health)
         self.on_health_change(health, context)
 
     def shield_change(self, shield_index, context):
