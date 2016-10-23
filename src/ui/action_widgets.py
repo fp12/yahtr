@@ -7,11 +7,6 @@ from utils import Color
 import skill
 
 
-default_action_arrow_color = Color.red
-default_unit_move_color = Color(0.05, 0.05, 0.85)
-default_enemy_move_color = Color(0.85, 0.05, 0.05)
-
-
 class ActionArrow(Scatter):
     source = StringProperty(None)
 
@@ -33,6 +28,9 @@ class ActionNMIMove(AngledColoredWidget):
 
 
 class ActionBuilder(AngledWidget):
+    default_unit_move_color = Color(0.05, 0.05, 0.85)
+    default_enemy_move_color = Color(0.85, 0.05, 0.05)
+
     def __init__(self, rk_skill, hex_coords, hex_layout, **kwargs):
         super(ActionBuilder, self).__init__(**kwargs)
         self.rk_skill = rk_skill
@@ -57,7 +55,7 @@ class ActionBuilder(AngledWidget):
                 else:
                     pos = self.pos
 
-                move_color = default_unit_move_color  # changed with checks
+                move_color = self.default_unit_move_color  # changed with checks
                 move_indic = ActionUnitMove(angle=hun.U.orientation.angle,
                                             pos=pos,
                                             color=move_color,
@@ -70,7 +68,7 @@ class ActionBuilder(AngledWidget):
                 end_coords = self.hex_coords + move_info.move.destination
                 end_pos = self.hex_layout.hex_to_pixel(end_coords)
 
-                move_color = default_enemy_move_color  # changed with checks
+                move_color = self.default_enemy_move_color  # changed with checks
                 move_indic = ActionNMIMove(angle=0,
                                            pos=end_pos.tup,
                                            origin_x=origin_pos.x, origin_y=origin_pos.y,

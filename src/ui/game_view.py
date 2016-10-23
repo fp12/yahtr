@@ -1,5 +1,6 @@
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.animation import Animation
+from kivy.graphics.transformation import Matrix
 
 from ui.tile import Tile
 from ui.piece import Piece, Status
@@ -107,9 +108,10 @@ class GameView(ScatterLayout):
                 return piece
 
     def center_game_view(self, pos):
+        scaled_pos = [pos[0] * self.scale, pos[1] * self.scale]
+        end_pos = [self.hex_layout.origin.x - scaled_pos[0], self.hex_layout.origin.y - scaled_pos[1]]
         Animation.cancel_all(self)
-        pos = (self.hex_layout.origin.x - pos[0], self.hex_layout.origin.y - pos[1])
-        anim = Animation(pos=pos, duration=1.)
+        anim = Animation(pos=end_pos, duration=1.)
         anim.start(self)
 
     def on_next_turn(self, unit):
@@ -227,3 +229,28 @@ class GameView(ScatterLayout):
         touch.ud['frame_count'] += 1
         self.x += touch.dx
         self.y += touch.dy
+
+    def zoom(self, value):
+        new_scale = self.scale + value
+        if 0.1 <= new_scale <= 1.5:
+            rescale = new_scale * 1.0 / self.scale
+            self.apply_transform(Matrix().scale(rescale, rescale, rescale),
+                                 post_multiply=True,
+                                 anchor=self.to_local(*self.hex_layout.origin.tup))  # == window center
+
+    def on_zoom_up(self, *args):
+        self.zoom(-0.1)
+
+    def on_zoom_down(self, *args):
+        self.zoom(0.1)
+
+    def on_move_key(self, code, key):
+        move = 25
+        if key == 'a':
+            self.x += move
+        if key == 'd':
+            self.x -= move
+        if key == 'w':
+            self.y -= move
+        if key == 's':
+            self.y += move

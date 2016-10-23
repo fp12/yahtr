@@ -95,7 +95,14 @@ class MainWindow(App):
         self.time_bar.create()
         self.actions_bar.create()
 
-        self._key_binder.update({'d': [self.game_view.on_debug_key],
+        self._key_binder.update({'q': [self.game_view.on_debug_key],
+                                 'shift+=': [self.game_view.on_zoom_down],
+                                 '+': [self.game_view.on_zoom_down],
+                                 '-': [self.game_view.on_zoom_up],
+                                 'a': [self.game_view.on_move_key],
+                                 's': [self.game_view.on_move_key],
+                                 'd': [self.game_view.on_move_key],
+                                 'w': [self.game_view.on_move_key],
                                  'c': [self.print_children],
                                  '0': [self.actions_bar.on_key_pressed],
                                  '1': [self.actions_bar.on_key_pressed],
@@ -125,10 +132,11 @@ class MainWindow(App):
         self.title = 'Yet Another Hex Tactical RPG'
         return self.layout
 
-    def on_keyboard_down(self, sdl_thing, code, thing, key, modifiers, *args):
-        if key in self._key_binder:
-            for cb in self._key_binder[key]:
-                cb(code, key)
+    def on_keyboard_down(self, window, keyboard, keycode, text, modifiers):
+        code = '{}+{}'.format('.'.join(modifiers), text) if modifiers else text
+        if code in self._key_binder:
+            for cb in self._key_binder[code]:
+                cb(keycode, code)
             return True
 
     def on_mouse_pos(self, *args):
