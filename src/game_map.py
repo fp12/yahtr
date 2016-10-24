@@ -39,25 +39,25 @@ class Map():
     def __init__(self, fight, name):
         self.fight = fight
         self.name = name
-        data = data_loader.local_load_single('data/maps/', name, '.json')
 
-        # checks
+        data = data_loader.local_load_single('data/maps/', name, '.json')
+        self.holes = data['holes'] if 'holes' in data else None
+        self.tiles = [Hex(*qr) for qr in data['adds']] if 'adds' in data else []
+        self.walls = [Wall(d) for d in data['walls']] if 'walls' in data else []
+
         if data['type'] == MapType.Parallelogram.name:
             attr.get_from_dict(self, data['info'], 'q1', 'q2', 'r1', 'r2')
-            self.get_tiles = self._get_tiles_parallelogram
+            self._get_tiles_parallelogram()
         elif data['type'] == MapType.Triangle.name:
             attr.get_from_dict(self, data['info'], 'size')
-            self.get_tiles = self._get_tiles_triangle
+            self._get_tiles_triangle()
         elif data['type'] == MapType.Hexagon.name:
             attr.get_from_dict(self, data['info'], 'radius')
-            self.get_tiles = self._get_tiles_hexagon
+            self._get_tiles_hexagon()
         elif data['type'] == MapType.Rectangle.name:
             attr.get_from_dict(self, data['info'], 'height', 'width')
-            self.get_tiles = self._get_tiles_rectangle
+            self._get_tiles_rectangle()
 
-        self.holes = data['holes'] if 'holes' in data else None
-        self.walls = [Wall(d) for d in data['walls']] if 'walls' in data else []
-        self.tiles = []  # lazy loaded
         self.units = []  # ref
 
         self.on_wall_hit = Event('origin', 'destination', 'destroyed')
@@ -80,48 +80,35 @@ class Map():
         else:
             self.on_wall_hit(wall.origin, wall.destination, destroyed=False)
 
+    def get_tiles(self):
+        return self.tiles
+
     def _get_tiles_parallelogram(self):
-        if self.tiles:
-            return self.tiles
-        else:
-            for q in range(self.q1, self.q2 + 1):
-                for r in range(self.r1, self.r2 + 1):
-                    if self._validate_not_hole(q, r):
-                        self.tiles.append(Hex(q, r))
-                        yield q, r
+        for q in range(self.q1, self.q2 + 1):
+            for r in range(self.r1, self.r2 + 1):
+                if self._validate_not_hole(q, r):
+                    self.tiles.append(Hex(q, r))
 
     def _get_tiles_triangle(self):
-        if self.tiles:
-            return self.tiles
-        else:
-            for q in range(self.size + 1):
-                for r in range(self.size - q, self.size + 1):
-                    if self._validate_not_hole(q, r):
-                        self.tiles.append(Hex(q, r))
-                        yield q, r
+        for q in range(self.size + 1):
+            for r in range(self.size - q, self.size + 1):
+                if self._validate_not_hole(q, r):
+                    self.tiles.append(Hex(q, r))
 
     def _get_tiles_hexagon(self):
-        if self.tiles:
-            return self.tiles
-        else:
-            for q in range(-self.radius, self.radius + 1):
-                r1 = max(-self.radius, -q - self.radius)
-                r2 = min(self.radius, -q + self.radius)
-                for r in range(r1, r2 + 1):
-                    if self._validate_not_hole(q, r):
-                        self.tiles.append(Hex(q, r))
-                        yield q, r
+        for q in range(-self.radius, self.radius + 1):
+            r1 = max(-self.radius, -q - self.radius)
+            r2 = min(self.radius, -q + self.radius)
+            for r in range(r1, r2 + 1):
+                if self._validate_not_hole(q, r):
+                    self.tiles.append(Hex(q, r))
 
     def _get_tiles_rectangle(self):
-        if self.tiles:
-            return self.tiles
-        else:
-            for r in range(self.height):
-                r_offset = floor(r / 2.)
-                for q in range(-r_offset, self.width - r_offset):
-                    if self._validate_not_hole(q, r):
-                        self.tiles.append(Hex(q, r))
-                        yield q, r
+        for r in range(self.height):
+            r_offset = floor(r / 2.)
+            for q in range(-r_offset, self.width - r_offset):
+                if self._validate_not_hole(q, r):
+                    self.tiles.append(Hex(q, r))
 
     def get_unit_on(self, hex_coords, include_shape=True):
         for u in self.units:

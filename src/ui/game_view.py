@@ -34,8 +34,8 @@ class GameView(ScatterLayout):
         self.current_action = None
 
     def load_map(self):
-        for q, r in game_instance.current_fight.current_map.get_tiles():
-            tile = Tile(q, r, layout=self.hex_layout, color=self.tile_color, size=(self.hex_radius, self.hex_radius))
+        for h in game_instance.current_fight.current_map.get_tiles():
+            tile = Tile(h.q, h.r, layout=self.hex_layout, color=self.tile_color, size=(self.hex_radius, self.hex_radius))
             self.add_widget(tile)
             self.tiles.append(tile)
 
