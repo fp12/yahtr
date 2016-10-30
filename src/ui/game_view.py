@@ -61,9 +61,14 @@ class GameView(ScatterLayout):
         game_instance.current_fight.on_action_change += self.on_action_change
         game_instance.current_fight.on_next_turn += self.on_next_turn
 
-    def on_debug_key(self, code, key):
+    def on_debug_key(self, keycode, code):
         for x in self.tiles:
             x.toggle_debug_label()
+
+    def on_center_key(self, keycode, code):
+        selected_piece = self.get_selected_piece()
+        if selected_piece:
+            self.center_game_view(selected_piece.pos, 0.1)
 
     def on_action_change(self, unit, action_type, action_node, rk_skill):
         self.current_action = action_type
@@ -107,11 +112,11 @@ class GameView(ScatterLayout):
             if piece.selected:
                 return piece
 
-    def center_game_view(self, pos):
+    def center_game_view(self, pos, duration=0.7):
         scaled_pos = [pos[0] * self.scale, pos[1] * self.scale]
         end_pos = [self.hex_layout.origin.x - scaled_pos[0], self.hex_layout.origin.y - scaled_pos[1]]
         Animation.cancel_all(self)
-        anim = Animation(pos=end_pos, duration=1.)
+        anim = Animation(pos=end_pos, duration=duration)
         anim.start(self)
 
     def on_next_turn(self, unit):
@@ -244,13 +249,13 @@ class GameView(ScatterLayout):
     def on_zoom_down(self, *args):
         self.zoom(0.1)
 
-    def on_move_key(self, code, key):
+    def on_move_key(self, keycode, code):
         move = 25
-        if key == 'a':
+        if code == 'a':
             self.x += move
-        if key == 'd':
+        if code == 'd':
             self.x -= move
-        if key == 'w':
+        if code == 'w':
             self.y -= move
-        if key == 's':
+        if code == 's':
             self.y += move

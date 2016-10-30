@@ -27,6 +27,8 @@ class MainWindow(App):
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
 
+        self.debug_print_keys = False
+
         self.layout = None
         self.game_view = None
         self.time_bar = None
@@ -96,7 +98,7 @@ class MainWindow(App):
         self.time_bar.create()
         self.actions_bar.create()
 
-        self._key_binder.update({'q': [self.game_view.on_debug_key],
+        self._key_binder.update({'q': [self.game_view.on_debug_key, self.on_debug_key],
                                  'shift+=': [self.game_view.on_zoom_down],
                                  '+': [self.game_view.on_zoom_down],
                                  '-': [self.game_view.on_zoom_up],
@@ -104,6 +106,7 @@ class MainWindow(App):
                                  's': [self.game_view.on_move_key],
                                  'd': [self.game_view.on_move_key],
                                  'w': [self.game_view.on_move_key],
+                                 ' ': [self.game_view.on_center_key],
                                  'c': [self.print_children],
                                  '0': [self.actions_bar.on_key_pressed],
                                  '1': [self.actions_bar.on_key_pressed],
@@ -135,10 +138,15 @@ class MainWindow(App):
 
     def on_keyboard_down(self, window, keyboard, keycode, text, modifiers):
         code = '{}+{}'.format('.'.join(modifiers), text) if modifiers else text
+        if self.debug_print_keys:
+            print('keycode:`{}` | code:`{}`'.format(keycode, code))
         if code in self._key_binder:
             for cb in self._key_binder[code]:
                 cb(keycode, code)
             return True
+
+    def on_debug_key(self, keycode, code):
+        self.debug_print_keys = not self.debug_print_keys
 
     def on_mouse_pos(self, *args):
         """dispatching mouse position by priority order
