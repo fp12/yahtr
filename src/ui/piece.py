@@ -168,10 +168,10 @@ class Piece(HexWidget):
             pt = self.hex_layout.hex_to_pixel(self.hex_coords + context.direction)
             target_pos_x = self.x + (pt.x - self.x) / 10
             target_pos_y = self.y + (pt.y - self.y) / 10
-            anim = Animation(pos=(target_pos_x, target_pos_y), **hit_color.rgb_dict, duration=duration / 3)
+            anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3, **hit_color.rgb_dict)
             anim += Animation(pos=(self.x, self.y), r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
         else:
-            anim = Animation(radius=self.radius * 1.2, **heal_color.rgb_dict, duration=duration / 3.)
+            anim = Animation(radius=self.radius * 1.2, duration=duration / 3., **heal_color.rgb_dict)
             anim += Animation(radius=self.radius, r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
 
         app = App.get_running_app()
