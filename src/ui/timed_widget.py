@@ -88,13 +88,14 @@ class TimedWidgetBar(RelativeLayout):
 
     def on_mouse_pos(self, stuff, pos):
         hovered_unit = self.get_unit_on_pos(pos)
-        if hovered_unit != self.last_hovered_unit:
-            for child in self.children:
-                if child.unit == hovered_unit:
-                    child.selector.show()
-                else:
-                    child.selector.hide()
-            self.last_hovered_unit = hovered_unit
+        if hovered_unit:
+            if hovered_unit != self.last_hovered_unit:
+                for child in self.children:
+                    if child.unit == hovered_unit:
+                        child.selector.show()
+                    else:
+                        child.selector.hide()
+                self.last_hovered_unit = hovered_unit
             return True
         return False
 

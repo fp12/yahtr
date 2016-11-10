@@ -172,7 +172,7 @@ class Piece(HexWidget):
             anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3, **hit_color.rgb_dict)
             anim += Animation(pos=(self.x, self.y), r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
         else:
-            anim = Animation(radius=self.radius * 1.1, duration=duration / 3., **heal_color.rgb_dict)
+            anim = Animation(radius=self.radius * 1.2, duration=duration / 3., **heal_color.rgb_dict)
             anim += Animation(radius=self.radius, r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
 
         app = App.get_running_app()
@@ -267,8 +267,8 @@ class Piece(HexWidget):
     def display_reachable_tiles(self):
         if not self.reachable_tiles:
             reachable_hexes = game_instance.current_fight.current_map.get_reachable(self.unit)
-            for hx in reachable_hexes:
-                tile = Tile(hx.q, hx.r,
+            for h in reachable_hexes:
+                tile = Tile(h.q, h.r,
                             layout=self.hex_layout,
                             color=reachable_color,
                             radius=self.radius - 2,
