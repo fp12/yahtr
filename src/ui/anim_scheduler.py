@@ -37,7 +37,7 @@ class AnimScheduler:
 
     @mainthread
     def start(self, thread_event):
-        assert(not self.animation_pending)
+        assert not self.animation_pending
         self.animation_pending = True
         self.thread_event = thread_event
         self._start()

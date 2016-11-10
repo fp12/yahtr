@@ -1,5 +1,6 @@
 from enum import Enum
 from math import floor
+from copy import copy
 
 import data_loader
 from core.hex_lib import Hex, get_hex_direction
@@ -156,12 +157,8 @@ class Map():
                 return 2
         return 1
 
-    def get_best_path(self, start, goal):
+    def get_best_path(self, unit, goal):
         if goal not in self.tiles:
-            return []
-
-        unit = self.get_unit_on(start, False)
-        if not unit:
             return []
 
         def heuristic(a, b):
@@ -177,8 +174,23 @@ class Map():
         # if the unit can fit in at least 1 direction, go!
         for i in range(6):
             if self.unit_can_fit(unit, goal, get_hex_direction(i)):
-                return pathfinding.get_best_path(start, goal, heuristic, get_neighbours, get_cost)
+                return pathfinding.Path(unit.hex_coords, unit.move, heuristic, get_neighbours, get_cost).get_best_to_goal(goal)
         return []
+
+    def get_close_to(self, unit, target):
+        target_shape = copy(target.current_shape)
+
+        def heuristic(a, b):
+            return a.distance(b)
+
+        def get_cost(a):
+            # could be cached later
+            return self._get_cost(unit, a)
+
+        def get_neighbours(a):
+            return self.get_free_neighbours(unit, a)
+
+        return pathfinding.Path(unit.hex_coords, unit.move, heuristic, get_neighbours, get_cost).get_best_to_shape(target_shape)
 
     def get_reachable(self, unit):
         def get_cost(a):
@@ -189,3 +201,5 @@ class Map():
             return self.get_free_neighbours(unit, a)
 
         return pathfinding.Reachable(unit.hex_coords, unit.move, get_neighbours, get_cost).get()
+
+

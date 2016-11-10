@@ -77,7 +77,7 @@ class GameView(ScatterLayout):
         self.trajectory.hide()
 
     def display_trajectory(self, piece, hover_hex):
-        path = game_instance.current_fight.current_map.get_best_path(piece.hex_coords, hover_hex)
+        path = game_instance.current_fight.current_map.get_best_path(piece.unit, hover_hex)
         if path:
             points = []
             for hex_coords in path:

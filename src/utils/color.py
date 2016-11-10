@@ -100,7 +100,7 @@ if __name__ == '__main__':
     red1 = Color('red')
     red2 = Color.red
     red3 = Color.red
-    assert(red1 != red2)
-    assert(red2 != red3)
-    assert(red1 != red3)
-    assert(red1.r == red2.r == red3.r)
+    assert red1 != red2
+    assert red2 != red3
+    assert red1 != red3
+    assert red1.r == red2.r == red3.r

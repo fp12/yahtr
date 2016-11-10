@@ -14,6 +14,7 @@ from ui.anim_scheduler import AnimScheduler
 
 from game import game_instance
 from player import Player
+from player_ai import PlayerAI
 from unit import Unit
 import tie
 from core.hex_lib import Hex
@@ -50,8 +51,8 @@ class MainWindow(App):
         self.layout.add_widget(self.game_view, 2)
 
         # prepare fight
-        p1 = Player(game_instance, 'Player 1')
-        p2 = Player(game_instance, 'Player 2')
+        p1 = Player(game_instance, 'Player')
+        p2 = PlayerAI(game_instance, 'AI')
 
         game_instance.prepare_new_fight(fight_map='demo_map', players=[p1, p2])
         game_instance.current_fight.set_tie(p1, p2, tie.Type.Enemy)

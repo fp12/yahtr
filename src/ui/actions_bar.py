@@ -57,7 +57,7 @@ class ActionsBar(RelativeLayout):
                 widget_data.append((index, a.data, a.data.name, None))
                 index += 1
         count = len(widget_data)  # not including the mandatory End Turn!
-        assert(count < len(ActionsBar.__Layouts__))
+        assert count < len(ActionsBar.__Layouts__)
         for i, (index, action_type, text, rk_skill) in enumerate(widget_data):
             q, r = ActionsBar.__Layouts__[count][i]
             self.create_action_widget(q, r, index, action_type, text, rk_skill)

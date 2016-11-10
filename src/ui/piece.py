@@ -88,6 +88,7 @@ class Piece(HexWidget):
         # events
         self.unit.on_health_change += self.on_unit_health_change
         self.unit.on_shield_change += self.update_shields
+        self.unit.on_skill_move += self.on_unit_sim_move
         self.unit.on_skill_move += self.on_unit_skill_move
 
     def do_rotate(self):
@@ -168,14 +169,17 @@ class Piece(HexWidget):
             pt = self.hex_layout.hex_to_pixel(self.hex_coords + context.direction)
             target_pos_x = self.x + (pt.x - self.x) / 10
             target_pos_y = self.y + (pt.y - self.y) / 10
-            anim = Animation(pos=(target_pos_x, target_pos_y), **hit_color.rgb_dict, duration=duration / 3)
+            anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3, **hit_color.rgb_dict)
             anim += Animation(pos=(self.x, self.y), r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
         else:
-            anim = Animation(radius=self.radius * 1.1, **heal_color.rgb_dict, duration=duration / 3.)
+            anim = Animation(radius=self.radius * 1.1, duration=duration / 3., **heal_color.rgb_dict)
             anim += Animation(radius=self.radius, r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
 
         app = App.get_running_app()
         app.anim_scheduler.add(anim, self, context.hit.order)
+
+    def on_unit_sim_move(self, trajectory):
+        self.move_to(hex_coords=trajectory[-1], trajectory=trajectory, on_move_end=lambda : self.parent.on_piece_move_end(self))
 
     def on_unit_skill_move(self, context):
         def on_skill_move_end(hex_coords, orientation):

@@ -1,43 +1,89 @@
 from utils import PriorityQueue
 from .hex_lib cimport Hex
 
+cdef class Path:
+    cdef frontier
+    cdef Hex start
+    cdef unsigned int max_cost
+    cdef dict came_from
+    cdef dict cost_so_far
+    cdef object heuristic, get_neighbours, get_cost
 
-cpdef list get_best_path(Hex start, Hex goal, heuristic, get_neighbours, get_cost):
-    frontier = PriorityQueue()
-    frontier.put(start, 0)
-    cdef dict came_from = {}
-    cdef dict cost_so_far = {}
-    came_from[start] = None
-    cost_so_far[start] = 0
+    def __init__(self, Hex start, unsigned int max_cost, object heuristic, object get_neighbours, object get_cost):
+        self.start = start
+        self.max_cost = max_cost
+        self.came_from = {start: None}
+        self.cost_so_far = {start: 0}
+        self.frontier = PriorityQueue()
+        self.frontier.put(start, 0)
+        self.heuristic, self.get_neighbours, self.get_cost = heuristic, get_neighbours, get_cost
 
-    cdef Hex current
-    cdef unsigned int new_cost, priority
+    cdef list backtrack_path(self, Hex end):
+        if end not in self.came_from:
+            return []
 
-    while not frontier.empty():
-        current = frontier.get()
+        cdef list path = [end]
+        cdef Hex backtrack_end = end
+        while backtrack_end != self.start:
+            backtrack_end = self.came_from[backtrack_end]
+            path.append(backtrack_end)
+        return path
 
-        if current == goal:
-            break
+    cpdef list get_best_to_goal(self, Hex goal):
+        cdef Hex current
+        cdef unsigned int new_cost, priority
 
-        for neighbour in get_neighbours(current):
-            new_cost = cost_so_far[current] + get_cost(neighbour)
-            if neighbour not in cost_so_far or new_cost < cost_so_far[neighbour]:
-                cost_so_far[neighbour] = new_cost
-                priority = new_cost + heuristic(goal, neighbour)
-                frontier.put(neighbour, priority)
-                came_from[neighbour] = current
+        while not self.frontier.empty():
+            current = self.frontier.get()
+            if current == goal:
+                break
 
-    # Maybe the goal was behind a wall...
-    # it can happen, so no real error notification
-    if goal not in came_from:
-        return []
+            for neighbour in self.get_neighbours(current):
+                new_cost = self.cost_so_far[current] + self.get_cost(neighbour)
+                if new_cost <= self.max_cost and (neighbour not in self.cost_so_far or new_cost < self.cost_so_far[neighbour]):
+                    self.cost_so_far[neighbour] = new_cost
+                    priority = new_cost + self.heuristic(goal, neighbour)
+                    self.frontier.put(neighbour, priority)
+                    self.came_from[neighbour] = current
 
-    cdef list path = [goal]
-    cdef Hex backtrack_end = goal
-    while backtrack_end != start:
-        backtrack_end = came_from[backtrack_end]
-        path.append(backtrack_end)
-    return path
+        return self.backtrack_path(goal)
+
+    cdef list expand_shape(self, shape):
+        cdef list shape_neighbours = []
+        for h in shape:
+            for neighbour in self.get_neighbours(h):
+                if neighbour in shape_neighbours or neighbour in shape:
+                    continue
+                shape_neighbours.append(neighbour)
+        return shape_neighbours
+
+    cpdef list get_best_to_shape(self, list shape):
+        cdef Hex current
+        cdef unsigned int new_cost, priority
+        cdef list expanded_shape = self.expand_shape(shape)
+
+        while not self.frontier.empty():
+            current = self.frontier.get()
+            if current in expanded_shape or self.cost_so_far[current] == self.max_cost:
+                break
+
+            for neighbour in self.get_neighbours(current):
+                expanded_shape_prio = PriorityQueue()
+                for shape_part in expanded_shape:
+                    expanded_shape_prio.put(shape_part, self.heuristic(shape_part, neighbour))
+
+                while not expanded_shape_prio.empty():
+                    heuristic, shape_part = expanded_shape_prio.get_with_priority()
+                    new_cost = self.cost_so_far[current] + self.get_cost(neighbour)
+                    if new_cost <= self.max_cost and (neighbour not in self.cost_so_far or new_cost < self.cost_so_far[neighbour]):
+                        self.cost_so_far[neighbour] = new_cost
+                        priority = new_cost + heuristic
+                        self.frontier.put(neighbour, priority)
+                        self.came_from[neighbour] = current
+        else:
+            print('get_best_to_shape - no best has been found?')
+
+        return self.backtrack_path(current)
 
 
 cdef class Reachable:
@@ -47,7 +93,7 @@ cdef class Reachable:
     cdef object get_neighbours, get_cost
     cdef object sort_lambda
 
-    def __init__(self, Hex start, unsigned int move_max, get_neighbours, get_cost):
+    def __init__(self, Hex start, unsigned int move_max, object get_neighbours, object get_cost):
         self.start = start
         self.openList = []
         self.closedList = []

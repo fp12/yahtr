@@ -57,6 +57,8 @@ class Fight:
         rk_skills = unit.get_skills(unit.actions_tree.default.data)
         rk_skill = rk_skills[0] if rk_skills else None
         self.on_action_change(unit, unit.actions_tree.default.data, unit.actions_tree, rk_skill)
+        if unit.owner.ai_controlled:
+            unit.owner.start_turn(unit)
 
     def end_turn(self):
         # here check if all units are dead in one major squad

@@ -31,13 +31,13 @@ class UniqueEvent:
         self.handler = None
 
     def handle(self, handler):
-        assert(not self.handler)
+        assert not self.handler
         self.handler = handler
         return self
 
     def unhandle(self, handler):
         try:
-            assert(self.handler == handler)
+            assert self.handler == handler
             self.handler = None
         except:
             raise ValueError("Handler is not handling this event, so cannot unhandle it.")

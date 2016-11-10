@@ -18,9 +18,7 @@ class UnitTemplate:
         attr.get_from_dict(self, data, *UnitTemplate.__attributes)
         self.actions_tree = actions_trees[data['actions_tree_name']]
 
-        self.skills = []
-        if 'skills' in data:
-            self.skills = [RankedSkill(get_skill(n), Rank[rank]) for n, rank in data['skills'].items()]
+        self.skills = [RankedSkill(get_skill(n), Rank[rank]) for n, rank in data['skills'].items()] if 'skills' in data else []
 
         self.shape = [Hex(0, 0)]
         if 'shape' in data:
@@ -47,6 +45,7 @@ class Unit:
         # events
         self.on_health_change = Event('health', 'context')
         self.on_shield_change = Event()
+        self.on_sim_move = Event('trajectory')
         self.on_skill_move = Event('context', 'unit')
 
     def __repr__(self):
@@ -62,6 +61,11 @@ class Unit:
             calc_shape = True
         if calc_shape:
             self.current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
+
+    def sim_move(self, trajectory):
+        """ Move is ordered from simulation (AI, events...) and UI need to be aware
+        UI must call move_to after"""
+        self.on_sim_move(trajectory)
 
     def skill_move(self, context, unit=None):
         """ Skill move is not directly managed by the unit because UI may want to do something

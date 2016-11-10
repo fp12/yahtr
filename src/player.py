@@ -19,5 +19,9 @@ class Player():
         self.weapons.append(w)
         return w
 
-    def __str__(self):
-        return 'P<{0}>'.format(self.name)
+    def __repr__(self):
+        return 'P<{}>'.format(self.name)
+
+    @property
+    def ai_controlled(self):
+        return False

@@ -17,6 +17,12 @@ class PriorityQueue:
         else:
             return None
 
+    def get_with_priority(self):
+        if len(self.elements) > 0:
+            return heappop(self.elements)
+        else:
+            return None
+
 
 class EqualPriorityQueue(PriorityQueue):
     def put(self, element, priority=0):

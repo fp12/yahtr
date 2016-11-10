@@ -17,9 +17,7 @@ class WeaponTemplate:
     def __init__(self, name, data, get_skill):
         self.name = name
         self.wp_type = Type[data['type']]
-        self.skills = []
-        if 'skills' in data:
-            self.skills = [get_skill(s) for s in data['skills']]
+        self.skills = [get_skill(s) for s in data['skills']] if 'skills' in data else []
 
     def __repr__(self):
         return 'WpTp<{0}>'.format(self.name)
