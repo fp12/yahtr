@@ -105,6 +105,7 @@ class Piece(HexWidget):
 #   ##    ## ##     ##  ##  ##       ##       ##     ## ##    ##
 #    ######  ##     ## #### ######## ######## ########   ######
 #   ############################################################
+
     def update_shields(self):
         def del_part(anim, widget):
             self.remove_widget(widget)
@@ -139,47 +140,17 @@ class Piece(HexWidget):
                             app = App.get_running_app()
                             app.anim_scheduler.add(anim, shield_part, 0, del_part)
 
-    def on_finished_moving(self, trajectory, callback):
-        self.status = Status.Idle
-        previous = trajectory[-2] if len(trajectory) > 1 else self.hex_coords
-        self.hex_coords = trajectory[-1]
-        self.unit.move_to(hex_coords=self.hex_coords, orientation=trajectory[-1] - previous)
-        if callback:
-            callback(self)
-
-    @check_root_window
-    def on_pos(self, *args):
-        self.contour.pos = self.pos
-        for shape_part, offset in self._shape_parts.items():
-            shape_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
-
-        for shield_data in self._shields:
-            for shield_part, (dx, dy, _) in shield_data.items():
-                shield_part.pos = (self.pos[0] + dx, self.pos[1] + dy)
-
-    @check_root_window
-    def on_color_change(self, r, g, b, a):
-        for shape_part, _ in self._shape_parts.items():
-            shape_part.color = (r, g, b, a)
-
-    def on_unit_health_change(self, health_change, context):
-        duration = 0.2
-        anim = None
-        if health_change < 0:
-            pt = self.hex_layout.hex_to_pixel(self.hex_coords + context.direction)
-            target_pos_x = self.x + (pt.x - self.x) / 10
-            target_pos_y = self.y + (pt.y - self.y) / 10
-            anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3, **hit_color.rgb_dict)
-            anim += Animation(pos=(self.x, self.y), r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
-        else:
-            anim = Animation(radius=self.radius * 1.2, duration=duration / 3., **heal_color.rgb_dict)
-            anim += Animation(radius=self.radius, r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
-
-        app = App.get_running_app()
-        app.anim_scheduler.add(anim, self, context.hit.order)
+#   ##     ##  #######  ##     ## ########
+#   ###   ### ##     ## ##     ## ##
+#   #### #### ##     ## ##     ## ##
+#   ## ### ## ##     ## ##     ## ######
+#   ##     ## ##     ##  ##   ##  ##
+#   ##     ## ##     ##   ## ##   ##
+#   ##     ##  #######     ###    ########
 
     def on_unit_sim_move(self, trajectory):
         def on_move_end(_):
+            # GameView is a scatter layout which contains a FloatLayout hence the parent.parent
             self.parent.parent.on_piece_move_end(self)
 
         self.move_to(hex_coords=trajectory[-1], trajectory=trajectory, on_move_end=on_move_end)
@@ -241,6 +212,45 @@ class Piece(HexWidget):
             anim.start(self)
         else:
             super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
+
+    def on_finished_moving(self, trajectory, callback):
+        self.status = Status.Idle
+        previous = trajectory[-2] if len(trajectory) > 1 else self.hex_coords
+        self.hex_coords = trajectory[-1]
+        self.unit.move_to(hex_coords=self.hex_coords, orientation=trajectory[-1] - previous)
+        if callback:
+            callback(self)
+
+    @check_root_window
+    def on_pos(self, *args):
+        self.contour.pos = self.pos
+        for shape_part, offset in self._shape_parts.items():
+            shape_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
+
+        for shield_data in self._shields:
+            for shield_part, (dx, dy, _) in shield_data.items():
+                shield_part.pos = (self.pos[0] + dx, self.pos[1] + dy)
+
+    @check_root_window
+    def on_color_change(self, r, g, b, a):
+        for shape_part, _ in self._shape_parts.items():
+            shape_part.color = (r, g, b, a)
+
+    def on_unit_health_change(self, health_change, context):
+        duration = 0.2
+        anim = None
+        if health_change < 0:
+            pt = self.hex_layout.hex_to_pixel(self.hex_coords + context.direction)
+            target_pos_x = self.x + (pt.x - self.x) / 10
+            target_pos_y = self.y + (pt.y - self.y) / 10
+            anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3, **hit_color.rgb_dict)
+            anim += Animation(pos=(self.x, self.y), r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
+        else:
+            anim = Animation(radius=self.radius * 1.2, duration=duration / 3., **heal_color.rgb_dict)
+            anim += Animation(radius=self.radius, r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
+
+        app = App.get_running_app()
+        app.anim_scheduler.add(anim, self, context.hit.order)
 
     def hex_test(self, hex_coords):
         return self.unit.hex_test(hex_coords)
