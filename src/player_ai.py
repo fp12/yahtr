@@ -4,7 +4,6 @@ from actions import ActionType
 import tie
 
 
-
 class PlayerAI(Player):
     def __init__(self, *args):
         super(PlayerAI, self).__init__(*args)
@@ -21,7 +20,7 @@ class PlayerAI(Player):
         self.ennemies = [u for _, units in self.game.current_fight.squads.items() for u in units if self.game.current_fight.get_tie(self, u.owner) == tie.Type.Enemy]
 
     def _get_closest_ennemy(self, current_unit):
-        closest_nmi= self.ennemies[0]
+        closest_nmi = self.ennemies[0]
         min_dist = current_unit.hex_coords.distance(closest_nmi.hex_coords)
         for u in self.ennemies[1:]:
             if current_unit.hex_coords.distance(u.hex_coords) < min_dist:
@@ -44,7 +43,6 @@ class PlayerAI(Player):
                         for hit in hun.H:
                             if Effect.damage in hit.effects:
                                 # can it hit directly?
-                                print('hit.direction.destination.length', hit.direction.destination.length, min_dist)
                                 if hit.direction.destination.length == min_dist:
                                     damage = rk_skill.get_skill_health_change(hit)
                                     if damage < best_action_score:  # damage is <0
@@ -52,7 +50,7 @@ class PlayerAI(Player):
                                         best_ranked_skill = (a.data, rk_skill)
                                         # turn the unit so that it can use this skill
                                         current_unit.sim_move(orientation=current_unit.hex_coords.direction_to_distant(closest_nmi.hex_coords))
-            if a.data == ActionType.Move:
+            elif a.data == ActionType.Move:
                 can_move = True
 
         if best_ranked_skill:

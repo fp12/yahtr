@@ -88,7 +88,7 @@ class Piece(HexWidget):
         # events
         self.unit.on_health_change += self.on_unit_health_change
         self.unit.on_shield_change += self.update_shields
-        self.unit.on_skill_move += self.on_unit_sim_move
+        self.unit.on_sim_move += self.on_unit_sim_move
         self.unit.on_skill_move += self.on_unit_skill_move
 
     def do_rotate(self):
@@ -179,7 +179,10 @@ class Piece(HexWidget):
         app.anim_scheduler.add(anim, self, context.hit.order)
 
     def on_unit_sim_move(self, trajectory):
-        self.move_to(hex_coords=trajectory[-1], trajectory=trajectory, on_move_end=lambda : self.parent.on_piece_move_end(self))
+        def on_move_end(_):
+            self.parent.parent.on_piece_move_end(self)
+
+        self.move_to(hex_coords=trajectory[-1], trajectory=trajectory, on_move_end=on_move_end)
 
     def on_unit_skill_move(self, context):
         def on_skill_move_end(hex_coords, orientation):
