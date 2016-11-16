@@ -55,7 +55,7 @@ class TimedWidgetBar(RelativeLayout):
         return (self.info_layout.origin.x - self.margin, self.y)
 
     def create(self):
-        game_instance.current_fight.on_next_turn += self.on_next
+        game_instance.current_fight.on_new_turn += self.on_next
 
     def on_next(self, unit):
         _, _, current_unit = game_instance.current_fight.time_bar.current

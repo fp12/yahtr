@@ -22,21 +22,20 @@ class Fight:
         self.squads = {p: [] for p in players}
         self.ties = []
         self.time_bar = TimeBar()
-        self.started = False
         self.actions_history = []  # (unit, [ actions ])
         self.thread_event = ()  # (threading.Event, callback)
 
         # events
         self.on_action_change = Event('unit', 'action_type', 'action_node', 'hit')
-        self.on_next_turn = Event('unit')
+        self.on_new_turn = Event('unit')
         self.on_skill_turn = UniqueEvent()
 
     def update(self, *args):
         if self.thread_event:
             evt, cb = self.thread_event
             if evt.is_set():
-                cb()
                 self.thread_event = ()
+                cb()
 
     def deploy(self, squads):
         for squad_owner, units in squads.items():
@@ -48,17 +47,16 @@ class Fight:
 
     def start(self):
         self.start_turn()
-        self.started = True
 
     def start_turn(self):
         _, _, unit = self.time_bar.current
         self.actions_history.append((unit, []))
-        self.on_next_turn(unit)
+        self.on_new_turn(unit)
         rk_skills = unit.get_skills(unit.actions_tree.default.data)
         rk_skill = rk_skills[0] if rk_skills else None
         self.on_action_change(unit, unit.actions_tree.default.data, unit.actions_tree, rk_skill)
         if unit.owner.ai_controlled:
-            unit.owner.start_turn(unit)
+            unit.owner.start_turn(unit, unit.actions_tree)
 
     def end_turn(self):
         # here check if all units are dead in one major squad
@@ -73,6 +71,8 @@ class Fight:
             rk_skills = unit.get_skills(new_action.default.data)
             rk_skill = rk_skills[0] if rk_skills else None
             self.on_action_change(unit, new_action.default.data, new_action, rk_skill)
+            if unit.owner.ai_controlled:
+                unit.owner.start_turn(unit, new_action)
 
     def resolve_skill(self, unit, rk_skill):
         """ Note: NOT executed on main thread """
@@ -149,8 +149,10 @@ class Fight:
 
     def notify_action_change(self, action_type, rk_skill):
         if action_type == actions.ActionType.EndTurn:
+            # if the player selected 'EndTurn', effectively end the turn
             self.end_turn()
         else:
+            # otherwise, propagate the event to interested tiers (UI...)
             unit, history = self.actions_history[-1]
             action_node = unit.actions_tree
             if history:
@@ -161,6 +163,7 @@ class Fight:
         unit, history = self.actions_history[-1]
         history.append(action_type)
 
+        assert not self.thread_event, '{}'.format(self.thread_event)
         self.thread_event = (threading.Event(), lambda: self._end_action_end(unit, history))
         if rk_skill:
             skill_thread = threading.Thread(target=self.resolve_skill, args=(unit, rk_skill))

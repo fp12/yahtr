@@ -27,7 +27,7 @@ class PlayerAI(Player):
                 closest_nmi = u
         return closest_nmi, min_dist
 
-    def start_turn(self, current_unit):
+    def start_turn(self, current_unit, actions_tree):
         # first, let's find the closest ennemy
         self._refresh_ennemies()
         closest_nmi, min_dist = self._get_closest_ennemy(current_unit)
@@ -36,7 +36,7 @@ class PlayerAI(Player):
         can_move = False
         best_action_score = 0
         best_ranked_skill = ()  # (action type, ranked skill)
-        for a in current_unit.actions_tree:
+        for a in actions_tree:
             if a.data in [ActionType.Weapon, ActionType.Skill]:
                 for rk_skill in current_unit.get_skills(a.data):
                     for hun in rk_skill.skill.huns:
@@ -59,7 +59,7 @@ class PlayerAI(Player):
         elif can_move:
             trajectory = self.game.current_fight.current_map.get_close_to(current_unit, closest_nmi)
             print('we need to move', trajectory)
-            current_unit.sim_move(trajectory)
+            current_unit.sim_move(trajectory=trajectory)
         else:
             print('nothing we can do yet, end this turn')
             self.game.current_fight.notify_action_change(ActionType.EndTurn, None)

@@ -59,7 +59,7 @@ class GameView(ScatterLayout):
                 self.pieces.append(new_piece)
                 new_piece.load()
         game_instance.current_fight.on_action_change += self.on_action_change
-        game_instance.current_fight.on_next_turn += self.on_next_turn
+        game_instance.current_fight.on_new_turn += self.on_new_turn
 
     def on_debug_key(self, keycode, code):
         for x in self.tiles:
@@ -119,14 +119,17 @@ class GameView(ScatterLayout):
         anim = Animation(pos=end_pos, duration=duration)
         anim.start(self)
 
-    def on_next_turn(self, unit):
+    def on_new_turn(self, unit):
         self.trajectory.hide()
+        new_selected_piece = None
         for piece in self.pieces:
             if piece.unit == unit:
-                piece.do_select(True)
-                self.center_game_view(piece.pos)
+                new_selected_piece = piece
             elif piece.selected:
                 piece.do_select(False)
+        if new_selected_piece:
+            new_selected_piece.do_select(True)
+            self.center_game_view(new_selected_piece.pos)
 
     def on_piece_move_end(self, piece):
         piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
@@ -150,37 +153,36 @@ class GameView(ScatterLayout):
 
         tile = self.get_tile_on_hex(hover_hex)
         if tile:
-            if game_instance.current_fight and game_instance.current_fight.started:
-                old_piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
-                new_piece_hovered = self.get_piece_on_hex(hover_hex)
-                if old_piece_hovered != new_piece_hovered:
-                    if old_piece_hovered:
-                        old_piece_hovered.on_hovered_out()
-                    if new_piece_hovered:
-                        new_piece_hovered.on_hovered_in()
+            old_piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
+            new_piece_hovered = self.get_piece_on_hex(hover_hex)
+            if old_piece_hovered != new_piece_hovered:
+                if old_piece_hovered:
+                    old_piece_hovered.on_hovered_out()
+                if new_piece_hovered:
+                    new_piece_hovered.on_hovered_in()
 
-                piece_selected = self.get_selected_piece()
-                if piece_selected:
-                    if self.current_action == ActionType.Move:
-                        if piece_selected.status == Status.Moving or new_piece_hovered:
-                            self.trajectory.hide()
+            piece_selected = self.get_selected_piece()
+            if piece_selected:
+                if self.current_action == ActionType.Move:
+                    if piece_selected.status == Status.Moving or new_piece_hovered:
+                        self.trajectory.hide()
+                    else:
+                        orientation = None
+                        if piece_selected.is_in_move_range(hover_hex):
+                            self.display_trajectory(piece_selected, hover_hex)
+                            if self.trajectory and len(self.trajectory.steps) > 1:
+                                orientation = piece_selected.hex_coords.direction_to_distant(self.trajectory.steps[-2])
                         else:
-                            orientation = None
-                            if piece_selected.is_in_move_range(hover_hex):
-                                self.display_trajectory(piece_selected, hover_hex)
-                                if self.trajectory and len(self.trajectory.steps) > 1:
-                                    orientation = piece_selected.hex_coords.direction_to_distant(self.trajectory.steps[-2])
-                            else:
-                                self.trajectory.hide()
-                                orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
-                            if orientation:
-                                piece_selected.unit.move_to(orientation=orientation)
-                                piece_selected.do_rotate()
-                    elif self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill] and piece_selected.hex_coords != hover_hex:
-                        orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
-                        if game_instance.current_fight.current_map.unit_can_fit(piece_selected.unit, piece_selected.unit.hex_coords, orientation):
+                            self.trajectory.hide()
+                            orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
+                        if orientation:
                             piece_selected.unit.move_to(orientation=orientation)
                             piece_selected.do_rotate()
+                elif self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill] and piece_selected.hex_coords != hover_hex:
+                    orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
+                    if game_instance.current_fight.current_map.unit_can_fit(piece_selected.unit, piece_selected.unit.hex_coords, orientation):
+                        piece_selected.unit.move_to(orientation=orientation)
+                        piece_selected.do_rotate()
 
             # finally move the selector
             self.selector.move_to(hover_hex, tile_pos=tile.pos)

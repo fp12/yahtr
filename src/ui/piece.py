@@ -148,12 +148,17 @@ class Piece(HexWidget):
 #   ##     ## ##     ##   ## ##   ##
 #   ##     ##  #######     ###    ########
 
-    def on_unit_sim_move(self, trajectory):
-        def on_move_end(_):
-            # GameView is a scatter layout which contains a FloatLayout hence the parent.parent
-            self.parent.parent.on_piece_move_end(self)
+    def on_unit_sim_move(self, trajectory, orientation):
+        if trajectory:
+            def on_move_end(_):
+                # GameView is a scatter layout which contains a FloatLayout hence the parent.parent
+                self.parent.parent.on_piece_move_end(self)
 
-        self.move_to(hex_coords=trajectory[-1], trajectory=trajectory, on_move_end=on_move_end)
+            self.move_to(hex_coords=trajectory[-1], trajectory=trajectory, on_move_end=on_move_end)
+
+        if orientation:
+            self.unit.move_to(orientation=orientation)
+            self.do_rotate()
 
     def on_unit_skill_move(self, context):
         def on_skill_move_end(hex_coords, orientation):

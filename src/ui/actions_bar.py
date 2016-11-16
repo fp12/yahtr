@@ -37,7 +37,7 @@ class ActionsBar(RelativeLayout):
         self.last_hovered_child = None
 
     def create(self):
-        game_instance.current_fight.on_next_turn += lambda unit: self.on_new_action(unit, None, unit.actions_tree)
+        game_instance.current_fight.on_new_turn += lambda unit: self.on_new_action(unit, None, unit.actions_tree)
         game_instance.current_fight.on_action_change += self.on_new_action
 
     def create_action_widget(self, q, r, index, action_type, text, rk_skill=None):
