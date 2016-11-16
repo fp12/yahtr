@@ -5,6 +5,7 @@ from game_map import Map
 from time_bar import TimeBar
 import actions
 from utils.event import Event, UniqueEvent
+from utils.log import log_fight
 import tie
 
 
@@ -46,6 +47,7 @@ class Fight:
                     self.time_bar.register_units(units)
 
     def start(self):
+        log_fight.info('Fight started')
         self.start_turn()
 
     def start_turn(self):

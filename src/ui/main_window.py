@@ -10,6 +10,7 @@ from kivy.clock import Clock
 from ui.game_view import GameView
 from ui.timed_widget import TimedWidgetBar
 from ui.actions_bar import ActionsBar
+from ui.game_console import GameConsole
 from ui.anim_scheduler import AnimScheduler
 
 from game import game_instance
@@ -33,6 +34,8 @@ class MainWindow(App):
         self.game_view = None
         self.time_bar = None
         self.actions_bar = None
+        self.game_console = None
+
         self._key_binder = {}
         self.anim_scheduler = AnimScheduler()
 
@@ -43,14 +46,17 @@ class MainWindow(App):
         game_instance.load()
 
         # prepare UI
+        self.game_console = GameConsole(pos=(10, 10), size_hint=(0.25, 0.25))
+        self.layout.add_widget(self.game_console, 0)
+
         self.time_bar = TimedWidgetBar(pos=(Window.width / 2 - 60, 75), size_hint=(None, 1), width=75)
-        self.layout.add_widget(self.time_bar, 0)
+        self.layout.add_widget(self.time_bar, 1)
 
         self.actions_bar = ActionsBar(pos=self.time_bar.get_pos_for_actions_bar(), size_hint=(None, None))
-        self.layout.add_widget(self.actions_bar, 1)
+        self.layout.add_widget(self.actions_bar, 2)
 
         self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size, auto_bring_to_front=False)
-        self.layout.add_widget(self.game_view, 2)
+        self.layout.add_widget(self.game_view, 3)
 
         # prepare fight
         p1 = Player(game_instance, 'Player')
