@@ -45,7 +45,7 @@ class Unit:
         # events
         self.on_health_change = Event('health', 'context')
         self.on_shield_change = Event()
-        self.on_sim_move = Event('trajectory')
+        self.on_sim_move = Event('trajectory', 'orientation')
         self.on_skill_move = Event('context', 'unit')
 
     def __repr__(self):
@@ -62,10 +62,10 @@ class Unit:
         if calc_shape:
             self.current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
 
-    def sim_move(self, trajectory):
+    def sim_move(self, trajectory=[], orientation=None):
         """ Move is ordered from simulation (AI, events...) and UI need to be aware
         UI must call move_to after"""
-        self.on_sim_move(trajectory)
+        self.on_sim_move(trajectory, orientation)
 
     def skill_move(self, context, unit=None):
         """ Skill move is not directly managed by the unit because UI may want to do something
