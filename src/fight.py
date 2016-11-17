@@ -4,9 +4,12 @@ from copy import copy
 from game_map import Map
 from time_bar import TimeBar
 import actions
-from utils.event import Event, UniqueEvent
-from utils.log import log_fight
 import tie
+from utils.event import Event, UniqueEvent
+from utils.log import log_game
+
+
+log_fight = log_game.getChild('FIGHT')
 
 
 class SkillContext:
@@ -52,6 +55,7 @@ class Fight:
 
     def start_turn(self):
         _, _, unit = self.time_bar.current
+        log_fight.info('New turn started [{}]'.format(unit))
         self.actions_history.append((unit, []))
         self.on_new_turn(unit)
         rk_skills = unit.get_skills(unit.actions_tree.default.data)
@@ -151,6 +155,7 @@ class Fight:
 
     def notify_action_change(self, action_type, rk_skill):
         if action_type == actions.ActionType.EndTurn:
+            log_fight.info('Action: EndTurn')
             # if the player selected 'EndTurn', effectively end the turn
             self.end_turn()
         else:
@@ -164,6 +169,7 @@ class Fight:
     def notify_action_end(self, action_type, rk_skill=None):
         unit, history = self.actions_history[-1]
         history.append(action_type)
+        log_fight.info('Action: {} {}'.format(action_type.name, rk_skill or ''))
 
         assert not self.thread_event, '{}'.format(self.thread_event)
         self.thread_event = (threading.Event(), lambda: self._end_action_end(unit, history))

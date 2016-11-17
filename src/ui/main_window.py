@@ -155,18 +155,13 @@ class MainWindow(App):
         self.debug_print_keys = not self.debug_print_keys
 
     def on_mouse_pos(self, *args):
-        """dispatching mouse position by priority order
-        Note: Could be improved..."""
-        dispatch_success = self.time_bar.on_mouse_pos(*args)
-        if dispatch_success:
-            self.actions_bar.on_no_mouse_pos()
-            self.game_view.on_no_mouse_pos()
-        else:
-            dispatch_success = self.actions_bar.on_mouse_pos(*args)
+        """dispatching mouse position by priority order"""
+        dispatch_success = False
+        for child in self.layout.children[:]:
             if dispatch_success:
-                self.game_view.on_no_mouse_pos()
+                child.on_no_mouse_pos()
             else:
-                self.game_view.on_mouse_pos(*args)
+                dispatch_success = child.on_mouse_pos(*args)
 
     def print_children(self, *args):
         def recurse(w, tab):

@@ -99,6 +99,9 @@ class TimedWidgetBar(RelativeLayout):
             return True
         return False
 
+    def on_no_mouse_pos(self):
+        pass
+
     def on_touch_down(self, touch):
         clicked_unit = self.get_unit_on_pos(touch.pos)
         if clicked_unit:

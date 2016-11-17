@@ -49,13 +49,9 @@ class GameConsoleHandler(logging.Handler):
         self.on_message = Event('message')
 
     def emit(self, record):
-        try:
-            msg = self.format(record)
-            self.on_message(msg)
-        except (KeyboardInterrupt, SystemExit):
-            raise
-        except:
-            self.handleError(record)
+        msg = self.format(record)
+        # Broadcast the formatted record
+        self.on_message(msg)
 
 
 class MarkupFormatter(logging.Formatter):
@@ -72,15 +68,15 @@ class MarkupFormatter(logging.Formatter):
         return s
 
 
-markup_formatter = MarkupFormatter(fmt='[%(name)-12s] %(message)s')
+markup_formatter = MarkupFormatter(fmt='[%(module)-12s] %(message)s')
 
 game_console_handler = GameConsoleHandler()
 game_console_handler.setFormatter(markup_formatter)
 
 # getting root logger child so it can work along with kivy's logging system
-log_main = logging.getLogger().getChild('yahtr')
+log_main = logging.getLogger().getChild('MAIN')
 log_main.addHandler(logging.StreamHandler())
 log_main.propagate = False  # don't propagate to kivy's logging system
 
-log_fight = logging.getLogger().getChild('FIGHT')
-log_fight.addHandler(game_console_handler)
+log_game = log_main.getChild('GAME')
+log_game.addHandler(game_console_handler)
