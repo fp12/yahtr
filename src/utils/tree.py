@@ -1,9 +1,9 @@
 class Tree:
     def __init__(self, *nodes):
         self.nodes = []
-        for node in nodes:
-            if type(node) == Node and node not in self.nodes:
-                self.nodes.append(node)
+        for n in nodes:
+            if isinstance(n, Node) and n not in self.nodes:
+                self.nodes.append(n)
 
     def get_node_from_history(self, history):
         current_node = self
@@ -17,10 +17,7 @@ class Tree:
         return current_node
 
     def __repr__(self):
-        txt = 'Tree:\n'
-        for n in self.nodes:
-            txt += n._display(1)
-        return txt
+        return 'Tree:\n' + ''.join(n._display(1) for n in self.nodes)
 
     def __iter__(self):
         return self.nodes.__iter__()
@@ -36,10 +33,8 @@ class Node(Tree):
         super(Node, self).__init__(*nodes)
 
     def _display(self, deep):
-        txt = str(self.data) + '\n'
-        for n in self.nodes:
-            txt += '\t' * deep + n._display(deep + 1)
-        return txt
+        separator = '\t' * deep
+        return str(self.data) + '\n' + ''.join(separator + n._display(deep + 1) for n in self.nodes)
 
     def __repr__(self):
         return self._display(1)
