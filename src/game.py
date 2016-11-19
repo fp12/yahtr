@@ -10,7 +10,6 @@ class Game():
         self.skills = []
         self.weapons_templates = []
         self.units_templates = []
-        self._flat_layout = True
         self.battle = None
         self.players = []
 
@@ -36,6 +35,7 @@ class Game():
         for p in self.players:
             if p.name == player_name:
                 return p
+        return None
 
     def get_skill(self, skill_name):
         for s in self.skills:
@@ -61,7 +61,7 @@ class Game():
 
     @property
     def flat_layout(self):
-        return self._flat_layout
+        return True
 
 
 if __name__ == '__main__':
