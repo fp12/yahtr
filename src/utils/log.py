@@ -1,46 +1,7 @@
 import logging
-import logging.config
 import logging.handlers
 
 from utils.event import Event
-
-
-logging_config = {
-        'version': 1,
-        'formatters': {
-            'detailed_fmt': {
-                'class': 'logging.Formatter',
-                'format': '[%(name)-12s] %(levelname)-8s %(processName)-10s %(message)s'
-            },
-            'game_console_fmt': {
-                '()': 'utils.log_utils.MarkupFormatter',
-                'format': '[%(name)-12s] %(message)s'
-            }
-        },
-        'handlers': {
-            'game_console': {
-                '()': 'utils.log_utils.GameConsoleHandler',
-                'formatter': 'game_console_fmt'
-            },
-            'console': {
-                'class': 'logging.StreamHandler',
-            },
-        },
-        'loggers': {
-            'yathr': {
-                'handlers': ['console']
-            },
-            'yathr.fight': {
-                'handlers': ['console'],
-                'level': 'NOTSET',
-                'propagate': 0,
-            }
-        },
-        'root': {
-            'level': 'NOTSET',
-            'handlers': ['console']
-        }
-    }
 
 
 class GameConsoleHandler(logging.Handler):
