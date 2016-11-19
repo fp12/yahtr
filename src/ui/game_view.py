@@ -33,33 +33,33 @@ class GameView(ScatterLayout):
         self.trajectory = Trajectory(color=self.trajectory_color_ok)
         self.current_action = None
 
-    def load_map(self):
-        for h in game_instance.current_fight.current_map.get_tiles():
+    def load_board(self):
+        for h in game_instance.battle.board.get_tiles():
             tile = Tile(h.q, h.r, layout=self.hex_layout, color=self.tile_color, size=(self.hex_radius, self.hex_radius))
             self.add_widget(tile)
             self.tiles.append(tile)
 
-        for w in game_instance.current_fight.current_map.walls:
+        for w in game_instance.battle.board.walls:
             pos = self.hex_layout.get_mid_edge_position(w.origin, w.destination)
             angle = w.origin.angle_to_neighbour(w.destination - w.origin)
             wall = WallWidget(w, pos=pos.tup, angle=angle, size=(self.hex_radius * 7. / 9., self.hex_margin * 0.9))
             self.add_widget(wall)
             self.walls.append(wall)
 
-        game_instance.current_fight.current_map.on_wall_hit += self.on_wall_hit
+        game_instance.battle.board.on_wall_hit += self.on_wall_hit
 
         self.add_widget(self.selector)
         self.add_widget(self.trajectory)
 
     def load_squads(self):
-        for player, squad in game_instance.current_fight.squads.items():
+        for player, squad in game_instance.battle.squads.items():
             for unit in squad:
                 new_piece = Piece(unit=unit, layout=self.hex_layout)
                 self.add_widget(new_piece)
                 self.pieces.append(new_piece)
                 new_piece.load()
-        game_instance.current_fight.on_action_change += self.on_action_change
-        game_instance.current_fight.on_new_turn += self.on_new_turn
+        game_instance.battle.on_action_change += self.on_action_change
+        game_instance.battle.on_new_turn += self.on_new_turn
 
     def on_debug_key(self, keycode, code):
         for x in self.tiles:
@@ -82,7 +82,7 @@ class GameView(ScatterLayout):
         self.trajectory.hide()
 
     def display_trajectory(self, piece, hover_hex):
-        path = game_instance.current_fight.current_map.get_best_path(piece.unit, hover_hex)
+        path = game_instance.battle.board.get_best_path(piece.unit, hover_hex)
         if path:
             points = []
             for hex_coords in path:
@@ -135,7 +135,7 @@ class GameView(ScatterLayout):
         piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
         if piece == piece_hovered:
             piece_hovered.on_hovered_in()
-        game_instance.current_fight.notify_action_end(ActionType.Move)
+        game_instance.battle.notify_action_end(ActionType.Move)
 
     def on_wall_hit(self, origin, destination, destroyed):
         for w in self.walls:
@@ -180,7 +180,7 @@ class GameView(ScatterLayout):
                             piece_selected.do_rotate()
                 elif self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill] and piece_selected.hex_coords != hover_hex:
                     orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
-                    if game_instance.current_fight.current_map.unit_can_fit(piece_selected.unit, piece_selected.unit.hex_coords, orientation):
+                    if game_instance.battle.board.unit_can_fit(piece_selected.unit, piece_selected.unit.hex_coords, orientation):
                         piece_selected.unit.move_to(orientation=orientation)
                         piece_selected.do_rotate()
 
@@ -214,7 +214,7 @@ class GameView(ScatterLayout):
 
         piece_selected = self.get_selected_piece()
         if piece_selected and self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill]:
-            game_instance.current_fight.notify_action_end(self.current_action, piece_selected.current_skill)
+            game_instance.battle.notify_action_end(self.current_action, piece_selected.current_skill)
             piece_selected.clean_skill()
             return True
 

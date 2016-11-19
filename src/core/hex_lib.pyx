@@ -65,7 +65,7 @@ cdef class Hex:
             other = other if isinstance(other, Hex) else Hex(other[0], other[1])
         if op == 0:  # <
             return not other or first.q < other.q or first.r < other.r
-        elif op == 1: # <=
+        elif op == 1:  # <=
             return other and first.q <= other.q and first.r <= other.r
         elif op == 2:  # ==
             return other and first.q == other.q and first.r == other.r

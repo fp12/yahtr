@@ -17,7 +17,7 @@ class PlayerAI(Player):
         return True
 
     def _refresh_ennemies(self):
-        self.ennemies = [u for _, units in self.game.current_fight.squads.items() for u in units if self.game.current_fight.get_tie(self, u.owner) == tie.Type.Enemy]
+        self.ennemies = [u for _, units in self.game.battle.squads.items() for u in units if self.game.battle.get_tie(self, u.owner) == tie.Type.Enemy]
 
     def _get_closest_ennemy(self, current_unit):
         closest_nmi = self.ennemies[0]
@@ -55,11 +55,11 @@ class PlayerAI(Player):
 
         if best_ranked_skill:
             print('chosen', best_ranked_skill)
-            self.game.current_fight.notify_action_end(*best_ranked_skill)
+            self.game.battle.notify_action_end(*best_ranked_skill)
         elif can_move:
-            trajectory = self.game.current_fight.current_map.get_close_to(current_unit, closest_nmi)
+            trajectory = self.game.battle.board.get_close_to(current_unit, closest_nmi)
             print('we need to move', trajectory)
             current_unit.sim_move(trajectory=trajectory)
         else:
             print('nothing we can do yet, end this turn')
-            self.game.current_fight.notify_action_change(ActionType.EndTurn, None)
+            self.game.battle.notify_action_change(ActionType.EndTurn, None)

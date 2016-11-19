@@ -55,17 +55,17 @@ class TimedWidgetBar(RelativeLayout):
         return (self.info_layout.origin.x - self.margin, self.y)
 
     def create(self):
-        game_instance.current_fight.on_new_turn += self.on_next
+        game_instance.battle.on_new_turn += self.on_next
 
     def on_next(self, unit):
-        _, _, current_unit = game_instance.current_fight.time_bar.current
+        _, _, current_unit = game_instance.battle.time_bar.current
         self.info_widget.set_unit(current_unit)
 
         # killing them now, but may be animated later
         for child in self.children[:]:
             if child != self.info_widget:
                 self.remove_widget(child)
-        simulation = game_instance.current_fight.time_bar.simulate_for(len(TimedWidgetBar.Coords) + 1)
+        simulation = game_instance.battle.time_bar.simulate_for(len(TimedWidgetBar.Coords) + 1)
         for index, (priority, _, unit) in enumerate(simulation):
             if index > 0:
                 q, r = TimedWidgetBar.Coords[index - 1]

@@ -1,4 +1,4 @@
-from fight import Fight
+from battle import Battle
 import skill
 import weapon
 import unit
@@ -11,7 +11,7 @@ class Game():
         self.weapons_templates = []
         self.units_templates = []
         self._flat_layout = True
-        self.current_fight = None
+        self.battle = None
         self.players = []
 
     def load(self):
@@ -26,8 +26,8 @@ class Game():
         # print(self._classes.classes)
 
     def update(self, *args):
-        if self.current_fight:
-            self.current_fight.update(*args)
+        if self.battle:
+            self.battle.update(*args)
 
     def register_player(self, player):
         self.players.append(player)
@@ -55,9 +55,9 @@ class Game():
                 return u
         return None
 
-    def prepare_new_fight(self, fight_map, players):
-        assert not self.current_fight
-        self.current_fight = Fight(fight_map, players)
+    def prepare_new_battle(self, battle_board, players):
+        assert not self.battle
+        self.battle = Battle(battle_board, players)
 
     @property
     def flat_layout(self):

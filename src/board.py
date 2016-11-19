@@ -11,7 +11,7 @@ from utils import attr
 import tie
 
 
-class MapType(Enum):
+class BoardType(Enum):
     Custom = 0
     Parallelogram = 1
     Triangle = 2
@@ -36,26 +36,26 @@ class Wall:
         return (o1 == self.origin and o2 == self.destination) or (o1 == self.destination and o2 == self.origin)
 
 
-class Map():
-    def __init__(self, fight, name):
-        self.fight = fight
+class Board():
+    def __init__(self, battle, name):
+        self.battle = battle
         self.name = name
 
-        data = data_loader.local_load_single('data/maps/', name, '.json')
+        data = data_loader.local_load_single('data/boards/', name, '.json')
         self.holes = data['holes'] if 'holes' in data else None
         self.tiles = [Hex(*qr) for qr in data['adds']] if 'adds' in data else []
         self.walls = [Wall(d) for d in data['walls']] if 'walls' in data else []
 
-        if data['type'] == MapType.Parallelogram.name:
+        if data['type'] == BoardType.Parallelogram.name:
             attr.get_from_dict(self, data['info'], 'q1', 'q2', 'r1', 'r2')
             self._get_tiles_parallelogram()
-        elif data['type'] == MapType.Triangle.name:
+        elif data['type'] == BoardType.Triangle.name:
             attr.get_from_dict(self, data['info'], 'size')
             self._get_tiles_triangle()
-        elif data['type'] == MapType.Hexagon.name:
+        elif data['type'] == BoardType.Hexagon.name:
             attr.get_from_dict(self, data['info'], 'radius')
             self._get_tiles_hexagon()
-        elif data['type'] == MapType.Rectangle.name:
+        elif data['type'] == BoardType.Rectangle.name:
             attr.get_from_dict(self, data['info'], 'height', 'width')
             self._get_tiles_rectangle()
 
@@ -153,7 +153,7 @@ class Map():
     def _get_cost(self, unit, a):
         for n in self.get_all_neighbours(a):
             other_unit = self.get_unit_on(n)
-            if other_unit and self.fight.get_tie(unit.owner, other_unit.owner) == tie.Type.Enemy:
+            if other_unit and self.battle.get_tie(unit.owner, other_unit.owner) == tie.Type.Enemy:
                 return 2
         return 1
 

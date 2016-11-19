@@ -1,7 +1,7 @@
 import threading
 from copy import copy
 
-from game_map import Map
+from board import Board
 from time_bar import TimeBar
 import actions
 import tie
@@ -9,7 +9,7 @@ from utils.event import Event, UniqueEvent
 from utils.log import log_game
 
 
-log_fight = log_game.getChild('FIGHT')
+log_battle = log_game.getChild('battle')
 
 
 class SkillContext:
@@ -20,9 +20,9 @@ class SkillContext:
         self.previous_target_angle = None  # used for choosing the rotation direction
 
 
-class Fight:
-    def __init__(self, fight_map, players):
-        self.current_map = Map(self, fight_map)
+class Battle:
+    def __init__(self, battle_board, players):
+        self.board = Board(self, battle_board)
         self.squads = {p: [] for p in players}
         self.ties = []
         self.time_bar = TimeBar()
@@ -46,16 +46,16 @@ class Fight:
             for player in self.squads.keys():
                 if player == squad_owner:
                     self.squads[player] = units
-                    self.current_map.register_units(units)
+                    self.board.register_units(units)
                     self.time_bar.register_units(units)
 
     def start(self):
-        log_fight.info('Fight started')
+        log_battle.info('Battle started')
         self.start_turn()
 
     def start_turn(self):
         _, _, unit = self.time_bar.current
-        log_fight.info('New turn started [{}]'.format(unit))
+        log_battle.info('New turn started [{}]'.format(unit))
         self.actions_history.append((unit, []))
         self.on_new_turn(unit)
         rk_skills = unit.get_skills(unit.actions_tree.default.data)
@@ -117,12 +117,12 @@ class Fight:
                 context.direction = base_direction.rotate_to(context.base_unit_orientation)
                 hitted_tile = context.base_unit_coords + copy(hit.direction.destination).rotate_to(context.base_unit_orientation)
                 origin_tile = hitted_tile - context.direction
-                hitted_wall = self.current_map.get_wall_between(hitted_tile, origin_tile)
+                hitted_wall = self.board.get_wall_between(hitted_tile, origin_tile)
                 if hitted_wall:
                     if health_change < 0:
-                        self.current_map.wall_damage(hitted_wall, health_change)
+                        self.board.wall_damage(hitted_wall, health_change)
                 else:
-                    hitted_unit = self.current_map.get_unit_on(hitted_tile)
+                    hitted_unit = self.board.get_unit_on(hitted_tile)
                     if hitted_unit and health_change != 0:
                         if health_change < 0:
                             shield_index = hitted_unit.get_shield(origin_tile, hitted_tile)
@@ -142,7 +142,7 @@ class Fight:
             for move_info in hun.N:
                 move_origin_offset = copy(move_info.move.origin).rotate_to(context.base_unit_orientation)
                 move_origin = context.base_unit_coords + move_origin_offset
-                moved_unit = self.current_map.get_unit_on(move_origin)
+                moved_unit = self.board.get_unit_on(move_origin)
                 if moved_unit:
                     get_move_context(context, moved_unit, move_info)
                     moved_unit.skill_move(context)
@@ -155,7 +155,7 @@ class Fight:
 
     def notify_action_change(self, action_type, rk_skill):
         if action_type == actions.ActionType.EndTurn:
-            log_fight.info('Action: EndTurn')
+            log_battle.info('Action: EndTurn')
             # if the player selected 'EndTurn', effectively end the turn
             self.end_turn()
         else:
@@ -169,7 +169,7 @@ class Fight:
     def notify_action_end(self, action_type, rk_skill=None):
         unit, history = self.actions_history[-1]
         history.append(action_type)
-        log_fight.info('Action: {} {}'.format(action_type.name, rk_skill or ''))
+        log_battle.info('Action: {} {}'.format(action_type.name, rk_skill or ''))
 
         assert not self.thread_event, '{}'.format(self.thread_event)
         self.thread_event = (threading.Event(), lambda: self._end_action_end(unit, history))

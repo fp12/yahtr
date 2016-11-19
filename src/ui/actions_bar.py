@@ -37,8 +37,8 @@ class ActionsBar(RelativeLayout):
         self.last_hovered_child = None
 
     def create(self):
-        game_instance.current_fight.on_new_turn += lambda unit: self.on_new_action(unit, None, unit.actions_tree)
-        game_instance.current_fight.on_action_change += self.on_new_action
+        game_instance.battle.on_new_turn += lambda unit: self.on_new_action(unit, None, unit.actions_tree)
+        game_instance.battle.on_action_change += self.on_new_action
 
     def create_action_widget(self, q, r, index, action_type, text, rk_skill=None):
         new_widget = UnitActionTile(index, action_type, text, rk_skill, q=q, r=r, layout=self.hex_layout)
@@ -71,7 +71,7 @@ class ActionsBar(RelativeLayout):
                     button = child
                     break
         if button:
-            game_instance.current_fight.notify_action_change(button.action_type, button.rk_skill)
+            game_instance.battle.notify_action_change(button.action_type, button.rk_skill)
 
     def on_key_pressed(self, code, key):
         self._on_action_selected(index=int(key))

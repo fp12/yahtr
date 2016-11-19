@@ -58,15 +58,15 @@ class MainWindow(App):
         self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size, auto_bring_to_front=False)
         self.layout.add_widget(self.game_view, 3)
 
-        # prepare fight
+        # prepare battle
         p1 = Player(game_instance, 'Player')
         p2 = PlayerAI(game_instance, 'AI')
 
-        game_instance.prepare_new_fight(fight_map='demo_map', players=[p1, p2])
-        game_instance.current_fight.set_tie(p1, p2, tie.Type.Enemy)
-        game_instance.current_fight.on_skill_turn += self.on_fight_skill_turn
+        game_instance.prepare_new_battle(battle_board='demo_map', players=[p1, p2])
+        game_instance.battle.set_tie(p1, p2, tie.Type.Enemy)
+        game_instance.battle.on_skill_turn += self.on_battle_skill_turn
 
-        self.game_view.load_map()
+        self.game_view.load_board()
 
         # deployment
         w11 = p1.add_weapon('default_sword')
@@ -98,7 +98,7 @@ class MainWindow(App):
         squads = OrderedDict()
         squads.update({p1: [u11, u12]})
         squads.update({p2: [u21, u22]})
-        game_instance.current_fight.deploy(squads)
+        game_instance.battle.deploy(squads)
 
         self.game_view.load_squads()
         self.time_bar.create()
@@ -126,11 +126,11 @@ class MainWindow(App):
                                  '9': [self.actions_bar.on_key_pressed]
                                  })
 
-        game_instance.current_fight.start()
+        game_instance.battle.start()
 
         Clock.schedule_interval(game_instance.update, 1 / 30.)
 
-    def on_fight_skill_turn(self):
+    def on_battle_skill_turn(self):
         if self.anim_scheduler.ready_to_start():
             event = threading.Event()
             self.anim_scheduler.start(event)

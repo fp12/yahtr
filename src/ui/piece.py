@@ -284,7 +284,7 @@ class Piece(HexWidget):
 
     def display_reachable_tiles(self):
         if not self.reachable_tiles:
-            reachable_hexes = game_instance.current_fight.current_map.get_reachable(self.unit)
+            reachable_hexes = game_instance.battle.board.get_reachable(self.unit)
             for h in reachable_hexes:
                 tile = Tile(h.q, h.r,
                             layout=self.hex_layout,
