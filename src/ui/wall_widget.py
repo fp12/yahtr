@@ -1,7 +1,7 @@
 from ui.base_widgets import AngledColoredWidget
 
 from utils import Color
-from board import WallType
+from wall import WallType
 
 
 class WallWidget(AngledColoredWidget):

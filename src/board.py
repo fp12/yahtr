@@ -5,6 +5,7 @@ from copy import copy
 import data_loader
 from core.hex_lib import Hex, get_hex_direction
 from core import pathfinding
+from wall import Wall, WallType
 from utils.event import Event
 from utils import attr
 
@@ -19,24 +20,10 @@ class BoardType(Enum):
     Rectangle = 4
 
 
-class WallType(Enum):
-    breakable = 1
-
-
-class Wall:
-    def __init__(self, data):
-        self.origin = Hex(*data[0:2])
-        self.destination = Hex(*data[2:4])
-        self.types = [WallType(x) for x in data[4:]]
-
-    def __eq__(self, other):
-        if isinstance(other, Wall):
-            return other.origin == self.origin and other.destination == self.destination
-        o1, o2 = other
-        return (o1 == self.origin and o2 == self.destination) or (o1 == self.destination and o2 == self.origin)
-
-
 class Board():
+    default_move_cost = 1
+    close_to_ennemy_move_cost = 2
+
     def __init__(self, battle, name):
         self.battle = battle
         self.name = name
@@ -154,8 +141,8 @@ class Board():
         for n in self.get_all_neighbours(a):
             other_unit = self.get_unit_on(n)
             if other_unit and self.battle.get_tie(unit.owner, other_unit.owner) == tie.Type.Enemy:
-                return 2
-        return 1
+                return Board.close_to_ennemy_move_cost
+        return Board.default_move_cost
 
     def get_best_path(self, unit, goal):
         if goal not in self.tiles:
@@ -201,5 +188,3 @@ class Board():
             return self.get_free_neighbours(unit, a)
 
         return pathfinding.Reachable(unit.hex_coords, unit.move, get_neighbours, get_cost).get()
-
-
