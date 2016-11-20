@@ -150,11 +150,7 @@ class Piece(HexWidget):
 
     def on_unit_sim_move(self, trajectory, orientation):
         if trajectory:
-            def on_move_end(_):
-                # GameView is a scatter layout which contains a FloatLayout hence the parent.parent
-                self.parent.parent.on_piece_move_end(self)
-
-            self.move_to(hex_coords=trajectory[-1], trajectory=trajectory, on_move_end=on_move_end)
+            self.move_to(hex_coords=trajectory[-1], trajectory=trajectory)
 
         if orientation:
             self.unit.move_to(orientation=orientation)
@@ -191,12 +187,14 @@ class Piece(HexWidget):
         app = App.get_running_app()
         app.anim_scheduler.add(anim, self, context.move_info.order, lambda *args: on_skill_move_end(context.end_coords, context.end_orientation))
 
-    def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
+    def move_to(self, hex_coords, tile_pos=None, trajectory=[]):
         """ override from HexWidget """
         if trajectory:
+            self.clean_skill()
             self.clean_reachable_tiles()
-            duration_per_tile = 0.2
             self.status = Status.Moving
+
+            duration_per_tile = 0.2
             Animation.cancel_all(self)
             trajectory.remove(self.hex_coords)
             trajectory.reverse()
@@ -213,18 +211,18 @@ class Piece(HexWidget):
                     step_anim &= Animation(angle=angle, duration=duration_per_tile / 3)
                 anim += step_anim
                 prev_state = h, angle
-            anim.bind(on_complete=lambda *args: self.on_finished_moving(trajectory, on_move_end))
-            anim.start(self)
+
+            app = App.get_running_app()
+            app.anim_scheduler.add(anim, self, 0, lambda *args: self.on_finished_moving(trajectory))
+
         else:
             super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
 
-    def on_finished_moving(self, trajectory, callback):
+    def on_finished_moving(self, trajectory):
         self.status = Status.Idle
         previous = trajectory[-2] if len(trajectory) > 1 else self.hex_coords
         self.hex_coords = trajectory[-1]
         self.unit.move_to(hex_coords=self.hex_coords, orientation=trajectory[-1] - previous)
-        if callback:
-            callback(self)
 
     @check_root_window
     def on_pos(self, *args):
@@ -271,6 +269,7 @@ class Piece(HexWidget):
 #   ##    ## ##   ##   ##  ##       ##       ##    ##
 #    ######  ##    ## #### ######## ########  ######
 #   #################################################
+
     def clean_skill(self):
         if self.skill_widget:
             self.parent.remove_widget(self.skill_widget)

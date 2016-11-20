@@ -26,8 +26,6 @@ class HexWidget(ColoredWidget):
         self.radius = radius or layout.size.x if layout else 0
         self.pos = layout.hex_to_pixel(self.hex_coords)
 
-    def move_to(self, hex_coords, tile_pos=None, trajectory=[], on_move_end=None):
+    def move_to(self, hex_coords, tile_pos=None, trajectory=[]):
         self.hex_coords = hex_coords
         self.pos = tile_pos or self.hex_layout.hex_to_pixel(self.hex_coords)
-        if on_move_end:
-            on_move_end()

@@ -17,13 +17,9 @@ class Event:
         for handler in self.handlers:
             handler(*args, **kargs)
 
-    def getHandlerCount(self):
-        return len(self.handlers)
-
     __iadd__ = handle
     __isub__ = unhandle
     __call__ = fire
-    __len__  = getHandlerCount
 
 
 class UniqueEvent:
@@ -36,11 +32,8 @@ class UniqueEvent:
         return self
 
     def unhandle(self, handler):
-        try:
-            assert self.handler == handler
-            self.handler = None
-        except:
-            raise ValueError("Handler is not handling this event, so cannot unhandle it.")
+        assert self.handler == handler, "Handler is not handling this event, so cannot unhandle it."
+        self.handler = None
         return self
 
     def fire(self, *args, **kargs):

@@ -3,7 +3,7 @@ from copy import copy
 
 from board import Board
 from time_bar import TimeBar
-import actions
+from actions import ActionType
 import tie
 from utils.event import Event, UniqueEvent
 from utils.log import log_game
@@ -32,7 +32,7 @@ class Battle:
         # events
         self.on_action_change = Event('unit', 'action_type', 'action_node', 'hit')
         self.on_new_turn = Event('unit')
-        self.on_skill_turn = UniqueEvent()
+        self.on_action = UniqueEvent()
 
     def update(self, *args):
         if self.thread_event:
@@ -71,7 +71,7 @@ class Battle:
 
     def _end_action_end(self, unit, history):
         new_action = unit.actions_tree.get_node_from_history(history)
-        if new_action.default.data == actions.ActionType.EndTurn:
+        if new_action.default.data == ActionType.EndTurn:
             self.end_turn()
         else:
             rk_skills = unit.get_skills(new_action.default.data)
@@ -80,7 +80,22 @@ class Battle:
             if unit.owner.ai_controlled:
                 unit.owner.start_turn(unit, new_action)
 
-    def resolve_skill(self, unit, rk_skill):
+    def resolve_move(self, unit, context):
+        trajectory = context.get('trajectory')
+        assert trajectory
+
+        unit.sim_move(trajectory)
+
+        ui_thread_event = self.on_action()
+        if ui_thread_event:
+            ui_thread_event.wait()
+
+        self.thread_event[0].set()
+
+    def resolve_skill(self, unit, context):
+        rk_skill = context.get('rk_skill')
+        assert rk_skill
+
         """ Note: NOT executed on main thread """
         def get_move_context(context, unit, move_info):
             epsilon = 0.000001
@@ -147,37 +162,40 @@ class Battle:
                     get_move_context(context, moved_unit, move_info)
                     moved_unit.skill_move(context)
 
-            ui_thread_event = self.on_skill_turn()
+            ui_thread_event = self.on_action()
             if ui_thread_event:
                 ui_thread_event.wait()
 
         self.thread_event[0].set()
 
-    def notify_action_change(self, action_type, rk_skill):
-        if action_type == actions.ActionType.EndTurn:
-            log_battle.info('Action: EndTurn')
-            # if the player selected 'EndTurn', effectively end the turn
-            self.end_turn()
-        else:
-            # otherwise, propagate the event to interested tiers (UI...)
-            unit, history = self.actions_history[-1]
-            action_node = unit.actions_tree
-            if history:
-                action_node = unit.actions_tree.get_node_from_history(history)
-            self.on_action_change(unit, action_type, action_node, rk_skill)
+    def notify_action_change(self, action_type, rk_skill=None):
+        unit, history = self.actions_history[-1]
+        action_node = unit.actions_tree
+        if history:
+            action_node = unit.actions_tree.get_node_from_history(history)
+        self.on_action_change(unit, action_type, action_node, rk_skill)
 
-    def notify_action_end(self, action_type, rk_skill=None):
+    def notify_action_end(self, action_type, **kwargs):
         unit, history = self.actions_history[-1]
         history.append(action_type)
-        log_battle.info('Action: {} {}'.format(action_type.name, rk_skill or ''))
+        log_battle.info('Action: {} {}'.format(action_type.name, kwargs or ''))
+
+        if action_type == ActionType.EndTurn:
+            self.end_turn()
+            return
+
+        if action_type == ActionType.Move:
+            action_resolution_function = self.resolve_move
+        elif action_type in [ActionType.Weapon, ActionType.Skill]:
+            action_resolution_function = self.resolve_skill
+        else:
+            log_battle.error('Unsupported action_type')
+            action_resolution_function = None
 
         assert not self.thread_event, '{}'.format(self.thread_event)
         self.thread_event = (threading.Event(), lambda: self._end_action_end(unit, history))
-        if rk_skill:
-            skill_thread = threading.Thread(target=self.resolve_skill, args=(unit, rk_skill))
-            skill_thread.start()
-        else:
-            self.thread_event[0].set()
+        action_thread = threading.Thread(target=action_resolution_function, args=(unit, kwargs))
+        action_thread.start()
 
     def set_tie(self, p1, p2, tie_type):
         for t in self.ties:

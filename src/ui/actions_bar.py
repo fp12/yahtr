@@ -71,7 +71,10 @@ class ActionsBar(RelativeLayout):
                     button = child
                     break
         if button:
-            game_instance.battle.notify_action_change(button.action_type, button.rk_skill)
+            if button.action_type == ActionType.EndTurn:
+                game_instance.battle.notify_action_end(ActionType.EndTurn)
+            else:
+                game_instance.battle.notify_action_change(button.action_type, button.rk_skill)
 
     def on_key_pressed(self, code, key):
         self._on_action_selected(index=int(key))

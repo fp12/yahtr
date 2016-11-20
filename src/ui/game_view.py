@@ -76,6 +76,8 @@ class GameView(ScatterLayout):
         if piece:
             piece.on_action_change(action_type, rk_skill)
             piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
+            if piece == piece_hovered:
+                piece_hovered.on_hovered_in()
             if action_type == ActionType.Move and piece and not piece_hovered:
                 self.display_trajectory(piece, self.selector.hex_coords)
                 return
@@ -130,12 +132,6 @@ class GameView(ScatterLayout):
         if new_selected_piece:
             new_selected_piece.do_select(True)
             self.center_game_view(new_selected_piece.pos)
-
-    def on_piece_move_end(self, piece):
-        piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
-        if piece == piece_hovered:
-            piece_hovered.on_hovered_in()
-        game_instance.battle.notify_action_end(ActionType.Move)
 
     def on_wall_hit(self, origin, destination, destroyed):
         for w in self.walls:
@@ -214,7 +210,7 @@ class GameView(ScatterLayout):
 
         piece_selected = self.get_selected_piece()
         if piece_selected and self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill]:
-            game_instance.battle.notify_action_end(self.current_action, piece_selected.current_skill)
+            game_instance.battle.notify_action_end(self.current_action, rk_skill=piece_selected.current_skill)
             piece_selected.clean_skill()
             return True
 
@@ -226,7 +222,7 @@ class GameView(ScatterLayout):
             tile_touched = self.get_tile_on_hex(self.selector.hex_coords)
             if piece_selected and tile_touched and piece_selected.is_in_move_range(self.selector.hex_coords):
                 self.trajectory.hide()
-                piece_selected.move_to(self.selector.hex_coords, trajectory=self.trajectory.steps, on_move_end=self.on_piece_move_end)
+                game_instance.battle.notify_action_end(ActionType.Move, trajectory=self.trajectory.steps)
                 return True
 
     def on_touch_move(self, touch):

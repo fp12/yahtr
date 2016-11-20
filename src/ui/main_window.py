@@ -64,7 +64,7 @@ class MainWindow(App):
 
         game_instance.prepare_new_battle(battle_board='demo_map', players=[p1, p2])
         game_instance.battle.set_tie(p1, p2, tie.Type.Enemy)
-        game_instance.battle.on_skill_turn += self.on_battle_skill_turn
+        game_instance.battle.on_action += self.on_battle_action
 
         self.game_view.load_board()
 
@@ -130,7 +130,7 @@ class MainWindow(App):
 
         Clock.schedule_interval(game_instance.update, 1 / 30.)
 
-    def on_battle_skill_turn(self):
+    def on_battle_action(self):
         if self.anim_scheduler.ready_to_start():
             event = threading.Event()
             self.anim_scheduler.start(event)

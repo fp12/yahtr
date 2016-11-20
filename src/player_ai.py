@@ -55,11 +55,12 @@ class PlayerAI(Player):
 
         if best_ranked_skill:
             print('chosen', best_ranked_skill)
-            self.game.battle.notify_action_end(*best_ranked_skill)
+            action_type, rk_skill = best_ranked_skill
+            self.game.battle.notify_action_end(action_type, rk_skill=rk_skill)
         elif can_move:
             trajectory = self.game.battle.board.get_close_to(current_unit, closest_nmi)
             print('we need to move', trajectory)
-            current_unit.sim_move(trajectory=trajectory)
+            self.game.battle.notify_action_end(ActionType.Move, trajectory=trajectory)
         else:
             print('nothing we can do yet, end this turn')
-            self.game.battle.notify_action_change(ActionType.EndTurn, None)
+            self.game.battle.notify_action_end(ActionType.EndTurn)
