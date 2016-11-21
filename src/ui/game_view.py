@@ -1,6 +1,7 @@
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.animation import Animation
 from kivy.graphics.transformation import Matrix
+from kivy.clock import Clock
 
 from ui.tile import Tile
 from ui.piece import Piece, Status
@@ -12,6 +13,10 @@ from core.hex_lib import Layout
 from game import game_instance
 from actions import ActionType
 from utils import Color
+from utils.log import log_ui
+
+
+logger = log_ui.getChild('GameView')
 
 
 class GameView(ScatterLayout):
@@ -32,6 +37,7 @@ class GameView(ScatterLayout):
         self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=self.selector_color)
         self.trajectory = Trajectory(color=self.trajectory_color_ok)
         self.current_action = None
+        self.attach_event = None  # kivy.Clock event used every frame when attached to a piece is moving
 
     def load_board(self):
         for h in game_instance.battle.board.get_tiles():
@@ -118,8 +124,11 @@ class GameView(ScatterLayout):
         scaled_pos = [pos[0] * self.scale, pos[1] * self.scale]
         end_pos = [self.hex_layout.origin.x - scaled_pos[0], self.hex_layout.origin.y - scaled_pos[1]]
         Animation.cancel_all(self)
-        anim = Animation(pos=end_pos, duration=duration)
-        anim.start(self)
+        if duration > 0:
+            anim = Animation(pos=end_pos, duration=duration)
+            anim.start(self)
+        else:
+            self.pos = end_pos
 
     def on_new_turn(self, unit):
         self.trajectory.hide()
@@ -129,9 +138,24 @@ class GameView(ScatterLayout):
                 new_selected_piece = piece
             elif piece.selected:
                 piece.do_select(False)
+                piece.on_status_change -= self.on_piece_status_change
         if new_selected_piece:
             new_selected_piece.do_select(True)
+            new_selected_piece.on_status_change += self.on_piece_status_change
             self.center_game_view(new_selected_piece.pos)
+
+    def on_piece_attached(self, dt):
+        selected_piece = self.get_selected_piece()
+        self.center_game_view(selected_piece.pos, duration=0)
+
+    def on_piece_status_change(self, new_status):
+        if new_status == Status.Moving:
+            if self.attach_event:
+                self.attach_event.cancel()
+            self.attach_event = Clock.schedule_interval(self.on_piece_attached, 0.016667)  # 1 / 60
+        elif new_status == Status.Idle:
+            if self.attach_event:
+                self.attach_event.cancel()
 
     def on_wall_hit(self, origin, destination, destroyed):
         for w in self.walls:

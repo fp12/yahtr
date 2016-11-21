@@ -9,6 +9,7 @@ from core.hex_lib import hex_angle, index_of_direction
 from game import game_instance
 from skill import MoveType
 from utils import Color
+from utils.event import Event
 import actions
 
 from ui.hex_widget import HexWidget
@@ -85,7 +86,10 @@ class Piece(HexWidget):
         self._shields = [{} for _ in range(len(unit.shields))]
         self.update_shields()
 
-        # events
+        # declare events
+        self.on_status_change = Event('new_status')
+
+        # register to events
         self.unit.on_health_change += self.on_unit_health_change
         self.unit.on_shield_change += self.update_shields
         self.unit.on_sim_move += self.on_unit_sim_move
@@ -96,6 +100,10 @@ class Piece(HexWidget):
         if self.skill_widget:
             self.skill_widget.angle = self.angle
 
+    def change_status(self, new_status):
+        if new_status != self.status:
+            self.status = new_status
+            self.on_status_change(self.status)
 
 #    ######  ##     ## #### ######## ##       ########   ######
 #   ##    ## ##     ##  ##  ##       ##       ##     ## ##    ##
@@ -147,6 +155,7 @@ class Piece(HexWidget):
 #   ##     ## ##     ##  ##   ##  ##
 #   ##     ## ##     ##   ## ##   ##
 #   ##     ##  #######     ###    ########
+#   ######################################
 
     def on_unit_sim_move(self, trajectory, orientation):
         if trajectory:
@@ -156,10 +165,13 @@ class Piece(HexWidget):
             self.unit.move_to(orientation=orientation)
             self.do_rotate()
 
+    def prepare_move(self):
+        self.clean_skill()
+        self.clean_reachable_tiles()
+        self.change_status(Status.Moving)
+
     def on_unit_skill_move(self, context):
-        def on_skill_move_end(hex_coords, orientation):
-            self.hex_coords = hex_coords
-            self.unit.move_to(hex_coords, orientation)
+        self.prepare_move()
 
         pos = self.hex_layout.hex_to_pixel(context.end_coords).tup if context.move_info.move else None
 
@@ -185,16 +197,15 @@ class Piece(HexWidget):
             anim = Animation(pos=pos, duration=0.3, t='out_back')
 
         app = App.get_running_app()
-        app.anim_scheduler.add(anim, self, context.move_info.order, lambda *args: on_skill_move_end(context.end_coords, context.end_orientation))
+        app.anim_scheduler.add(anim, self, context.move_info.order, lambda *args: self.on_finished_moving(context.end_coords, context.end_orientation))
 
     def move_to(self, hex_coords, tile_pos=None, trajectory=[]):
         """ override from HexWidget """
-        if trajectory:
-            self.clean_skill()
-            self.clean_reachable_tiles()
-            self.status = Status.Moving
+        self.prepare_move()
 
+        if trajectory:
             duration_per_tile = 0.2
+
             Animation.cancel_all(self)
             trajectory.remove(self.hex_coords)
             trajectory.reverse()
@@ -212,17 +223,17 @@ class Piece(HexWidget):
                 anim += step_anim
                 prev_state = h, angle
 
+            previous = trajectory[-2] if len(trajectory) > 1 else self.hex_coords
             app = App.get_running_app()
-            app.anim_scheduler.add(anim, self, 0, lambda *args: self.on_finished_moving(trajectory))
+            app.anim_scheduler.add(anim, self, 0, lambda *args: self.on_finished_moving(trajectory[-1], trajectory[-1] - previous))
 
         else:
             super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
 
-    def on_finished_moving(self, trajectory):
-        self.status = Status.Idle
-        previous = trajectory[-2] if len(trajectory) > 1 else self.hex_coords
-        self.hex_coords = trajectory[-1]
-        self.unit.move_to(hex_coords=self.hex_coords, orientation=trajectory[-1] - previous)
+    def on_finished_moving(self, end_pos, orientation):
+        self.change_status(Status.Idle)
+        self.hex_coords = end_pos
+        self.unit.move_to(hex_coords=self.hex_coords, orientation=orientation)
 
     @check_root_window
     def on_pos(self, *args):

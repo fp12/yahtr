@@ -41,3 +41,6 @@ log_main.propagate = False  # don't propagate to kivy's logging system
 
 log_game = log_main.getChild('GAME')
 log_game.addHandler(game_console_handler)
+
+log_ui = log_main.getChild('UI')
+log_ui.addHandler(game_console_handler)
