@@ -5,7 +5,7 @@ from ui.base_widgets import ColoredWidget
 
 class Trajectory(ColoredWidget):
     def __init__(self, **kwargs):
-        super(Trajectory, self).__init__(**kwargs)
+        super(Trajectory, self).__init__(color=[0, 0, 0, 0], **kwargs)
         self.steps = []
 
     # override

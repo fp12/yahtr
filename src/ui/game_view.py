@@ -35,7 +35,7 @@ class GameView(ScatterLayout):
         self.tiles = []
         self.walls = []
         self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=self.selector_color)
-        self.trajectory = Trajectory(color=self.trajectory_color_ok)
+        self.trajectory = Trajectory()
         self.current_action = None
         self.attach_event = None  # kivy.Clock event used every frame when attached to a piece is moving
 
@@ -150,6 +150,7 @@ class GameView(ScatterLayout):
 
     def on_piece_status_change(self, new_status):
         if new_status == Status.Moving:
+            self.trajectory.hide()
             if self.attach_event:
                 self.attach_event.cancel()
             self.attach_event = Clock.schedule_interval(self.on_piece_attached, 0.016667)  # 1 / 60
@@ -190,7 +191,7 @@ class GameView(ScatterLayout):
                         orientation = None
                         if piece_selected.is_in_move_range(hover_hex):
                             self.display_trajectory(piece_selected, hover_hex)
-                            if self.trajectory and len(self.trajectory.steps) > 1:
+                            if len(self.trajectory.steps) > 1:
                                 orientation = piece_selected.hex_coords.direction_to_distant(self.trajectory.steps[-2])
                         else:
                             self.trajectory.hide()
