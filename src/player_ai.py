@@ -1,7 +1,11 @@
 from player import Player
 from skill import Effect
 from actions import ActionType
+from utils.log import log_main
 import tie
+
+
+logger = log_main.getChild('AI')
 
 
 class PlayerAI(Player):
@@ -54,13 +58,17 @@ class PlayerAI(Player):
                 can_move = True
 
         if best_ranked_skill:
-            print('chosen', best_ranked_skill)
+            logger.info('chosen {}'.format(best_ranked_skill))
             action_type, rk_skill = best_ranked_skill
             self.game.battle.notify_action_end(action_type, rk_skill=rk_skill)
         elif can_move:
             trajectory = self.game.battle.board.get_close_to(current_unit, closest_nmi)
-            print('we need to move', trajectory)
-            self.game.battle.notify_action_end(ActionType.Move, trajectory=trajectory)
+            if len(trajectory) > 1 or trajectory[0] != current_unit.hex_coords:
+                logger.info('we need to move {}'.format(trajectory))
+                self.game.battle.notify_action_end(ActionType.Move, trajectory=trajectory)
+            else:
+                logger.info('we can\'t even move')
+                self.game.battle.notify_action_end(ActionType.EndTurn)
         else:
-            print('nothing we can do yet, end this turn')
+            logger.info('nothing we can do yet, end this turn')
             self.game.battle.notify_action_end(ActionType.EndTurn)

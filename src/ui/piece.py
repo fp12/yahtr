@@ -224,8 +224,9 @@ class Piece(HexWidget):
                 prev_state = h, angle
 
             previous = trajectory[-2] if len(trajectory) > 1 else self.hex_coords
+            destination = trajectory[-1]
             app = App.get_running_app()
-            app.anim_scheduler.add(anim, self, 0, lambda *args: self.on_finished_moving(trajectory[-1], trajectory[-1] - previous))
+            app.anim_scheduler.add(anim, self, 0, lambda *args: self.on_finished_moving(destination, destination - previous))
 
         else:
             super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
