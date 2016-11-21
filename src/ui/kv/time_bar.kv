@@ -21,7 +21,7 @@
         text: '{0.template.name}'.format(root.unit) if root.unit else ''
         halign: 'center'
         valign: 'middle'
-        color: 1, 0, 0, 1
+        color: root.squad_color
 
 
 <UnitInfoWidget>:
@@ -47,7 +47,7 @@
         font_size: '30sp'
         halign: 'center'
         valign: 'middle'
-        color: 1, 1, 1, 1
+        color: root.squad_color
     Label:
         text: 'I:{0.initiative}\nS:{0.speed}'.format(root.unit) if root.unit else ''
         markup: True

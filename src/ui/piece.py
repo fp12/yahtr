@@ -1,7 +1,7 @@
 from enum import Enum
 
 from kivy.app import App
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, ListProperty
 from kivy.animation import Animation
 
 from core.hex_lib import hex_angle, index_of_direction
@@ -44,11 +44,13 @@ class PieceInterBody(AngledColoredWidget):
 
 class Piece(HexWidget):
     angle = NumericProperty(0)
+    squad_color = ListProperty([])
 
     def __init__(self, unit, **kwargs):
         super(Piece, self).__init__(q=unit.hex_coords.q, r=unit.hex_coords.r, **kwargs)
         self.unit = unit
         self.color = unit.color
+        self.squad_color = unit.owner.color.color
         self.current_skill = None
         self.skill_widget = None
         self.status = Status.Idle

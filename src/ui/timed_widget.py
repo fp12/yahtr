@@ -1,7 +1,7 @@
 from math import sqrt
 
 from kivy.uix.relativelayout import RelativeLayout
-from kivy.properties import StringProperty, ObjectProperty
+from kivy.properties import ObjectProperty, ListProperty
 from kivy.uix.behaviors import ButtonBehavior
 
 from ui.hex_widget import HexWidget
@@ -11,28 +11,20 @@ from core.hex_lib import Layout
 
 
 class TimedWidget(ButtonBehavior, HexWidget):
-    UnitText = StringProperty()
     unit = ObjectProperty(None)
     selector = ObjectProperty(None)
+    squad_color = ListProperty([1, 1, 1, 1])
 
     Radius = 40
-
-    def __init__(self, unit, prio, **kwargs):
-        super(TimedWidget, self).__init__(**kwargs)
-        self.unit = unit
-        self.color = unit.color
-        self.UnitText = '{0}\n({1})'.format(self.unit.template.name, prio)
-
-
-class UnitInfoWidget(ButtonBehavior, HexWidget):
-    unit = ObjectProperty(None)
-    selector = ObjectProperty(None)
-
-    Radius = TimedWidget.Radius * 3
 
     def set_unit(self, unit):
         self.unit = unit
         self.color = unit.color
+        self.squad_color = unit.owner.color.color
+
+
+class UnitInfoWidget(TimedWidget):
+    Radius = TimedWidget.Radius * 3
 
 
 class TimedWidgetBar(RelativeLayout):
@@ -69,7 +61,8 @@ class TimedWidgetBar(RelativeLayout):
         for index, (priority, _, unit) in enumerate(simulation):
             if index > 0:
                 q, r = TimedWidgetBar.Coords[index - 1]
-                new_widget = TimedWidget(unit, priority, q=q, r=r, layout=self.hex_layout)
+                new_widget = TimedWidget(q=q, r=r, layout=self.hex_layout)
+                new_widget.set_unit(unit)
                 self.add_widget(new_widget)
 
     def get_unit_on_pos(self, pos):

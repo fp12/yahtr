@@ -61,7 +61,7 @@ class Battle:
         rk_skills = unit.get_skills(unit.actions_tree.default.data)
         rk_skill = rk_skills[0] if rk_skills else None
         self.on_action_change(unit, unit.actions_tree.default.data, unit.actions_tree, rk_skill)
-        if unit.owner.ai_controlled:
+        if unit.ai_controlled:
             unit.owner.start_turn(unit, unit.actions_tree)
 
     def end_turn(self):
@@ -77,7 +77,7 @@ class Battle:
             rk_skills = unit.get_skills(new_action.default.data)
             rk_skill = rk_skills[0] if rk_skills else None
             self.on_action_change(unit, new_action.default.data, new_action, rk_skill)
-            if unit.owner.ai_controlled:
+            if unit.ai_controlled:
                 unit.owner.start_turn(unit, new_action)
 
     def resolve_move(self, unit, context):

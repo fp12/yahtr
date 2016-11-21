@@ -19,6 +19,7 @@ from player_ai import PlayerAI
 from unit import Unit
 import tie
 from core.hex_lib import Hex
+from utils import Color
 
 
 Builder.load_file('src/ui/kv/main_window.kv')
@@ -59,8 +60,8 @@ class MainWindow(App):
         self.layout.add_widget(self.game_view, 3)
 
         # prepare battle
-        p1 = Player(game_instance, 'Player')
-        p2 = PlayerAI(game_instance, 'AI')
+        p1 = Player(game_instance, 'Player', Color.player_team)
+        p2 = PlayerAI(game_instance, 'AI', Color.ai_team_1)
 
         game_instance.prepare_new_battle(battle_board='demo_map', players=[p1, p2])
         game_instance.battle.set_tie(p1, p2, tie.Type.Enemy)

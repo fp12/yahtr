@@ -2,9 +2,10 @@ from weapon import Weapon
 
 
 class Player():
-    def __init__(self, game, name):
+    def __init__(self, game, name, color):
         self.game = game
         self.name = name
+        self.color = color
         self.units = []
         self.weapons = []
 

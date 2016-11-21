@@ -51,6 +51,10 @@ class Unit:
     def __repr__(self):
         return 'U<{0}>'.format(self.template.name)
 
+    @property
+    def ai_controlled(self):
+        return self.owner.ai_controlled
+
     def move_to(self, hex_coords=None, orientation=None):
         calc_shape = False
         if hex_coords and hex_coords != self.hex_coords:

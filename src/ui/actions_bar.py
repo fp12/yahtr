@@ -46,6 +46,9 @@ class ActionsBar(RelativeLayout):
 
     def on_new_action(self, unit, action_type, action_node, _rk_skill=None):
         self.clear_widgets()
+        if unit.ai_controlled:
+            return
+
         widget_data = []
         index = 1
         for a in action_node:
