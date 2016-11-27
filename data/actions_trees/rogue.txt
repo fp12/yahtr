@@ -1,0 +1,10 @@
+# Rogues can attack twice
+Move
+  Weapon
+    Weapon
+  Skill
+  Rotate
+Weapon
+  Weapon
+Skill
+Rotate

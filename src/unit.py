@@ -4,7 +4,7 @@ from core.hex_lib import Hex, index_of_direction
 import data_loader
 from utils import attr, clamp
 from utils.event import Event
-from actions import ActionType, actions_trees
+from actions import ActionType
 from rank import Rank
 from skill import RankedSkill
 from weapon import RankedWeapon
@@ -13,10 +13,10 @@ from weapon import RankedWeapon
 class UnitTemplate:
     __attributes = ['move', 'initiative', 'speed', 'shields', 'color', 'weapons', 'health']
 
-    def __init__(self, name, data, get_skill):
+    def __init__(self, name, data, get_skill, get_actions_tree):
         self.name = name
         attr.get_from_dict(self, data, *UnitTemplate.__attributes)
-        self.actions_tree = actions_trees[data['actions_tree_name']]
+        self.actions_tree = get_actions_tree(data['actions_tree_name'])
 
         self.skills = [RankedSkill(get_skill(n), Rank[rank]) for n, rank in data['skills'].items()] if 'skills' in data else []
 
@@ -122,6 +122,6 @@ class Unit:
         return -1
 
 
-def load_all(root_path, get_skill):
+def load_all(root_path, get_skill, get_actions_tree):
     raw_units = data_loader.local_load(root_path + 'data/templates/units/', '.json')
-    return [UnitTemplate(name, data, get_skill) for name, data in raw_units.items()]
+    return [UnitTemplate(name, data, get_skill, get_actions_tree) for name, data in raw_units.items()]

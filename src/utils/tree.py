@@ -1,9 +1,9 @@
 class Tree:
     def __init__(self, *nodes):
-        self.nodes = []
-        for n in nodes:
-            if isinstance(n, Node) and n not in self.nodes:
-                self.nodes.append(n)
+        self.nodes = list(nodes)
+
+    def add_node(self, node):
+        self.nodes.append(node)
 
     def get_node_from_history(self, history):
         current_node = self

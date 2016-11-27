@@ -2,6 +2,7 @@ from battle import Battle
 import skill
 import weapon
 import unit
+import actions
 
 
 class Game():
@@ -10,13 +11,15 @@ class Game():
         self.skills = []
         self.weapons_templates = []
         self.units_templates = []
+        self.actions_trees = []
         self.battle = None
         self.players = []
 
     def load(self):
         self.skills = skill.load_all(self._root_path)
+        self.actions_trees = actions.load_all(self._root_path)
         self.weapons_templates = weapon.load_all(self._root_path, self.get_skill)
-        self.units_templates = unit.load_all(self._root_path, self.get_skill)
+        self.units_templates = unit.load_all(self._root_path, self.get_skill, self.get_actions_tree)
 
     def update_from_wiki(self):
         # print(self._classes.classes)
@@ -41,6 +44,12 @@ class Game():
         for s in self.skills:
             if s.name == skill_name:
                 return s
+        return None
+
+    def get_actions_tree(self, name):
+        for at in self.actions_trees:
+            if at.name == name:
+                return at.tree
         return None
 
     def get_weapon_template(self, weapon_template_name):

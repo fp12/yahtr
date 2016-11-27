@@ -1,3 +1,4 @@
+import data_loader
 from enum import Enum
 from utils.tree import Tree, Node
 
@@ -10,49 +11,40 @@ class ActionType(Enum):
     Skill = 4
 
 
-actions_trees = {
-    # debug action tree
-    'dbg': Tree(Node(ActionType.Move,
-                     Node(ActionType.Rotate,
-                          Node(ActionType.EndTurn)),
-                     Node(ActionType.EndTurn)),
-                Node(ActionType.Rotate,
-                     Node(ActionType.EndTurn)),
-                Node(ActionType.EndTurn)),
-    # base action tree for most units
-    'base': Tree(Node(ActionType.Move,
-                      Node(ActionType.Weapon,
-                           Node(ActionType.EndTurn)),
-                      Node(ActionType.Skill,
-                           Node(ActionType.EndTurn)),
-                      Node(ActionType.Rotate,
-                           Node(ActionType.EndTurn)),
-                      Node(ActionType.EndTurn)),
-                 Node(ActionType.Weapon,
-                      Node(ActionType.EndTurn)),
-                 Node(ActionType.Skill,
-                      Node(ActionType.EndTurn)),
-                 Node(ActionType.Rotate,
-                      Node(ActionType.EndTurn)),
-                 Node(ActionType.EndTurn)),
-    # base action tree for rogues (can use weapons twice)
-    'rogue': Tree(Node(ActionType.Move,
-                       Node(ActionType.Weapon,
-                            Node(ActionType.Weapon,
-                                 Node(ActionType.EndTurn)),
-                            Node(ActionType.EndTurn)),
-                       Node(ActionType.Skill,
-                            Node(ActionType.EndTurn)),
-                       Node(ActionType.Rotate,
-                            Node(ActionType.EndTurn)),
-                       Node(ActionType.EndTurn)),
-                  Node(ActionType.Weapon,
-                       Node(ActionType.Weapon,
-                            Node(ActionType.EndTurn)),
-                       Node(ActionType.EndTurn)),
-                  Node(ActionType.Skill,
-                       Node(ActionType.EndTurn)),
-                  Node(ActionType.Rotate,
-                       Node(ActionType.EndTurn)),
-                  Node(ActionType.EndTurn))
-}
+class ActionTree:
+    separator = '  '
+    comment_token = '#'
+
+    def __init__(self, name, data):
+        self.name = name
+        self.tree = Tree()
+        self.__load_tree(data)
+
+    def __load_tree(self, data):
+        current_tabs_count = -1
+        cursor = [self.tree]
+        for line in data:
+            if line.startswith(self.comment_token):
+                continue
+            tabs_count = line.count(self.separator)
+            action_type = ActionType[line.strip()]
+            current_node = Node(action_type)
+            if tabs_count > current_tabs_count:
+                cursor[-1].add_node(current_node)
+            elif tabs_count == current_tabs_count:
+                cursor[-1].add_node(Node(ActionType.EndTurn))
+                cursor.pop(-1)
+                cursor[-1].add_node(current_node)
+            else:  # tabs_count < current_tabs_count
+                cursor[-1].add_node(Node(ActionType.EndTurn))
+                cursor.pop(-1)
+                cursor.pop(-1)
+                cursor[-1].add_node(current_node)
+            cursor.append(current_node)
+            current_tabs_count = tabs_count
+        self.tree.add_node(Node(ActionType.EndTurn))
+
+
+def load_all(root_path):
+    raw_data = data_loader.local_load(root_path + 'data/actions_trees/', '.txt')
+    return [ActionTree(name, data) for name, data in raw_data.items()]

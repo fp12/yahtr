@@ -13,7 +13,10 @@ def local_load(folder, ext):
                     data_path = dirpath[len(folder):]
                     data_name = data_path + '/' if data_path else ''
                     data_name += file[:-len(ext)]
-                    data[data_name] = json.load(f)
+                    if ext == '.json':
+                        data[data_name] = json.load(f)
+                    else:
+                        data[data_name] = f.readlines()
     return data
 
 
