@@ -1,10 +1,10 @@
 {
-	"move": 1,
-	"initiative" : 190,
+	"move": 4,
+	"initiative" : 100,
 	"speed": 100,
 	"health": 10,
 	"color": [0.25098, 0.878431, 0.815686],
-	"shields": [1, 1, 1, 1, 1, 1],
+	"shields": [0, 0, 0, 0, 0, 0],
 	"actions_tree_name": "base",
 	"weapons":
 	{
