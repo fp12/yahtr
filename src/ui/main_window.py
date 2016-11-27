@@ -70,13 +70,13 @@ class MainWindow(App):
         self.game_view.load_board()
 
         # deployment
-        w11 = p1.add_weapon('default_sword')
+        w11 = p1.add_weapon('chess_demo/king_sword')
         w12 = p1.add_weapon('default_grimoire')
         w21 = p2.add_weapon('default_daggers')
         w22 = p2.add_weapon('default_sword')
         w31 = p1.add_weapon('default_scythe')
 
-        u11 = Unit(game_instance.get_unit_template('reaper'))
+        u11 = Unit(game_instance.get_unit_template('chess_demo/king'))
         u12 = Unit(game_instance.get_unit_template('guard'))
         u21 = Unit(game_instance.get_unit_template('rogue'))
         u22 = Unit(game_instance.get_unit_template('white_mage'))

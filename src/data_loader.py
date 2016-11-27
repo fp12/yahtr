@@ -6,10 +6,14 @@ import re
 
 def local_load(folder, ext):
     data = {}
-    for file in os.listdir(folder):
-        if file.endswith(ext):
-            with open(folder + file) as f:
-                data[file[:-len(ext)]] = json.load(f)
+    for dirpath, dirs, files in os.walk(folder):
+        for file in files:
+            if file.endswith(ext):
+                with open(dirpath + '/' + file) as f:
+                    data_path = dirpath[len(folder):]
+                    data_name = data_path + '/' if data_path else ''
+                    data_name += file[:-len(ext)]
+                    data[data_name] = json.load(f)
     return data
 
 
