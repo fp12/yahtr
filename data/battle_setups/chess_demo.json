@@ -10,15 +10,87 @@
 			[
 				{
 					"template": "chess_demo/king",
-					"position": [-1, -4],
+					"position": [-1, -7],
 					"orientation": [0, 1],
 					"weapons": ["chess_demo/king_sword"]
 				},
 				{
 					"template": "chess_demo/queen",
-					"position": [1, -5],
+					"position": [1, -8],
 					"orientation": [0, 1],
 					"weapons": ["chess_demo/queen_daggers"]
+				},
+				{
+					"template": "chess_demo/royal_guard",
+					"position": [-1, -5],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/royal_guard",
+					"position": [1, -6],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/lancer",
+					"position": [-3, -3],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/spear"]
+				},
+				{
+					"template": "chess_demo/lancer",
+					"position": [3, -6],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/spear"]
+				},
+				{
+					"template": "chess_demo/knight",
+					"position": [-4, -5],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/knight",
+					"position": [4, -9],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [-5, -1],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [-3, -1],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [-1, -3],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [1, -4],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [3, -4],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [5, -6],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/sword"]
 				}
 			]
 		},
@@ -30,15 +102,87 @@
 			[
 				{
 					"template": "chess_demo/king",
-					"position": [-1, 5],
+					"position": [-1, 8],
 					"orientation": [0, -1],
 					"weapons": ["chess_demo/king_sword"]
 				},
 				{
 					"template": "chess_demo/queen",
-					"position": [1, 4],
+					"position": [1, 7],
 					"orientation": [0, -1],
 					"weapons": ["chess_demo/queen_daggers"]
+				},
+				{
+					"template": "chess_demo/royal_guard",
+					"position": [-1, 6],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/royal_guard",
+					"position": [1, 5],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/lancer",
+					"position": [-3, 6],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/spear"]
+				},
+				{
+					"template": "chess_demo/lancer",
+					"position": [3, 3],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/spear"]
+				},
+				{
+					"template": "chess_demo/knight",
+					"position": [-4, 9],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/knight",
+					"position": [4, 5],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [5, 1],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [3, 1],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [1, 3],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [-1, 4],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [-3, 4],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/sword"]
+				},
+				{
+					"template": "chess_demo/soldier",
+					"position": [-5, 6],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/sword"]
 				}
 			]
 		}

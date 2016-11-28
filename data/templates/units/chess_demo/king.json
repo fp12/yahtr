@@ -5,7 +5,7 @@
 	"health": 1,
 	"color": [1, 0.843137, 0],
 	"shields": [1, 1, 1, 1, 1, 1],
-	"actions_tree_name": "base",
+	"actions_tree_name": "chess_demo/base",
 	"weapons":
 	{
 		"sword": "B"

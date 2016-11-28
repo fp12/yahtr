@@ -1,0 +1,8 @@
+# base actions tree for most classes
+Move
+  Weapon
+  Skill
+  Rotate
+Weapon
+Skill
+Rotate

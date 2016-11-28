@@ -1,11 +1,10 @@
 import threading
-import time
 from copy import copy
 
+import tie
 from board import Board
 from time_bar import TimeBar
 from actions import ActionType
-import tie
 from utils.event import Event, UniqueEvent
 from utils.log import log_game
 
@@ -82,7 +81,6 @@ class Battle:
                 unit.owner.start_turn(unit, new_action)
 
     def resolve_rotate(self, unit, context):
-        time.sleep(0)
         self.thread_event[0].set()
 
     def resolve_move(self, unit, context):

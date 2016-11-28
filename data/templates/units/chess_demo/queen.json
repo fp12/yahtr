@@ -1,6 +1,6 @@
 {
 	"move": 4,
-	"initiative" : 100,
+	"initiative" : 200,
 	"speed": 100,
 	"health": 1,
 	"color": [0.780392, 0.0823529, 0.521569],

@@ -1,0 +1,15 @@
+{
+	"move": 6,
+	"initiative" : 100,
+	"speed": 100,
+	"health": 1,
+	"color": [0.627451, 0.321569, 0.176471],
+	"shape" : [0, 0, 0, 1],
+	"shields": [0, 1, 0, 0, 0, 1,
+				1, 1, 1, 0, 1, 1],
+	"actions_tree_name": "chess_demo/base",
+	"weapons":
+	{
+		"sword": "B"
+	}
+}

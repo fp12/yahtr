@@ -1,0 +1,17 @@
+{
+	"comment": "A shield hit that pushes an ennemy",
+	"HUN":
+	[
+		{
+			"N":
+			[
+				{
+					"move": [0, 1, 0, 2],
+					"type": "pushed",
+					"check": "goal_free",
+					"order": 1
+				}
+			]
+		}
+	]
+}

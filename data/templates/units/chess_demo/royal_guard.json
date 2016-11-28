@@ -2,9 +2,8 @@
 	"move": 4,
 	"initiative" : 100,
 	"speed": 100,
-	"attack": 10,
-	"health": 13,
-	"color": [0.4, 0.4, 0.7],
+	"health": 1,
+	"color": [1, 0.270588, 0],
 	"shields": [3, 2, 1, 0, 1, 2],
 	"actions_tree_name": "base",
 	"weapons":
@@ -13,6 +12,6 @@
 	},
 	"skills":
 	{
-		"bash" : "B"
+		"chess_demo/bash" : "B"
 	}
 }
