@@ -1,4 +1,5 @@
 import threading
+import time
 from copy import copy
 
 from board import Board
@@ -71,7 +72,7 @@ class Battle:
 
     def _end_action_end(self, unit, history):
         new_action = unit.actions_tree.get_node_from_history(history)
-        if new_action.default.data == ActionType.EndTurn:
+        if not new_action.has_leaves():
             self.end_turn()
         else:
             rk_skills = unit.get_skills(new_action.default.data)
@@ -79,6 +80,10 @@ class Battle:
             self.on_action_change(unit, new_action.default.data, new_action, rk_skill)
             if unit.ai_controlled:
                 unit.owner.start_turn(unit, new_action)
+
+    def resolve_rotate(self, unit, context):
+        time.sleep(0)
+        self.thread_event[0].set()
 
     def resolve_move(self, unit, context):
         trajectory = context.get('trajectory')
@@ -186,6 +191,8 @@ class Battle:
 
         if action_type == ActionType.Move:
             action_resolution_function = self.resolve_move
+        elif action_type == ActionType.Rotate:
+            action_resolution_function = self.resolve_rotate
         elif action_type in [ActionType.Weapon, ActionType.Skill]:
             action_resolution_function = self.resolve_skill
         else:

@@ -5,13 +5,13 @@
 	"health": 1,
 	"color": [0.780392, 0.0823529, 0.521569],
 	"shields": [0, 0, 0, 0, 0, 0],
-	"actions_tree_name": "base",
+	"actions_tree_name": "chess_demo/queen",
 	"weapons":
 	{
 		"daggers": "B"
 	},
 	"skills":
 	{
-		"chess_demo/slash": "B"
+		"chess_demo/queen_stab": "B"
 	}
 }

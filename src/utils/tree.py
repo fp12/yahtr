@@ -22,6 +22,9 @@ class Tree:
     def __iter__(self):
         return self.nodes.__iter__()
 
+    def has_leaves(self):
+        return len(self.nodes) > 0
+
     @property
     def default(self):
         return self.nodes[0]

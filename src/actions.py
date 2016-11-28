@@ -32,17 +32,15 @@ class ActionTree:
             if tabs_count > current_tabs_count:
                 cursor[-1].add_node(current_node)
             elif tabs_count == current_tabs_count:
-                cursor[-1].add_node(Node(ActionType.EndTurn))
                 cursor.pop(-1)
                 cursor[-1].add_node(current_node)
             else:  # tabs_count < current_tabs_count
-                cursor[-1].add_node(Node(ActionType.EndTurn))
-                cursor.pop(-1)
-                cursor.pop(-1)
+                diff = current_tabs_count - tabs_count + 1
+                for _ in range(diff):
+                    cursor.pop(-1)
                 cursor[-1].add_node(current_node)
             cursor.append(current_node)
             current_tabs_count = tabs_count
-        self.tree.add_node(Node(ActionType.EndTurn))
 
 
 def load_all(root_path):

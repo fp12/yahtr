@@ -1,0 +1,17 @@
+{
+	"comment": "Don't look the queen in the eyes",
+	"HUN":
+	[
+		{
+			"H": 
+			[
+				{ 
+					"dir": [0, 2, 0, 1],
+					"effects": ["damage"],
+					"values": [25, 20, 18, 15, 10],
+					"order": 1
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,16 @@
+# The Queen can move after attacking
+Move
+  Weapon
+    Move
+      Rotate
+  Skill
+    Move
+      Rotate
+  Rotate
+Weapon
+  Move
+    Rotate
+Skill
+  Move
+    Rotate
+Rotate
