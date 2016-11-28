@@ -1,0 +1,46 @@
+{
+	"board": "chess_demo/default",
+	"players":
+	[
+		{
+			"name": "Player",
+			"control": "human",
+			"color": "player_team",
+			"squad": 
+			[
+				{
+					"template": "chess_demo/king",
+					"position": [-1, -4],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/king_sword"]
+				},
+				{
+					"template": "chess_demo/queen",
+					"position": [1, -5],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/queen_daggers"]
+				}
+			]
+		},
+		{
+			"name": "AI",
+			"control": "AI",
+			"color": "ai_team_1",
+			"squad": 
+			[
+				{
+					"template": "chess_demo/king",
+					"position": [-1, 5],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/king_sword"]
+				},
+				{
+					"template": "chess_demo/queen",
+					"position": [1, 4],
+					"orientation": [0, -1],
+					"weapons": ["chess_demo/queen_daggers"]
+				}
+			]
+		}
+	]
+}

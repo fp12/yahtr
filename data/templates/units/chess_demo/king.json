@@ -2,13 +2,13 @@
 	"move": 1,
 	"initiative" : 190,
 	"speed": 100,
-	"health": 10,
-	"color": [0.25098, 0.878431, 0.815686],
+	"health": 1,
+	"color": [1, 0.843137, 0],
 	"shields": [1, 1, 1, 1, 1, 1],
 	"actions_tree_name": "base",
 	"weapons":
 	{
-		"chess_demo/king_sword": "B"
+		"sword": "B"
 	},
 	"skills":
 	{

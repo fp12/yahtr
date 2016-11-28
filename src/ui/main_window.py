@@ -14,12 +14,6 @@ from ui.game_console import GameConsole
 from ui.anim_scheduler import AnimScheduler
 
 from game import game_instance
-from player import Player
-from player_ai import PlayerAI
-from unit import Unit
-import tie
-from core.hex_lib import Hex
-from utils import Color
 
 
 Builder.load_file('src/ui/kv/main_window.kv')
@@ -59,48 +53,10 @@ class MainWindow(App):
         self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size, auto_bring_to_front=False)
         self.layout.add_widget(self.game_view, 3)
 
-        # prepare battle
-        p1 = Player(game_instance, 'Player', Color.player_team)
-        p2 = PlayerAI(game_instance, 'AI', Color.ai_team_1)
-
-        game_instance.prepare_new_battle(battle_board='demo_map', players=[p1, p2])
-        game_instance.battle.set_tie(p1, p2, tie.Type.Enemy)
+        game_instance.load_battle_setup('chess_demo')
         game_instance.battle.on_action += self.on_battle_action
 
         self.game_view.load_board()
-
-        # deployment
-        w11 = p1.add_weapon('chess_demo/king_sword')
-        w12 = p1.add_weapon('default_grimoire')
-        w21 = p2.add_weapon('default_daggers')
-        w22 = p2.add_weapon('default_sword')
-        w31 = p1.add_weapon('default_scythe')
-
-        u11 = Unit(game_instance.get_unit_template('chess_demo/king'))
-        u12 = Unit(game_instance.get_unit_template('guard'))
-        u21 = Unit(game_instance.get_unit_template('rogue'))
-        u22 = Unit(game_instance.get_unit_template('white_mage'))
-
-        u11.equip(w31)
-        u12.equip(w11)
-        u21.equip(w21)
-        u22.equip(w12)
-
-        p1.add_unit(u11)
-        p1.add_unit(u12)
-        p2.add_unit(u21)
-        p2.add_unit(u22)
-
-        u11.move_to(hex_coords=Hex(-1, -4), orientation=Hex(0,  1))
-        u12.move_to(hex_coords=Hex( 1, -5), orientation=Hex(0,  1))
-        u21.move_to(hex_coords=Hex(-1,  5), orientation=Hex(0, -1))
-        u22.move_to(hex_coords=Hex( 1,  4), orientation=Hex(0, -1))
-
-        squads = OrderedDict()
-        squads.update({p1: [u11, u12]})
-        squads.update({p2: [u21, u22]})
-        game_instance.battle.deploy(squads)
-
         self.game_view.load_squads()
         self.time_bar.create()
         self.actions_bar.create()

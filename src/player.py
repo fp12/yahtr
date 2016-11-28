@@ -9,8 +9,6 @@ class Player():
         self.units = []
         self.weapons = []
 
-        self.game.register_player(self)
-
     def add_unit(self, unit):
         unit.owner = self
         self.units.append(unit)

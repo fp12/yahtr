@@ -1,0 +1,21 @@
+{
+	"comment": "Two quick hits on front diagonals",
+	"HUN":
+	[
+		{
+			"H": 
+			[
+				{ 
+					"dir": [0, 0, 1, 0],
+					"effects": ["damage"],
+					"values" : [10, 7, 6, 4, 2]
+				},
+				{ 
+					"dir": [0, 0, -1, 1],
+					"effects": ["damage"],
+					"values" : [10, 7, 6, 4, 2]
+				}
+			]
+		}
+	]
+}

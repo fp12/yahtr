@@ -1,6 +1,6 @@
 """ Reference for color names and definitions: http://www.avatar.se/molscript/doc/colour_names.html
     This list is never accessed directly but through Color('white') or even Color.white """
-__colors = {
+colors = {
     'black': (0, 0, 0),
     'white': (1., 1., 1.),
     'red': (1., 0, 0),
@@ -25,8 +25,8 @@ class Color(metaclass=__MetaColor):
         self.color = [0, 0, 0, 1.]
 
         name = args[0] if args else None
-        if name and isinstance(name, str) and name in __colors:
-            self.set_rgb(*__colors[name])
+        if name and isinstance(name, str) and name in colors:
+            self.set_rgb(*colors[name])
         else:
             self.set_rgb(*args, **kwargs)
 
@@ -94,7 +94,7 @@ def __add_metacolor_property(name, value):
 
 # This allows to get a fresh instance of a specific color:
 # Color.white will return a NEW instance of Color('white')
-for k, v in __colors.items():
+for k, v in colors.items():
     __add_metacolor_property(k, v)
 
 

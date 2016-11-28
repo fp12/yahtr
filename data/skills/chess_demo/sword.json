@@ -1,0 +1,16 @@
+{
+	"comment": "A basic move to hit in front",
+	"HUN":
+	[
+		{
+			"H": 
+			[
+				{ 
+					"dir": [0, 0, 0, 1],
+					"effects": ["damage"],
+					"values" : [25, 20, 18, 15, 10]
+				}
+			]
+		}
+	]
+}

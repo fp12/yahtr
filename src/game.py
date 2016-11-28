@@ -1,8 +1,17 @@
+from collections import OrderedDict
+
 from battle import Battle
 import skill
 import weapon
 import unit
 import actions
+import battle_setups
+import tie
+from player import Player
+from player_ai import PlayerAI
+from unit import Unit
+from utils import Color
+from core.hex_lib import Hex
 
 
 class Game():
@@ -12,6 +21,7 @@ class Game():
         self.weapons_templates = []
         self.units_templates = []
         self.actions_trees = []
+        self.battle_setups = []
         self.battle = None
         self.players = []
 
@@ -20,19 +30,14 @@ class Game():
         self.actions_trees = actions.load_all(self._root_path)
         self.weapons_templates = weapon.load_all(self._root_path, self.get_skill)
         self.units_templates = unit.load_all(self._root_path, self.get_skill, self.get_actions_tree)
+        self.battle_setups = battle_setups.load_all(self._root_path)
 
     def update_from_wiki(self):
-        # print(self._classes.classes)
         added, changed, removed = self._classes.wiki_load()
-        print(added, changed, removed)
-        # print(self._classes.classes)
 
     def update(self, *args):
         if self.battle:
             self.battle.update(*args)
-
-    def register_player(self, player):
-        self.players.append(player)
 
     def get_player(self, player_name):
         for p in self.players:
@@ -64,9 +69,30 @@ class Game():
                 return u
         return None
 
-    def prepare_new_battle(self, battle_board, players):
+    def load_battle_setup(self, name):
         assert not self.battle
-        self.battle = Battle(battle_board, players)
+        squads = OrderedDict()
+        for setup in self.battle_setups:
+            if setup.name == name:
+                for player_info in setup.data['players']:
+                    player_class = Player if player_info['control'] == 'human' else PlayerAI
+                    p = player_class(self, player_info['name'], Color(player_info['color']))
+                    squads[p] = []
+                    for unit_info in player_info['squad']:
+                        template = self.get_unit_template(unit_info['template'])
+                        u = Unit(template)
+                        for weapon_name in unit_info['weapons']:
+                            w = p.add_weapon(weapon_name)
+                            u.equip(w)
+                        p.add_unit(u)
+                        squads[p].append(u)
+                        u.move_to(hex_coords=Hex(*unit_info['position']), orientation=Hex(*unit_info['orientation']))
+                    self.players.append(p)
+
+                self.battle = Battle(setup.data['board'], self.players)
+                self.battle.set_tie(self.players[0], self.players[1], tie.Type.Enemy)
+                self.battle.deploy(squads)
+                break
 
     @property
     def flat_layout(self):
