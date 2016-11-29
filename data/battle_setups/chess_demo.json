@@ -48,13 +48,13 @@
 					"template": "chess_demo/knight",
 					"position": [-4, -5],
 					"orientation": [0, 1],
-					"weapons": ["chess_demo/sword"]
+					"weapons": ["chess_demo/knight_sword"]
 				},
 				{
 					"template": "chess_demo/knight",
 					"position": [4, -9],
 					"orientation": [0, 1],
-					"weapons": ["chess_demo/sword"]
+					"weapons": ["chess_demo/knight_sword"]
 				},
 				{
 					"template": "chess_demo/soldier",
@@ -140,13 +140,13 @@
 					"template": "chess_demo/knight",
 					"position": [-4, 9],
 					"orientation": [0, -1],
-					"weapons": ["chess_demo/sword"]
+					"weapons": ["chess_demo/knight_sword"]
 				},
 				{
 					"template": "chess_demo/knight",
 					"position": [4, 5],
 					"orientation": [0, -1],
-					"weapons": ["chess_demo/sword"]
+					"weapons": ["chess_demo/knight_sword"]
 				},
 				{
 					"template": "chess_demo/soldier",

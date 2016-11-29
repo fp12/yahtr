@@ -1,0 +1,21 @@
+{
+	"comment": "A basic move to hit 2 ennemies at once",
+	"HUN":
+	[
+		{
+			"H": 
+			[
+				{ 
+					"dir": [0, 0, 0, 1],
+					"effects": ["damage"],
+					"values" : [1, 1, 1, 1, 1]
+				},
+				{ 
+					"dir": [0, 1, 0, 2],
+					"effects": ["damage"],
+					"values" : [1, 1, 1, 1, 1]
+				}
+			]
+		}
+	]
+}

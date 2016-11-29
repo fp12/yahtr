@@ -12,6 +12,10 @@ from player_ai import PlayerAI
 from unit import Unit
 from utils import Color
 from core.hex_lib import Hex
+from utils.log import log_main
+
+
+logger = log_main.getChild('game')
 
 
 class Game():
@@ -45,28 +49,32 @@ class Game():
                 return p
         return None
 
-    def get_skill(self, skill_name):
+    def get_skill(self, name):
         for s in self.skills:
-            if s.name == skill_name:
+            if s.name == name:
                 return s
+        logger.warning('can\'t find Skill [{}]'.format(name))
         return None
 
     def get_actions_tree(self, name):
         for at in self.actions_trees:
             if at.name == name:
                 return at.tree
+        logger.warning('can\'t find Action Tree [{}]'.format(name))
         return None
 
-    def get_weapon_template(self, weapon_template_name):
+    def get_weapon_template(self, name):
         for w in self.weapons_templates:
-            if w.name == weapon_template_name:
+            if w.name == name:
                 return w
+        logger.warning('can\'t find Weapon Template [{}]'.format(name))
         return None
 
-    def get_unit_template(self, unit_template_name):
+    def get_unit_template(self, name):
         for u in self.units_templates:
-            if u.name == unit_template_name:
+            if u.name == name:
                 return u
+        logger.warning('can\'t find Unit Template [{}]'.format(name))
         return None
 
     def load_battle_setup(self, name):
