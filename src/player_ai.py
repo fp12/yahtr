@@ -1,5 +1,4 @@
 from player import Player
-from skill import Effect
 from actions import ActionType
 from utils.log import log_main
 import tie
@@ -45,10 +44,10 @@ class PlayerAI(Player):
                 for rk_skill in current_unit.get_skills(a.data):
                     for hun in rk_skill.skill.huns:
                         for hit in hun.H:
-                            if Effect.damage in hit.effects:
+                            if hit.is_damage:
                                 # can it hit directly?
                                 if hit.direction.destination.length == min_dist:
-                                    damage = rk_skill.get_skill_health_change(hit)
+                                    damage = rk_skill.hit_value(hit)
                                     if damage < best_action_score:  # damage is <0
                                         best_action_score = damage
                                         best_ranked_skill = (a.data, rk_skill)

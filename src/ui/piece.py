@@ -181,7 +181,7 @@ class Piece(HexWidget):
         if context.move_info.move_type == MoveType.none:
             anim = Animation(duration=0)
             if pos:
-                anim &= Animation(pos=pos, duration=0.1)
+                anim &= Animation(pos=pos, duration=0.3)
             if context.move_info.orientation:
                 if abs(context.target_angle - self.angle) > 180:
                     self.angle -= 360

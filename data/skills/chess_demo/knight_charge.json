@@ -1,0 +1,25 @@
+{
+	"comment": "The knight charges ahead of him to hit on the side",
+	"HUN":
+	[
+		{
+			"H": 
+			[
+				{ 
+					"dir": [0, 6, 1, 6],
+					"effects": ["hit_through_shield"],
+					"values": [1, 1, 1, 1, 1],
+					"order": 1
+				}
+			],
+			"U": 
+			{
+				"move": [0, 0, 0, 6],
+				"orientation" : [0, 0, 0, 1],
+				"type": "none",
+				"check": "goal_free",
+				"order": 0
+			}
+		}
+	]
+}

@@ -3,6 +3,7 @@ from copy import copy
 
 import tie
 from board import Board
+from skill import Target
 from time_bar import TimeBar
 from actions import ActionType
 from utils.event import Event, UniqueEvent
@@ -129,29 +130,34 @@ class Battle:
 
         for hun in rk_skill.skill.huns:
             for hit in hun.H:
-                health_change = rk_skill.get_skill_health_change(hit)
+                hit_value = rk_skill.hit_value(hit)
+                if hit_value == 0:
+                    continue
 
                 base_direction = hit.direction.destination - hit.direction.origin
                 context.direction = base_direction.rotate_to(context.base_unit_orientation)
                 hitted_tile = context.base_unit_coords + copy(hit.direction.destination).rotate_to(context.base_unit_orientation)
                 origin_tile = hitted_tile - context.direction
-                hitted_wall = self.board.get_wall_between(hitted_tile, origin_tile)
-                if hitted_wall:
-                    if health_change < 0:
-                        self.board.wall_damage(hitted_wall, health_change)
-                else:
-                    hitted_unit = self.board.get_unit_on(hitted_tile)
-                    if hitted_unit and health_change != 0:
-                        if health_change < 0:
-                            shield_index = hitted_unit.get_shield(origin_tile, hitted_tile)
-                            if shield_index != -1:
-                                hitted_unit.shield_change(shield_index, context)
-                            else:
-                                context.hit = hit
-                                hitted_unit.health_change(health_change, context)
-                        else:
-                            context.hit = hit
-                            hitted_unit.health_change(health_change, context)
+                if hit.valid_on_target(Target.wall):
+                    hitted_wall = self.board.get_wall_between(hitted_tile, origin_tile)
+                    if hitted_wall:
+                        self.board.wall_damage(hitted_wall, -hit_value)
+                        continue
+
+                hitted_unit = self.board.get_unit_on(hitted_tile)
+                if not hitted_unit:
+                    continue
+
+                context.hit = hit
+                is_damage = hit.is_damage
+                if is_damage:
+                    if hit.valid_on_target(Target.shield):
+                        shield_index = hitted_unit.get_shield(origin_tile, hitted_tile)
+                        if shield_index != -1:
+                            hitted_unit.shield_change(shield_index, context)
+                            continue
+
+                hitted_unit.health_change(hit_value * (-1 if is_damage else 1), context)
 
             if hun.U:
                 get_move_context(context, unit, hun.U)

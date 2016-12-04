@@ -7,7 +7,7 @@
 			[
 				{ 
 					"dir": [1, 0, 0, 1],
-					"effects": ["damage"],
+					"effects": ["hit_normal"],
 					"values" : [12, 10, 7, 5, 3]
 				}
 			]
@@ -17,7 +17,7 @@
 			[
 				{ 
 					"dir": [0, 1, -1, 1],
-					"effects": ["damage"],
+					"effects": ["hit_normal"],
 					"values" : [12, 10, 7, 5, 3]
 				}
 			]

@@ -4,14 +4,15 @@ from kivy.uix.scatter import Scatter
 from ui.base_widgets import AngledWidget, AngledColoredWidget
 
 from utils import Color
-import skill
+from skill import Effect
 
 
 class ActionArrow(Scatter):
     source = StringProperty(None)
 
-    img_mapping = {skill.Effect.damage: '../data/img/red_arrow.png',
-                   skill.Effect.heal: '../data/img/green_arrow.png'}
+    img_mapping = {Effect.hit_normal: '../data/img/red_arrow.png',
+                   Effect.hit_through_shield: '../data/img/red_arrow.png',  # TEMP !!!
+                   Effect.heal: '../data/img/green_arrow.png'}
 
     def __init__(self, hit, **kwargs):
         source = ActionArrow.img_mapping[hit.effects[0]]

@@ -1,6 +1,6 @@
 {
 	"move": 6,
-	"initiative" : 100,
+	"initiative" : 40,
 	"speed": 100,
 	"health": 1,
 	"color": [0.627451, 0.321569, 0.176471],
@@ -11,5 +11,9 @@
 	"weapons":
 	{
 		"sword": "B"
+	},
+	"skills":
+	{
+		"chess_demo/knight_charge": "B"
 	}
 }

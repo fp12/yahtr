@@ -5,8 +5,13 @@ from core.hex_lib import Hex
 
 
 class Effect(Enum):
-    damage = 0
-    heal = 1
+    none = 0
+    hit_normal = 10
+    hit_through_shield = 11
+    hit_through_wall = 12
+    hit_shield_only = 13
+    hit_wall_only = 14
+    heal = 20
 
 
 class MoveCheck(Enum):
@@ -18,6 +23,13 @@ class MoveType(Enum):
     none = 0
     blink = 1
     pushed = 2
+
+
+class Target:
+    none = 0
+    unit = 1
+    shield = 2
+    wall = 3
 
 
 class HexDir:
@@ -37,6 +49,24 @@ class Hit:
         self.effects = [Effect[e] for e in data['effects']] if 'effects' in data else []
         self.values = data.get('values', [])
         self.order = data['order'] if 'order' in data else 0
+
+    def valid_on_target(self, target):
+        if target == Target.none:
+            return False
+        if target == Target.unit:
+            return any(e in [Effect.hit_normal, Effect.hit_through_shield, Effect.hit_through_wall, Effect.heal] for e in self.effects)
+        if target == Target.shield:
+            return any(e in [Effect.hit_normal, Effect.hit_through_wall, Effect.hit_shield_only] for e in self.effects)
+        if target == Target.wall:
+            return any(e in [Effect.hit_normal, Effect.hit_through_shield, Effect.hit_wall_only] for e in self.effects)
+
+    @property
+    def is_damage(self):
+        return any(e in [Effect.hit_normal,
+                         Effect.hit_through_shield,
+                         Effect.hit_through_wall,
+                         Effect.hit_shield_only,
+                         Effect.hit_wall_only] for e in self.effects)
 
 
 class UnitMove:
@@ -87,12 +117,8 @@ class RankedSkill:
     def __repr__(self):
         return 'RkSk<{0}:{1}>'.format(self.skill.name, self.rank.name)
 
-    def get_skill_health_change(self, hit):
-        if Effect.damage in hit.effects:
-            return -hit.values[self.rank.value]
-        if Effect.heal in hit.effects:
-            return hit.values[self.rank.value]
-        return 0
+    def hit_value(self, hit):
+        return hit.values[self.rank.value]
 
 
 def load_all(root_path):
