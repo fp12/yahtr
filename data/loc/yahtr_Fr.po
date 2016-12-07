@@ -1,0 +1,21 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: yahtr\n"
+"Language: fr\n"
+
+#: 
+msgid "Move"
+msgstr "Déplacement"
+
+#: 
+msgid "Rotate"
+msgstr "Rotation"
+
+#: 
+msgid "End Turn"
+msgstr "Fin du tour"
+

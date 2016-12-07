@@ -1,3 +1,6 @@
+import localization.core
+localization.core.init()
+
 import kivy
 kivy.require('1.9.1')
 

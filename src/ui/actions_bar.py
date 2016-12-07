@@ -57,7 +57,7 @@ class ActionsBar(RelativeLayout):
                     widget_data.append((index, a.data, rk_skill.skill.name, rk_skill))
                     index += 1
             elif a.data != ActionType.EndTurn:
-                widget_data.append((index, a.data, a.data.name, None))
+                widget_data.append((index, a.data, a.data.get_loc(), None))
                 index += 1
         count = len(widget_data)  # not including the mandatory End Turn!
         assert count < len(ActionsBar.__Layouts__)
@@ -65,7 +65,7 @@ class ActionsBar(RelativeLayout):
             q, r = ActionsBar.__Layouts__[count][i]
             self.create_action_widget(q, r, index, action_type, text, rk_skill)
         q, r = ActionsBar.__Layouts__[count][count]
-        self.create_action_widget(q, r, 0, ActionType.EndTurn, 'End Turn')
+        self.create_action_widget(q, r, 0, ActionType.EndTurn, ActionType.EndTurn.get_loc())
 
     def _on_action_selected(self, index=None, button=None):
         if not button:
