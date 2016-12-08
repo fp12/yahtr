@@ -15,6 +15,7 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
+
 #: src\localization\ids.py:2
 msgid "Move"
 msgstr ""
