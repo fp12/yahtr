@@ -23,7 +23,7 @@ msgstr "Fin du tour"
 msgid "Scythe"
 msgstr "Faux"
 
-#: data\scythe_sweep:description
+#: data\scythe:description
 msgid "A sweeping move that hits from the sides"
 msgstr "Un coup qui touche sur les côtés"
 
@@ -55,7 +55,7 @@ msgstr "Un coup pour frapper trois ennemis en face"
 msgid "Sweep"
 msgstr "Balayage"
 
-#: data\default_spear:name
+#: data\chess_demo/spear:name
 msgid "Spear"
 msgstr "Lance"
 
@@ -79,11 +79,11 @@ msgstr "Dagues"
 msgid "Two quick hits on front diagonals"
 msgstr "Deux coups rapides dans les diagonales"
 
-#: data\default_sword:name
+#: data\chess_demo/sword:name
 msgid "Sword"
 msgstr "Épée"
 
-#: data\sword:description
+#: data\chess_demo/sword:description
 msgid "A basic move to hit in front"
 msgstr "Un coup basique qui touche devant"
 
@@ -127,7 +127,7 @@ msgstr "Faucheur"
 msgid "Boss"
 msgstr "Boss"
 
-#: data\lancer:name
+#: data\chess_demo/lancer:name
 msgid "Lancer"
 msgstr "Lancier"
 
@@ -158,4 +158,16 @@ msgstr "Reine"
 #: data\chess_demo/knight_sword:name
 msgid "Knight sword"
 msgstr "Épée de chevalier"
+
+#: src\localization\ids.py:7
+msgid "Battle Started"
+msgstr "Début de la bataille"
+
+#: src\localization\ids.py:8
+msgid "New turn started [{}]"
+msgstr "Nouveau tour [{}]"
+
+#: src\localization\ids.py:9
+msgid "Action: {} {}"
+msgstr "Action: {} {}"
 
