@@ -1,5 +1,6 @@
 {
-	"comment": "A shield hit that pushes an ennemy",
+	"name": "Bash",
+	"description": "A shield hit that pushes an ennemy",
 	"HUN":
 	[
 		{

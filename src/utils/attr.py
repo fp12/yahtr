@@ -3,7 +3,7 @@ import copy
 
 def copy_from_instance(a, b, *args):
     for arg in args:
-        attr = getattr(a, arg)
+        attr = getattr(a, arg, None)
         if isinstance(attr, list):
             setattr(b, arg, attr[:])
         else:

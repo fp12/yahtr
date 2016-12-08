@@ -8,6 +8,8 @@ class Type(Enum):
 
 
 class Tie:
+    """ Relationship between two players """
+
     def __init__(self, p1, p2, tie_type):
         self.players = (p1, p2)
         self.tie_type = tie_type

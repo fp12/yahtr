@@ -1,4 +1,6 @@
 {
+	"name": "Boss",
+	"description": "",
 	"move": 3,
 	"initiative" : 1,
 	"speed": 10,

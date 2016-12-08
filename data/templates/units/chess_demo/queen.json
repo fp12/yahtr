@@ -1,4 +1,6 @@
 {
+	"name": "Queen",
+	"description": "",
 	"move": 4,
 	"initiative" : 200,
 	"speed": 100,

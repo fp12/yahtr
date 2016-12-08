@@ -20,6 +20,20 @@ def local_load(folder, ext):
     return data
 
 
+def local_load_gen(folder, ext):
+    for dirpath, dirs, files in os.walk(folder):
+        for file in files:
+            if file.endswith(ext):
+                with open(dirpath + '/' + file) as f:
+                    data_path = dirpath[len(folder):]
+                    data_name = data_path + '/' if data_path else ''
+                    data_name += file[:-len(ext)]
+                    if ext == '.json':
+                        yield data_name, json.load(f)
+                    else:
+                        yield data_name, f.readlines()
+
+
 def local_load_single(folder, file, ext):
     with open(folder + file + ext) as f:
         return json.load(f)

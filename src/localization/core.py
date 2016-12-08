@@ -15,4 +15,4 @@ def init():
 
   trans.install()
 
-  print('[{}] Localization loaded: {}'.format(loc_code, trans.gettext('Move')))
+  print('[{}] Localization loaded'.format(loc_code))
