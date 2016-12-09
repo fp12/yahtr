@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-12-08 17:12+Est\n"
+"POT-Creation-Date: 2016-12-09 15:48+Est\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,7 +13,6 @@ msgstr ""
 "Content-Type: text/plain; charset=cp1252\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-
 
 
 #: src\localization\ids.py:2
@@ -25,7 +24,7 @@ msgid "Rotate"
 msgstr ""
 
 #: src\localization\ids.py:4
-msgid "End Turn"
+msgid "EndTurn"
 msgstr ""
 
 #: src\localization\ids.py:7
@@ -40,108 +39,12 @@ msgstr ""
 msgid "Action: {} {}"
 msgstr ""
 
-#: data\chess_demo/knight_sword:name
-msgid "Sword"
+#: data\spear:name
+msgid "Spear"
 msgstr ""
 
-#: data\chess_demo/knight_sword:description
-msgid "A basic move to hit in front"
-msgstr ""
-
-#: data\slash:name
-msgid "Slash"
-msgstr ""
-
-#: data\slash:description
-msgid "A move to hit 3 facing ennemies"
-msgstr ""
-
-#: data\scythe_sweep:name
-msgid "Sweep"
-msgstr ""
-
-#: data\scythe_sweep:description
-msgid "A sweeping move that hits from the sides"
-msgstr ""
-
-#: data\chess_demo/queen_stab:name
-msgid "Queen's stare"
-msgstr ""
-
-#: data\chess_demo/queen_stab:description
-msgid "Don't look the queen in the eyes"
-msgstr ""
-
-#: data\chess_demo/daggers:name
-msgid "Daggers"
-msgstr ""
-
-#: data\chess_demo/daggers:description
-msgid "Two quick hits on front diagonals"
-msgstr ""
-
-#: data\chess_demo/bash:name
-msgid "Bash"
-msgstr ""
-
-#: data\chess_demo/bash:description
-msgid "A shield hit that pushes an ennemy"
-msgstr ""
-
-#: data\bash:name
-msgid "Bash"
-msgstr ""
-
-#: data\bash:description
-msgid "A shield hit that pushes an ennemy"
-msgstr ""
-
-#: data\sword:name
-msgid "Sword"
-msgstr ""
-
-#: data\sword:description
-msgid "A basic move to hit in front"
-msgstr ""
-
-#: data\daggers:name
-msgid "Daggers"
-msgstr ""
-
-#: data\daggers:description
-msgid "Two quick hits on front diagonals"
-msgstr ""
-
-#: data\heal:name
-msgid "Heal"
-msgstr ""
-
-#: data\heal:description
-msgid "Most basic healing magic"
-msgstr ""
-
-#: data\blink_stab:name
-msgid "Blink Stab"
-msgstr ""
-
-#: data\blink_stab:description
-msgid "A teleport move to move and hit behind your opponents"
-msgstr ""
-
-#: data\chess_demo/slash:name
-msgid "Slash"
-msgstr ""
-
-#: data\chess_demo/slash:description
-msgid "A move to hit 3 facing ennemies"
-msgstr ""
-
-#: data\scythe:name
-msgid "Scythe"
-msgstr ""
-
-#: data\scythe:description
-msgid "A sweeping move that hits from the sides"
+#: data\spear:description
+msgid "A basic move to hit 2 ennemies at once"
 msgstr ""
 
 #: data\chess_demo/sword:name
@@ -152,27 +55,131 @@ msgstr ""
 msgid "A basic move to hit in front"
 msgstr ""
 
-#: data\spear:name
-msgid "Spear"
+#: data\scythe_sweep:name
+msgid "Sweep"
 msgstr ""
 
-#: data\spear:description
-msgid "A basic move to hit 2 ennemies at once"
+#: data\scythe_sweep:description
+msgid "A sweeping move that hits from the sides"
 msgstr ""
 
-#: data\default_scythe:name
-msgid "Scythe"
+#: data\daggers:name
+msgid "Daggers"
 msgstr ""
 
-#: data\default_scythe:description
-msgid ""
+#: data\daggers:description
+msgid "Two quick hits on front diagonals"
+msgstr ""
+
+#: data\chess_demo/queen_stab:name
+msgid "Queen's stare"
+msgstr ""
+
+#: data\chess_demo/queen_stab:description
+msgid "Don't look the queen in the eyes"
 msgstr ""
 
 #: data\chess_demo/knight_sword:name
-msgid "Knight sword"
+msgid "Sword"
 msgstr ""
 
 #: data\chess_demo/knight_sword:description
+msgid "A basic move to hit in front"
+msgstr ""
+
+#: data\chess_demo/bash:name
+msgid "Bash"
+msgstr ""
+
+#: data\chess_demo/bash:description
+msgid "A shield hit that pushes an ennemy"
+msgstr ""
+
+#: data\slash:name
+msgid "Slash"
+msgstr ""
+
+#: data\slash:description
+msgid "A move to hit 3 facing ennemies"
+msgstr ""
+
+#: data\chess_demo/daggers:name
+msgid "Daggers"
+msgstr ""
+
+#: data\chess_demo/daggers:description
+msgid "Two quick hits on front diagonals"
+msgstr ""
+
+#: data\bash:name
+msgid "Bash"
+msgstr ""
+
+#: data\bash:description
+msgid "A shield hit that pushes an ennemy"
+msgstr ""
+
+#: data\chess_demo/slash:name
+msgid "Slash"
+msgstr ""
+
+#: data\chess_demo/slash:description
+msgid "A move to hit 3 facing ennemies"
+msgstr ""
+
+#: data\heal:name
+msgid "Heal"
+msgstr ""
+
+#: data\heal:description
+msgid "Most basic healing magic"
+msgstr ""
+
+#: data\scythe:name
+msgid "Scythe"
+msgstr ""
+
+#: data\scythe:description
+msgid "A sweeping move that hits from the sides"
+msgstr ""
+
+#: data\sword:name
+msgid "Sword"
+msgstr ""
+
+#: data\sword:description
+msgid "A basic move to hit in front"
+msgstr ""
+
+#: data\blink_stab:name
+msgid "Blink Stab"
+msgstr ""
+
+#: data\blink_stab:description
+msgid "A teleport move to move and hit behind your opponents"
+msgstr ""
+
+#: data\default_grimoire:name
+msgid "Grimoire"
+msgstr ""
+
+#: data\default_grimoire:description
+msgid ""
+msgstr ""
+
+#: data\default_daggers:name
+msgid "Daggers"
+msgstr ""
+
+#: data\default_daggers:description
+msgid ""
+msgstr ""
+
+#: data\chess_demo/sword:name
+msgid "Sword"
+msgstr ""
+
+#: data\chess_demo/sword:description
 msgid ""
 msgstr ""
 
@@ -192,19 +199,19 @@ msgstr ""
 msgid ""
 msgstr ""
 
-#: data\chess_demo/queen_daggers:name
-msgid "Queen's daggers"
+#: data\chess_demo/spear:name
+msgid "Spear"
 msgstr ""
 
-#: data\chess_demo/queen_daggers:description
+#: data\chess_demo/spear:description
 msgid ""
 msgstr ""
 
-#: data\default_daggers:name
-msgid "Daggers"
+#: data\default_scythe:name
+msgid "Scythe"
 msgstr ""
 
-#: data\default_daggers:description
+#: data\default_scythe:description
 msgid ""
 msgstr ""
 
@@ -216,83 +223,19 @@ msgstr ""
 msgid ""
 msgstr ""
 
-#: data\chess_demo/sword:name
-msgid "Sword"
+#: data\chess_demo/knight_sword:name
+msgid "Knight sword"
 msgstr ""
 
-#: data\chess_demo/sword:description
+#: data\chess_demo/knight_sword:description
 msgid ""
 msgstr ""
 
-#: data\default_grimoire:name
-msgid "Grimoire"
+#: data\chess_demo/queen_daggers:name
+msgid "Queen's daggers"
 msgstr ""
 
-#: data\default_grimoire:description
-msgid ""
-msgstr ""
-
-#: data\chess_demo/spear:name
-msgid "Spear"
-msgstr ""
-
-#: data\chess_demo/spear:description
-msgid ""
-msgstr ""
-
-#: data\chess_demo/king:name
-msgid "King"
-msgstr ""
-
-#: data\chess_demo/king:description
-msgid ""
-msgstr ""
-
-#: data\chess_demo/queen:name
-msgid "Queen"
-msgstr ""
-
-#: data\chess_demo/queen:description
-msgid ""
-msgstr ""
-
-#: data\chess_demo/knight:name
-msgid "Knight"
-msgstr ""
-
-#: data\chess_demo/knight:description
-msgid ""
-msgstr ""
-
-#: data\lancer:name
-msgid "Lancer"
-msgstr ""
-
-#: data\lancer:description
-msgid ""
-msgstr ""
-
-#: data\chess_demo/soldier:name
-msgid "Soldier"
-msgstr ""
-
-#: data\chess_demo/soldier:description
-msgid ""
-msgstr ""
-
-#: data\reaper:name
-msgid "Reaper"
-msgstr ""
-
-#: data\reaper:description
-msgid ""
-msgstr ""
-
-#: data\warrior:name
-msgid "Warrior"
-msgstr ""
-
-#: data\warrior:description
+#: data\chess_demo/queen_daggers:description
 msgid ""
 msgstr ""
 
@@ -304,35 +247,19 @@ msgstr ""
 msgid ""
 msgstr ""
 
-#: data\chess_demo/lancer:name
-msgid "Lancer"
+#: data\chess_demo/queen:name
+msgid "Queen"
 msgstr ""
 
-#: data\chess_demo/lancer:description
+#: data\chess_demo/queen:description
 msgid ""
 msgstr ""
 
-#: data\white_mage:name
-msgid "White Mage"
+#: data\reaper:name
+msgid "Reaper"
 msgstr ""
 
-#: data\white_mage:description
-msgid ""
-msgstr ""
-
-#: data\guard:name
-msgid "Guard"
-msgstr ""
-
-#: data\guard:description
-msgid ""
-msgstr ""
-
-#: data\mounted_knight:name
-msgid "Knight"
-msgstr ""
-
-#: data\mounted_knight:description
+#: data\reaper:description
 msgid ""
 msgstr ""
 
@@ -344,11 +271,83 @@ msgstr ""
 msgid ""
 msgstr ""
 
+#: data\warrior:name
+msgid "Warrior"
+msgstr ""
+
+#: data\warrior:description
+msgid ""
+msgstr ""
+
+#: data\chess_demo/king:name
+msgid "King"
+msgstr ""
+
+#: data\chess_demo/king:description
+msgid ""
+msgstr ""
+
+#: data\mounted_knight:name
+msgid "Knight"
+msgstr ""
+
+#: data\mounted_knight:description
+msgid ""
+msgstr ""
+
 #: data\rogue:name
 msgid "Rogue"
 msgstr ""
 
 #: data\rogue:description
+msgid ""
+msgstr ""
+
+#: data\white_mage:name
+msgid "White Mage"
+msgstr ""
+
+#: data\white_mage:description
+msgid ""
+msgstr ""
+
+#: data\chess_demo/knight:name
+msgid "Knight"
+msgstr ""
+
+#: data\chess_demo/knight:description
+msgid ""
+msgstr ""
+
+#: data\guard:name
+msgid "Guard"
+msgstr ""
+
+#: data\guard:description
+msgid ""
+msgstr ""
+
+#: data\chess_demo/lancer:name
+msgid "Lancer"
+msgstr ""
+
+#: data\chess_demo/lancer:description
+msgid ""
+msgstr ""
+
+#: data\chess_demo/soldier:name
+msgid "Soldier"
+msgstr ""
+
+#: data\chess_demo/soldier:description
+msgid ""
+msgstr ""
+
+#: data\lancer:name
+msgid "Lancer"
+msgstr ""
+
+#: data\lancer:description
 msgid ""
 msgstr ""
 

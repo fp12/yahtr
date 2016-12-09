@@ -1,24 +1,14 @@
-from enum import Enum
-
 import data_loader
 from utils.tree import Tree, Node
-from localization.ids import *
+from utils.enum import LocalizedEnum
 
 
-class ActionType(Enum):
+class ActionType(LocalizedEnum):
     EndTurn = 0
     Move = 1
     Rotate = 2
     Weapon = 3
     Skill = 4
-
-    def get_loc(self):
-        if self.value == ActionType.Move.value:
-            return L_Move
-        if self.value == ActionType.Rotate.value:
-            return L_Rotate
-        if self.value == ActionType.EndTurn.value:
-            return L_EndTurn
 
 
 class ActionTree:

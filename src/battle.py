@@ -97,10 +97,10 @@ class Battle:
         self.thread_event[0].set()
 
     def resolve_skill(self, unit, context):
+        """ Note: NOT executed on main thread """
         rk_skill = context.get('rk_skill')
         assert rk_skill
 
-        """ Note: NOT executed on main thread """
         def get_move_context(context, unit, move_info):
             epsilon = 0.000001
             context.move_info = move_info
