@@ -81,6 +81,10 @@ class Color(metaclass=__MetaColor):
         self.color[3] = value
 
     @property
+    def rgb(self):
+        return self.color[:3]
+
+    @property
     def rgb_dict(self):
         return {'r': self.color[0], 'g': self.color[1], 'b': self.color[2]}
 

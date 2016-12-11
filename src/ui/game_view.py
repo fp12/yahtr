@@ -53,6 +53,7 @@ class GameView(ScatterLayout):
             self.walls.append(wall)
 
         game_instance.battle.board.on_wall_hit += self.on_wall_hit
+        game_instance.battle.board.on_unit_removed += self.on_unit_removed
 
         self.add_widget(self.selector)
         self.add_widget(self.trajectory)
@@ -66,6 +67,13 @@ class GameView(ScatterLayout):
                 new_piece.load()
         game_instance.battle.on_action_change += self.on_action_change
         game_instance.battle.on_new_turn += self.on_new_turn
+
+    def on_unit_removed(self, unit):
+        for piece in self.pieces:
+            if piece.unit == unit:
+                self.remove_widget(piece)
+                self.pieces.remove(piece)
+                return
 
     def on_debug_key(self, keycode, code):
         for x in self.tiles:

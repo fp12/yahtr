@@ -6,7 +6,7 @@ from utils import attr, clamp
 from utils.event import Event
 from actions import ActionType
 from rank import Rank
-from skill import RankedSkill
+from skill import RankedSkill, Target
 from weapon import RankedWeapon
 
 
@@ -105,7 +105,9 @@ class Unit:
 
     def health_change(self, health, context):
         self.health = clamp(0, self.health + health, self.template.health)
-        self.on_health_change(health, context)
+        if self.health <= 0:
+            context.targets_killed.append((self, Target.unit))
+        self.on_health_change(health, context),
 
     def shield_change(self, shield_index, context):
         self.shields[shield_index] -= 1

@@ -19,14 +19,16 @@ class SkillContext:
         self.base_unit_coords = copy(unit.hex_coords)
         self.base_unit_orientation = copy(unit.orientation)
         self.previous_target_angle = None  # used for choosing the rotation direction
+        self.targets = []  # (target, type)
+        self.targets_killed = []  # (target, type) will be set later by unit
 
 
 class Battle:
     def __init__(self, battle_board, players):
         self.board = Board(self, battle_board)
+        self.time_bar = TimeBar()
         self.squads = {p: [] for p in players}
         self.ties = []
-        self.time_bar = TimeBar()
         self.actions_history = []  # (unit, [ actions ])
         self.thread_event = ()  # (threading.Event, callback)
 
@@ -126,7 +128,7 @@ class Battle:
                 else:
                     context.previous_target_angle = context.target_angle
 
-        context = SkillContext(unit)
+        ctx = SkillContext(unit)
 
         for hun in rk_skill.skill.huns:
             for hit in hun.H:
@@ -135,12 +137,13 @@ class Battle:
                     continue
 
                 base_direction = hit.direction.destination - hit.direction.origin
-                context.direction = base_direction.rotate_to(context.base_unit_orientation)
-                hitted_tile = context.base_unit_coords + copy(hit.direction.destination).rotate_to(context.base_unit_orientation)
-                origin_tile = hitted_tile - context.direction
+                ctx.direction = base_direction.rotate_to(ctx.base_unit_orientation)
+                hitted_tile = ctx.base_unit_coords + copy(hit.direction.destination).rotate_to(ctx.base_unit_orientation)
+                origin_tile = hitted_tile - ctx.direction
                 if hit.valid_on_target(Target.wall):
                     hitted_wall = self.board.get_wall_between(hitted_tile, origin_tile)
                     if hitted_wall:
+                        ctx.targets.append((hitted_wall, Target.wall))
                         self.board.wall_damage(hitted_wall, -hit_value)
                         continue
 
@@ -148,32 +151,39 @@ class Battle:
                 if not hitted_unit:
                     continue
 
-                context.hit = hit
+                ctx.hit = hit
                 is_damage = hit.is_damage
-                if is_damage:
-                    if hit.valid_on_target(Target.shield):
-                        shield_index = hitted_unit.get_shield(origin_tile, hitted_tile)
-                        if shield_index != -1:
-                            hitted_unit.shield_change(shield_index, context)
-                            continue
+                if is_damage and hit.valid_on_target(Target.shield):
+                    shield_index = hitted_unit.get_shield(origin_tile, hitted_tile)
+                    if shield_index != -1:
+                        ctx.targets.append((hitted_unit, Target.shield))
+                        hitted_unit.shield_change(shield_index, ctx)
+                        continue
 
-                hitted_unit.health_change(hit_value * (-1 if is_damage else 1), context)
+                ctx.targets.append((hitted_unit, Target.unit))
+                hitted_unit.health_change(hit_value * (-1 if is_damage else 1), ctx)
 
             if hun.U:
-                get_move_context(context, unit, hun.U)
-                unit.skill_move(context)
+                get_move_context(ctx, unit, hun.U)
+                unit.skill_move(ctx)
 
             for move_info in hun.N:
-                move_origin_offset = copy(move_info.move.origin).rotate_to(context.base_unit_orientation)
-                move_origin = context.base_unit_coords + move_origin_offset
+                move_origin_offset = copy(move_info.move.origin).rotate_to(ctx.base_unit_orientation)
+                move_origin = ctx.base_unit_coords + move_origin_offset
                 moved_unit = self.board.get_unit_on(move_origin)
                 if moved_unit:
-                    get_move_context(context, moved_unit, move_info)
-                    moved_unit.skill_move(context)
+                    get_move_context(ctx, moved_unit, move_info)
+                    moved_unit.skill_move(ctx)
 
             ui_thread_event = self.on_action()
             if ui_thread_event:
                 ui_thread_event.wait()
+
+                # here we do the cleanup if some units / walls are killed
+                for target, target_type in ctx.targets_killed:
+                    if target_type == Target.unit:
+                        self.board.unregister_unit(target)
+                        self.time_bar.unregister_unit(target)
 
         self.thread_event[0].set()
 

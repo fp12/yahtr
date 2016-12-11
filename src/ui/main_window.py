@@ -1,4 +1,3 @@
-from collections import OrderedDict
 import threading
 
 from kivy.lang import Builder

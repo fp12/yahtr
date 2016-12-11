@@ -13,9 +13,9 @@ class Event:
             raise ValueError("Handler is not handling this event, so cannot unhandle it.")
         return self
 
-    def fire(self, *args, **kargs):
+    def fire(self, *args, **kwargs):
         for handler in self.handlers:
-            handler(*args, **kargs)
+            handler(*args, **kwargs)
 
     __iadd__ = handle
     __isub__ = unhandle
@@ -36,9 +36,15 @@ class UniqueEvent:
         self.handler = None
         return self
 
-    def fire(self, *args, **kargs):
-        return self.handler(*args, **kargs)
+    def fire(self, *args, **kwargs):
+        return self.handler(*args, **kwargs)
 
     __iadd__ = handle
     __isub__ = unhandle
     __call__ = fire
+
+
+class FireOnceEvent(Event):
+    def fire(self, *args, **kwargs):
+        super(FireOnceEvent, self).fire(*args, **kwargs)
+        self.handlers = []

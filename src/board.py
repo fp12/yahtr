@@ -49,9 +49,14 @@ class Board():
         self.units = []  # ref
 
         self.on_wall_hit = Event('origin', 'destination', 'destroyed')
+        self.on_unit_removed = Event('unit')
 
     def register_units(self, units):
         self.units.extend(units)
+
+    def unregister_unit(self, unit):
+        self.on_unit_removed(unit)
+        self.units.remove(unit)
 
     def _validate_not_hole(self, q, r):
         if self.holes and [q, r] in self.holes:

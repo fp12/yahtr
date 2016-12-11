@@ -17,6 +17,9 @@ class TimeBar:
         for u in units:
             self.register_unit(u)
 
+    def unregister_unit(self, unit):
+        self.queue[:] = [(i, c, u) for i, c, u in self.queue if u != unit]
+
     @property
     def current(self):
         return self.queue[0]

@@ -50,7 +50,7 @@ class Piece(HexWidget):
         super(Piece, self).__init__(q=unit.hex_coords.q, r=unit.hex_coords.r, **kwargs)
         self.unit = unit
         self.color = unit.color
-        self.squad_color = unit.owner.color.color
+        self.squad_color = unit.owner.color.rgb + [self.a]
         self.current_skill = None
         self.skill_widget = None
         self.status = Status.Idle
@@ -256,6 +256,7 @@ class Piece(HexWidget):
     def on_unit_health_change(self, health_change, context):
         duration = 0.2
         anim = None
+
         if health_change < 0:
             pt = self.hex_layout.hex_to_pixel(self.hex_coords + context.direction)
             target_pos_x = self.x + (pt.x - self.x) / 10
@@ -268,6 +269,12 @@ class Piece(HexWidget):
 
         app = App.get_running_app()
         app.anim_scheduler.add(anim, self, context.hit.order)
+
+        for target, target_type in context.targets_killed:
+            if self.unit == target:
+                anim = Animation(a=0, duration=duration)
+                app.anim_scheduler.add(anim, self, 99)
+                break
 
     def hex_test(self, hex_coords):
         return self.unit.hex_test(hex_coords)
