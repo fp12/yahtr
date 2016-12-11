@@ -1,5 +1,6 @@
 {
-	"comment": "A sweeping move that hits from the sides",
+	"name": "Sweep",
+	"description": "A sweeping move that hits from the sides",
 	"HUN":
 	[
 		{

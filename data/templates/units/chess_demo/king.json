@@ -1,4 +1,6 @@
 {
+	"name": "King",
+	"description": "",
 	"move": 1,
 	"initiative" : 190,
 	"speed": 100,

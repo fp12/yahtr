@@ -12,6 +12,7 @@ from ui.actions_bar import ActionsBar
 from ui.game_console import GameConsole
 from ui.anim_scheduler import AnimScheduler
 
+from game_data import game_data
 from game import game_instance
 
 
@@ -36,8 +37,8 @@ class MainWindow(App):
         Window.bind(on_key_down=self.on_keyboard_down, mouse_pos=self.on_mouse_pos)
 
     def on_start(self):
-        # prepare game logic
-        game_instance.load()
+        # load static data
+        game_data.load()
 
         # prepare UI
         self.game_console = GameConsole(pos=(10, 10), size_hint=(0.25, 0.25))
@@ -52,6 +53,7 @@ class MainWindow(App):
         self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size, auto_bring_to_front=False)
         self.layout.add_widget(self.game_view, 3)
 
+        # load dynamic setup
         game_instance.load_battle_setup('chess_demo')
         game_instance.battle.on_action += self.on_battle_action
 

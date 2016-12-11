@@ -2,6 +2,7 @@ from enum import Enum
 
 import data_loader
 from core.hex_lib import Hex
+from utils import attr
 
 
 class Effect(Enum):
@@ -79,6 +80,8 @@ class UnitMove:
 
 
 class HUN:
+    """ Hit - Unit - eNmeny data format for skills """
+
     def __init__(self, hun):
         self.hits = [Hit(h) for h in hun['H']] if 'H' in hun else []
         self.unit_move = UnitMove(hun['U']) if 'U' in hun else None
@@ -101,8 +104,13 @@ class HUN:
 
 
 class Skill:
-    def __init__(self, name, data):
-        self.name = name
+    """ Skill as defined in data """
+
+    __attributes = ['name', 'description']
+
+    def __init__(self, file, data):
+        self.id = file
+        attr.get_from_dict(self, data, *Skill.__attributes)
         self.huns = [HUN(hun) for hun in data['HUN']] if 'HUN' in data else []
 
     def __repr__(self):
@@ -110,6 +118,8 @@ class Skill:
 
 
 class RankedSkill:
+    """ Skill instanciated inside a weapon or a unit """
+
     def __init__(self, skill, rank):
         self.skill = skill
         self.rank = rank
@@ -123,4 +133,4 @@ class RankedSkill:
 
 def load_all(root_path):
     raw_skills = data_loader.local_load(root_path + 'data/skills/', '.json')
-    return [Skill(name, data) for name, data in raw_skills.items()]
+    return [Skill(file, data) for file, data in raw_skills.items()]

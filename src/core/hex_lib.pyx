@@ -115,7 +115,7 @@ cdef class Hex:
     cpdef rotate_to(self, Hex direction):
         cdef int i = index_of_direction(direction)
         if 0 <= i < NHEX:
-            for _ in range(i):
+            for __ in range(i):
                 q, s = self._q, -self._q - self._r
                 self._q = -s
                 self._r = -q

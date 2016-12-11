@@ -18,7 +18,7 @@
     Label:
         size: root.size
         center: root.pos
-        text: '{0.template.name}'.format(root.unit) if root.unit else ''
+        text: '{0}'.format(_(root.unit.template.name)) if root.unit else ''
         halign: 'center'
         valign: 'middle'
         color: root.squad_color
@@ -39,7 +39,7 @@
         radius: root.radius
         a: 0
     Label:
-        text: '[b]{0.template.name}[/b]'.format(root.unit) if root.unit else ''
+        text: '[b]{0}[/b]'.format(_(root.unit.template.name)) if root.unit else ''
         markup: True
         size: root.size
         center_x: root.x

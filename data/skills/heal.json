@@ -1,5 +1,6 @@
 {
-	"comment": "Most basic healing magic",
+	"name": "Heal",
+	"description": "Most basic healing magic",
 	"HUN":
 	[
 		{

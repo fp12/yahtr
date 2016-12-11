@@ -1,9 +1,9 @@
 import data_loader
-from enum import Enum
 from utils.tree import Tree, Node
+from utils.enum import LocalizedEnum
 
 
-class ActionType(Enum):
+class ActionType(LocalizedEnum):
     EndTurn = 0
     Move = 1
     Rotate = 2
@@ -15,8 +15,8 @@ class ActionTree:
     separator = '  '
     comment_token = '#'
 
-    def __init__(self, name, data):
-        self.name = name
+    def __init__(self, file, data):
+        self.id = file
         self.tree = Tree()
         self.__load_tree(data)
 
@@ -36,7 +36,7 @@ class ActionTree:
                 cursor[-1].add_node(current_node)
             else:  # tabs_count < current_tabs_count
                 diff = current_tabs_count - tabs_count + 1
-                for _ in range(diff):
+                for __ in range(diff):
                     cursor.pop(-1)
                 cursor[-1].add_node(current_node)
             cursor.append(current_node)
@@ -45,4 +45,4 @@ class ActionTree:
 
 def load_all(root_path):
     raw_data = data_loader.local_load(root_path + 'data/actions_trees/', '.txt')
-    return [ActionTree(name, data) for name, data in raw_data.items()]
+    return [ActionTree(file, data) for file, data in raw_data.items()]

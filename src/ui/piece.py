@@ -85,7 +85,7 @@ class Piece(HexWidget):
         self.add_widget(self.contour)
 
         self.do_rotate()
-        self._shields = [{} for _ in range(len(unit.shields))]
+        self._shields = [{} for __ in range(len(unit.shields))]
         self.update_shields()
 
         # declare events
@@ -142,7 +142,7 @@ class Piece(HexWidget):
                         self.add_widget(w)
                         self._shields[linear_index].update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1], i)})
                 elif diff < 0:
-                    for shield_part, (_, _, order) in self._shields[linear_index].items():
+                    for shield_part, (__, __, order) in self._shields[linear_index].items():
                         if shield_value <= order < old_size:
                             shield_part.color = hit_color
                             anim = Animation(thickness=shield_part.thickness * 2, a=0, duration=0.5, t='in_out_circ')

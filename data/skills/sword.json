@@ -1,5 +1,6 @@
 {
-	"comment": "A basic move to hit in front",
+	"name": "Sword",
+	"description": "A basic move to hit in front",
 	"HUN":
 	[
 		{

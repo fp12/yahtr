@@ -1,0 +1,173 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: yahtr\n"
+"Language: fr\n"
+
+#: src\localization\ids.py:2
+msgid "Move"
+msgstr "Déplacement"
+
+#: src\localization\ids.py:3
+msgid "Rotate"
+msgstr "Rotation"
+
+#: src\localization\ids.py:4
+msgid "End Turn"
+msgstr "Fin du tour"
+
+#: data\default_scythe:name
+msgid "Scythe"
+msgstr "Faux"
+
+#: data\scythe:description
+msgid "A sweeping move that hits from the sides"
+msgstr "Un coup qui touche sur les côtés"
+
+#: data\blink_stab:name
+msgid "Blink Stab"
+msgstr ""
+
+#: data\blink_stab:description
+msgid "A teleport move to move and hit behind your opponents"
+msgstr "Un déplacement furtif pour frapper de l'autre côté d'une unité"
+
+#: data\heal:name
+msgid "Heal"
+msgstr "Soins"
+
+#: data\heal:description
+msgid "Most basic healing magic"
+msgstr "Le sort de soins le plus basique"
+
+#: data\chess_demo/slash:name
+msgid "Slash"
+msgstr ""
+
+#: data\chess_demo/slash:description
+msgid "A move to hit 3 facing ennemies"
+msgstr "Un coup pour frapper trois ennemis en face"
+
+#: data\scythe_sweep:name
+msgid "Sweep"
+msgstr "Balayage"
+
+#: data\chess_demo/spear:name
+msgid "Spear"
+msgstr "Lance"
+
+#: data\spear:description
+msgid "A basic move to hit 2 ennemies at once"
+msgstr "Un coup basique pour frapper deux ennemis à la fois"
+
+#: data\bash:name
+msgid "Bash"
+msgstr "Gros coup"
+
+#: data\bash:description
+msgid "A shield hit that pushes an ennemy"
+msgstr "Un coup de bouclier qui pousse un ennemi"
+
+#: data\default_daggers:name
+msgid "Daggers"
+msgstr "Dagues"
+
+#: data\daggers:description
+msgid "Two quick hits on front diagonals"
+msgstr "Deux coups rapides dans les diagonales"
+
+#: data\chess_demo/sword:name
+msgid "Sword"
+msgstr "Épée"
+
+#: data\chess_demo/sword:description
+msgid "A basic move to hit in front"
+msgstr "Un coup basique qui touche devant"
+
+#: data\chess_demo/queen_stab:name
+msgid "Queen's stare"
+msgstr "Regard de Reine"
+
+#: data\chess_demo/queen_stab:description
+msgid "Don't look the queen in the eyes"
+msgstr "Ne regarde pas la reine dans les yeux"
+
+#: data\default_grimoire:name
+msgid "Grimoire"
+msgstr "Grimoire"
+
+#: data\chess_demo/queen_daggers:name
+msgid "Queen's daggers"
+msgstr "Dagues de la Reine"
+
+#: data\chess_demo/king_sword:name
+msgid "King's sword"
+msgstr "Épée du Roi"
+
+#: data\mounted_knight:name
+msgid "Knight"
+msgstr "Chevalier"
+
+#: data\chess_demo/king:name
+msgid "King"
+msgstr "Roi"
+
+#: data\rogue:name
+msgid "Rogue"
+msgstr "Voyou"
+
+#: data\reaper:name
+msgid "Reaper"
+msgstr "Faucheur"
+
+#: data\boss:name
+msgid "Boss"
+msgstr "Boss"
+
+#: data\chess_demo/lancer:name
+msgid "Lancer"
+msgstr "Lancier"
+
+#: data\chess_demo/royal_guard:name
+msgid "Royal Guard"
+msgstr "Garde Royal"
+
+#: data\white_mage:name
+msgid "White Mage"
+msgstr "Mage Blanc"
+
+#: data\warrior:name
+msgid "Warrior"
+msgstr "Guerrier"
+
+#: data\chess_demo/soldier:name
+msgid "Soldier"
+msgstr "Soldat"
+
+#: data\guard:name
+msgid "Guard"
+msgstr "Garde"
+
+#: data\chess_demo/queen:name
+msgid "Queen"
+msgstr "Reine"
+
+#: data\chess_demo/knight_sword:name
+msgid "Knight sword"
+msgstr "Épée de chevalier"
+
+#: src\localization\ids.py:7
+msgid "Battle Started"
+msgstr "Début de la bataille"
+
+#: src\localization\ids.py:8
+msgid "New turn started [{}]"
+msgstr "Nouveau tour [{}]"
+
+#: src\localization\ids.py:9
+msgid "Action: {} {}"
+msgstr "Action: {} {}"
+

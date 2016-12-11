@@ -1,4 +1,5 @@
 from weapon import Weapon
+from game_data import game_data
 
 
 class Player():
@@ -14,7 +15,7 @@ class Player():
         self.units.append(unit)
 
     def add_weapon(self, weapon_template):
-        w = Weapon(self.game.get_weapon_template(weapon_template))
+        w = Weapon(game_data.get_weapon_template(weapon_template))
         self.weapons.append(w)
         return w
 

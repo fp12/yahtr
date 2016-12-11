@@ -3,6 +3,8 @@ import itertools
 
 
 class TimeBar:
+    """ Ordered list (by initiative + speed) of units """
+
     def __init__(self):
         self.queue = []
         self.count = itertools.count()
@@ -25,7 +27,7 @@ class TimeBar:
         return self.queue[0]
 
     def next(self):
-        old_priority, _, unit = heapq.heappop(self.queue)
+        old_priority, __, unit = heapq.heappop(self.queue)
         heapq.heappush(self.queue, (old_priority + unit.speed, next(self.count), unit))
         return self.current
 
@@ -35,7 +37,7 @@ class TimeBar:
         count = itertools.count(start=next(self.count))
         while len(copy) < max_elements:
             copy = heapq.nsmallest(max_elements, copy)
-            old_priority, _, unit = copy[index]
+            old_priority, __, unit = copy[index]
             heapq.heappush(copy, (old_priority + unit.speed, next(count), unit))
             index += 1
         return heapq.nsmallest(max_elements, copy)

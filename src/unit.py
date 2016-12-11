@@ -1,7 +1,7 @@
 import copy
 
-from core.hex_lib import Hex, index_of_direction
 import data_loader
+from core.hex_lib import Hex, index_of_direction
 from utils import attr, clamp
 from utils.event import Event
 from actions import ActionType
@@ -11,10 +11,12 @@ from weapon import RankedWeapon
 
 
 class UnitTemplate:
-    __attributes = ['move', 'initiative', 'speed', 'shields', 'color', 'weapons', 'health']
+    """ Unit as defined in data """
 
-    def __init__(self, name, data, get_skill, get_actions_tree):
-        self.name = name
+    __attributes = ['name', 'description', 'move', 'initiative', 'speed', 'shields', 'color', 'weapons', 'health']
+
+    def __init__(self, file, data, get_skill, get_actions_tree):
+        self.id = file
         attr.get_from_dict(self, data, *UnitTemplate.__attributes)
         self.actions_tree = get_actions_tree(data['actions_tree_name'])
 
@@ -29,6 +31,8 @@ class UnitTemplate:
 
 
 class Unit:
+    """ Unit in a player pool of available units """
+
     __attributes = ['move', 'initiative', 'speed', 'shields', 'color', 'actions_tree', 'skills', 'shape', 'health']
 
     def __init__(self, template):
@@ -40,7 +44,7 @@ class Unit:
         self.owner = None
         self.current_shape = []
         if not self.shields:
-            self.shields = [0 for _ in range(6)]
+            self.shields = [0 for __ in range(6)]
 
         # events
         self.on_health_change = Event('health', 'context')
@@ -126,4 +130,4 @@ class Unit:
 
 def load_all(root_path, get_skill, get_actions_tree):
     raw_units = data_loader.local_load(root_path + 'data/templates/units/', '.json')
-    return [UnitTemplate(name, data, get_skill, get_actions_tree) for name, data in raw_units.items()]
+    return [UnitTemplate(file, data, get_skill, get_actions_tree) for file, data in raw_units.items()]

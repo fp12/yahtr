@@ -20,7 +20,7 @@ class PlayerAI(Player):
         return True
 
     def _refresh_ennemies(self):
-        self.ennemies = [u for _, units in self.game.battle.squads.items() for u in units if self.game.battle.get_tie(self, u.owner) == tie.Type.Enemy]
+        self.ennemies = [u for __, units in self.game.battle.squads.items() for u in units if self.game.battle.get_tie(self, u.owner) == tie.Type.Enemy]
 
     def _get_closest_ennemy(self, current_unit):
         closest_nmi = self.ennemies[0]
