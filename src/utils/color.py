@@ -1,5 +1,6 @@
 """ Reference for color names and definitions: http://www.avatar.se/molscript/doc/colour_names.html
-    This list is never accessed directly but through Color('white') or even Color.white """
+    This list is never accessed directly but through Color('white') or even Color.white
+"""
 colors = {
     'black': (0, 0, 0),
     'white': (1., 1., 1.),
@@ -12,7 +13,11 @@ colors = {
     'darkseagreen': (0.560784, 0.737255, 0.560784),
     'lightgreen': (0.564706, 0.933333, 0.564706),
     'player_team': (0, 88, 209),
-    'ai_team_1': (217, 42, 22)
+    'ai_team_1': (217, 42, 22),
+    'action_move_rotate': (57, 127, 191),
+    'action_weapon': (68, 152, 229),
+    'action_skill': (76, 169, 255),
+    'action_endturn': (38, 85, 127)
 }
 
 

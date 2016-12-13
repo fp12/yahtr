@@ -14,7 +14,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="grey_arrow.svg">
+   sodipodi:docname="grey_arrow.svg"
+   inkscape:export-filename="D:\Dev\yahtr\data\img\grey_arrow.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
     <marker
@@ -117,7 +120,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.74"
-     inkscape:cx="-29.259561"
+     inkscape:cx="-30.408986"
      inkscape:cy="125.69458"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"

@@ -7,11 +7,20 @@ from ui.hex_widget import HexWidget
 from game import game_instance
 from actions import ActionType
 from core.hex_lib import Layout
+from utils import Color
 
 
 class UnitActionTile(ButtonBehavior, HexWidget):
     action = StringProperty()
     key = StringProperty()
+
+    colors = {
+        ActionType.Move: Color.action_move_rotate,
+        ActionType.Rotate: Color.action_move_rotate,
+        ActionType.Weapon: Color.action_weapon,
+        ActionType.Skill: Color.action_skill,
+        ActionType.EndTurn: Color.action_endturn
+    }
 
     def __init__(self, index, action_type, text, rk_skill=None, **kwargs):
         self.index = index
@@ -19,7 +28,7 @@ class UnitActionTile(ButtonBehavior, HexWidget):
         self.rk_skill = rk_skill
         self.action = text
         self.key = '[b]{0}[/b]'.format(index)
-        super(UnitActionTile, self).__init__(**kwargs)
+        super(UnitActionTile, self).__init__(color=self.colors[action_type], **kwargs)
 
 
 class ActionsBar(RelativeLayout):
