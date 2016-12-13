@@ -1,15 +1,17 @@
+#cython: language_level=3
+
 cdef class Hex:
-    cdef int _q, _r
+    cdef readonly int q, r
 
-    cpdef distance(self, Hex other)
+    cpdef int distance(self, Hex other)
 
-    cpdef get_neighbours(self)
+    cpdef list get_neighbours(self)
 
     cpdef Hex get_neighbour(self, size_t direction)
 
-    cpdef angle_to_neighbour(self, Hex neighbour)
+    cpdef int angle_to_neighbour(self, Hex neighbour)
 
-    cpdef rotate_to(self, Hex direction)
+    cpdef Hex rotate_to(self, Hex direction)
 
     cpdef Hex direction_to_distant(self, Hex other)
 

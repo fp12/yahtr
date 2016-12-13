@@ -2,4 +2,8 @@ language: python
 python:
   - "3.4"
 install: "pip install Cython --install-option=\"--no-cython-compile\""
-script: ./build_cython.sh
+script: 
+  - ./build_cython.sh
+  - cd scr/
+  - python -m unitest -v tests/tests_hex_lib.py
+  - python -m unitest -v tests/tests_utils.py

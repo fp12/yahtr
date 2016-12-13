@@ -1,16 +1,18 @@
+#cython: language_level=3
+
 from utils import PriorityQueue
 from .hex_lib cimport Hex
 
 
 cdef class Path:
-    cdef frontier
+    cdef object frontier
     cdef Hex start
     cdef unsigned int max_cost
     cdef dict came_from
     cdef dict cost_so_far
     cdef object heuristic, get_neighbours, get_cost
 
-    def __init__(self, Hex start, unsigned int max_cost, object heuristic, object get_neighbours, object get_cost):
+    def __cinit__(self, Hex start, unsigned int max_cost, object heuristic, object get_neighbours, object get_cost):
         self.start = start
         self.max_cost = max_cost
         self.came_from = {start: None}
@@ -31,7 +33,7 @@ cdef class Path:
         return path
 
     cpdef list get_best_to_goal(self, Hex goal):
-        cdef Hex current
+        cdef Hex current, neighbour
         cdef unsigned int new_cost, priority
 
         while not self.frontier.empty():
@@ -51,6 +53,7 @@ cdef class Path:
 
     cdef list expand_shape(self, shape):
         cdef list shape_neighbours = []
+        cdef Hex neighbour
         for h in shape:
             for neighbour in self.get_neighbours(h):
                 if neighbour in shape_neighbours or neighbour in shape:
@@ -59,7 +62,7 @@ cdef class Path:
         return shape_neighbours
 
     cpdef list get_best_to_shape(self, list shape):
-        cdef Hex current
+        cdef Hex current, neighbour
         cdef unsigned int new_cost, priority
         cdef list expanded_shape = self.expand_shape(shape)
 
@@ -94,7 +97,7 @@ cdef class Reachable:
     cdef object get_neighbours, get_cost
     cdef object sort_lambda
 
-    def __init__(self, Hex start, unsigned int move_max, object get_neighbours, object get_cost):
+    def __cinit__(self, Hex start, unsigned int move_max, object get_neighbours, object get_cost):
         self.start = start
         self.openList = []
         self.closedList = []
@@ -106,6 +109,7 @@ cdef class Reachable:
     cpdef list get(self):
         self.expand(self.start)
         cdef Hex next
+        
         while len(self.openList) > 0:
             self.openList.sort(key=self.sort_lambda)
             next = self.openList.pop(-1)
@@ -117,6 +121,8 @@ cdef class Reachable:
     cdef void expand(self, h):
         cdef unsigned int parentPoints = self.movementPoints[h]
         cdef int points
+        cdef Hex neighbour
+
         self.closedList.append(h)
         for neighbour in self.get_neighbours(h):
             if neighbour in self.closedList or neighbour in self.openList:
