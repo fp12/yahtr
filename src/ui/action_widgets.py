@@ -11,7 +11,7 @@ class ActionArrow(Scatter):
     source = StringProperty(None)
 
     img_mapping = {Effect.hit_normal: '../data/img/red_arrow.png',
-                   Effect.hit_through_shield: '../data/img/red_arrow.png',  # TEMP !!!
+                   Effect.hit_through_shield: '../data/img/grey_arrow.png',
                    Effect.heal: '../data/img/green_arrow.png'}
 
     def __init__(self, hit, **kwargs):
