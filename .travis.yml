@@ -2,4 +2,4 @@ language: python
 python:
   - "3.4"
 install: "pip install Cython --install-option=\"--no-cython-compile\""
-script: python ./build_cython.py
+script: ./build_cython.sh
