@@ -1,5 +1,6 @@
 # yahtr
 _Yet Another Hex Tactical RPG_
+
 [![Build Status](https://travis-ci.org/fp12/yahtr.svg?branch=master)](https://travis-ci.org/fp12/yahtr)
 
 
