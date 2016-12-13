@@ -1,6 +1,7 @@
 from utils import PriorityQueue
 from .hex_lib cimport Hex
 
+
 cdef class Path:
     cdef frontier
     cdef Hex start
