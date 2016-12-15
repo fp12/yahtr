@@ -70,7 +70,7 @@ class Unit:
         if calc_shape:
             self.current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
 
-    def sim_move(self, trajectory=[], orientation=None):
+    def sim_move(self, trajectory=None, orientation=None):
         """ Move is ordered from simulation (AI, events...) and UI need to be aware
         UI must call move_to after"""
         self.on_sim_move(trajectory, orientation)

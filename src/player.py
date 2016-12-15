@@ -3,6 +3,8 @@ from game_data import game_data
 
 
 class Player():
+    ai_controlled = False
+
     def __init__(self, game, name, color):
         self.game = game
         self.name = name
@@ -21,7 +23,3 @@ class Player():
 
     def __repr__(self):
         return 'P<{}>'.format(self.name)
-
-    @property
-    def ai_controlled(self):
-        return False

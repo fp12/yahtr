@@ -8,7 +8,7 @@ from time_bar import TimeBar
 from actions import ActionType
 from utils.event import Event, UniqueEvent
 from utils.log import log_game
-from localization.ids import *
+from localization.ids import L_LogAction, L_LogBattleStarted, L_LogNewTurn
 
 
 log_battle = log_game.getChild('battle')

@@ -8,16 +8,14 @@ logger = log_main.getChild('AI')
 
 
 class PlayerAI(Player):
+    ai_controlled = True
+
     def __init__(self, *args):
         super(PlayerAI, self).__init__(*args)
         self.ennemies = []
 
     def __repr__(self):
         return 'AI<{}>'.format(self.name)
-
-    @property
-    def ai_controlled(self):
-        return True
 
     def _refresh_ennemies(self):
         self.ennemies = [u for __, units in self.game.battle.squads.items() for u in units if self.game.battle.get_tie(self, u.owner) == tie.Type.Enemy]

@@ -8,7 +8,7 @@ class Dummy:
     pass
 
 
-class Test_Attr(unittest.TestCase):
+class TestAttr(unittest.TestCase):
     def setUp(self):
         self.dummy = Dummy()
         self.args = ['p1', 'p2', 'p3']
@@ -29,7 +29,7 @@ class Test_Attr(unittest.TestCase):
         self.assertEqual(self.dummy.p3, None)
 
 
-class Test_Color(unittest.TestCase):
+class TestColor(unittest.TestCase):
     def test_core(self):
         self.assertEqual(Color.white.r, 1.)
         self.assertEqual(Color.white.g, 1.)

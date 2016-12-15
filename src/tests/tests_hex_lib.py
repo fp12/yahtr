@@ -1,9 +1,9 @@
 import unittest
 
-from core.hex_lib import *
+from core.hex_lib import Point, Hex, Layout
 
 
-class Test_PointCore(unittest.TestCase):
+class TestPointCore(unittest.TestCase):
     def test_properties(self):
         p1 = Point(5, 2)
         self.assertEqual(p1.x, 5)
@@ -14,7 +14,7 @@ class Test_PointCore(unittest.TestCase):
         self.assertEqual(p1.tup, (5, 2))
 
 
-class Test_PointArithmetic(unittest.TestCase):
+class TestPointArithmetic(unittest.TestCase):
     def setUp(self):
         self.result = Point(4, -10)
 
@@ -41,7 +41,7 @@ class Test_PointArithmetic(unittest.TestCase):
         self.assertEqual(p1, self.result)
 
 
-class Test_HexCore(unittest.TestCase):
+class TestHexCore(unittest.TestCase):
     def test_properties(self):
         h1 = Hex(5, 2)
         self.assertEqual(h1.q, 5)
@@ -53,7 +53,7 @@ class Test_HexCore(unittest.TestCase):
         self.assertEqual(h1.length, 4)
 
 
-class Test_HexArithmetic(unittest.TestCase):
+class TestHexArithmetic(unittest.TestCase):
     def setUp(self):
         self.result = Hex(4, -10, 6)
 
@@ -80,7 +80,7 @@ class Test_HexArithmetic(unittest.TestCase):
         self.assertEqual(h1, self.result)
 
 
-class Test_LayoutCore(unittest.TestCase):
+class TestLayoutCore(unittest.TestCase):
     def test_properties(self):
         l1 = Layout(origin=(12, 12), size=5, flat=True, margin=5)
         self.assertEqual(l1.origin, Point(12, 12))

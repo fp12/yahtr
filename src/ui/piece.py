@@ -201,7 +201,7 @@ class Piece(HexWidget):
         app = App.get_running_app()
         app.anim_scheduler.add(anim, self, context.move_info.order, lambda *args: self.on_finished_moving(context.end_coords, context.end_orientation))
 
-    def move_to(self, hex_coords, tile_pos=None, trajectory=[]):
+    def move_to(self, hex_coords, tile_pos=None, trajectory=None):
         """ override from HexWidget """
         self.prepare_move()
 

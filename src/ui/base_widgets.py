@@ -30,7 +30,7 @@ class ColoredWidget(Widget):
         if isinstance(value, Color):
             value = value.color
         if len(value) == 3:
-            value = value + [self.a]
+            value.append(self.a)
         self._old_color = [self.r, self.g, self.b, self.a]
         self.r, self.g, self.b, self.a = value
 
