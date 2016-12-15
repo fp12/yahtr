@@ -16,6 +16,7 @@ logger = log_main.getChild('game')
 
 class Game():
     """ Class managing real time Game data """
+    flat_layout = True
 
     def __init__(self, root_path=''):
         self.battle = None
@@ -55,10 +56,6 @@ class Game():
                 self.battle.set_tie(self.players[0], self.players[1], tie.Type.Enemy)
                 self.battle.deploy(squads)
                 break
-
-    @property
-    def flat_layout(self):
-        return True
 
 
 game_instance = Game()
