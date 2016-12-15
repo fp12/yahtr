@@ -65,7 +65,7 @@ class GameView(ScatterLayout):
                 self.add_widget(new_piece)
                 self.pieces.append(new_piece)
                 new_piece.load()
-        game_instance.battle.on_action_change += self.on_action_change
+        game_instance.battle.on_select_action += self.on_action_selected
         game_instance.battle.on_new_turn += self.on_new_turn
 
     def on_unit_removed(self, unit):
@@ -84,11 +84,11 @@ class GameView(ScatterLayout):
         if selected_piece:
             self.center_game_view(selected_piece.pos, 0.1)
 
-    def on_action_change(self, unit, action_type, action_node, rk_skill):
+    def on_action_selected(self, unit, action_type, rk_skill):
         self.current_action = action_type
         piece = self.get_selected_piece()
         if piece:
-            piece.on_action_change(action_type, rk_skill)
+            piece.on_action_selected(action_type, rk_skill)
             piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
             if piece == piece_hovered:
                 piece_hovered.on_hovered_in()

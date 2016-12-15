@@ -1,6 +1,6 @@
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.behaviors import ButtonBehavior
-from kivy.properties import StringProperty
+from kivy.properties import ObjectProperty
 
 from ui.hex_widget import HexWidget
 
@@ -11,8 +11,8 @@ from utils import Color
 
 
 class UnitActionTile(ButtonBehavior, HexWidget):
-    action = StringProperty()
-    key = StringProperty()
+    action_key = ObjectProperty(None)
+    action_name = ObjectProperty(None)
 
     colors = {
         ActionType.Move: Color.action_move_rotate,
@@ -23,12 +23,20 @@ class UnitActionTile(ButtonBehavior, HexWidget):
     }
 
     def __init__(self, index, action_type, text, rk_skill=None, **kwargs):
-        self.index = index
+        super(UnitActionTile, self).__init__(color=self.colors[action_type], **kwargs)
         self.action_type = action_type
         self.rk_skill = rk_skill
-        self.action = text
-        self.key = '[b]{0}[/b]'.format(index)
-        super(UnitActionTile, self).__init__(color=self.colors[action_type], **kwargs)
+        self.action_name.text = text
+        self.action_index = index
+        self.unselect()
+
+    def select(self):
+        self.action_key.text = ''
+        self.action_name.color = [1, 1, 1, 1]
+
+    def unselect(self):
+        self.action_key.text = '[b]{}[/b]'.format(self.action_index)
+        self.action_name.color = [0.5, 0.5, 0.5, 1]
 
 
 class ActionsBar(RelativeLayout):
@@ -44,16 +52,17 @@ class ActionsBar(RelativeLayout):
         super(ActionsBar, self).__init__(**kwargs)
         self.hex_layout = Layout(origin=self.pos, size=40, flat=True, margin=1)
         self.last_hovered_child = None
+        self.selected_button = None
 
     def create(self):
-        game_instance.battle.on_new_turn += lambda unit: self.on_new_action(unit, None, unit.actions_tree)
-        game_instance.battle.on_action_change += self.on_new_action
+        # game_instance.battle.on_new_turn += lambda unit: self.on_new_action(unit, None, unit.actions_tree)
+        game_instance.battle.on_new_actions += self.on_new_actions
 
     def create_action_widget(self, q, r, index, action_type, text, rk_skill=None):
         new_widget = UnitActionTile(index, action_type, text, rk_skill, q=q, r=r, layout=self.hex_layout)
         self.add_widget(new_widget)
 
-    def on_new_action(self, unit, action_type, action_node, _rk_skill=None):
+    def on_new_actions(self, unit, action_node):
         self.clear_widgets()
         if unit.ai_controlled:
             return
@@ -68,24 +77,34 @@ class ActionsBar(RelativeLayout):
             elif a.data != ActionType.EndTurn:
                 widget_data.append((index, a.data, str(a.data), None))
                 index += 1
+
         count = len(widget_data)  # not including the mandatory End Turn!
         assert count < len(ActionsBar.__Layouts__)
+
         for i, (index, action_type, text, rk_skill) in enumerate(widget_data):
             q, r = ActionsBar.__Layouts__[count][i]
             self.create_action_widget(q, r, index, action_type, text, rk_skill)
         q, r = ActionsBar.__Layouts__[count][count]
         self.create_action_widget(q, r, 0, ActionType.EndTurn, str(ActionType.EndTurn))
 
+        self.selected_button = self.children[-1]
+        self.selected_button.select()
+
     def _on_action_selected(self, index=None, button=None):
         if not button:
             for child in self.children:
-                if child.index == index:
+                if child.action_index == index:
                     button = child
                     break
-        if button:
+
+        if button and button != self.selected_button:
+            self.selected_button.unselect()
+
             if button.action_type == ActionType.EndTurn:
                 game_instance.battle.notify_action_end(ActionType.EndTurn)
             else:
+                self.selected_button = button
+                self.selected_button.select()
                 game_instance.battle.notify_action_change(button.action_type, button.rk_skill)
 
     def on_key_pressed(self, code, key):

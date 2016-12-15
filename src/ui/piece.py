@@ -326,7 +326,7 @@ class Piece(HexWidget):
             self.parent.remove_widget(tile)
         self.reachable_tiles = []
 
-    def on_action_change(self, action_type, rk_skill):
+    def on_action_selected(self, action_type, rk_skill):
         self.clean_skill()
         if action_type == actions.ActionType.Move:
             self.display_reachable_tiles()
