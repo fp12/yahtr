@@ -30,6 +30,7 @@ cpdef Hex get_hex_direction(short i):
 cdef class Hex:
     def __cinit__(self, int q, int r, int s = 0):
         self.q, self.r = q, r
+        self.neighbours = []
 
     @property
     def s(self):
@@ -89,7 +90,9 @@ cdef class Hex:
         return (self - other).length
 
     cpdef list get_neighbours(self):
-        return [self + Hex(x[0], x[1]) for x in directions]
+        if len(self.neighbours) == 0:
+            self.neighbours = [self + Hex(x[0], x[1]) for x in directions]
+        return self.neighbours
 
     cpdef Hex get_neighbour(self, size_t direction):
         return self + Hex(directions[direction][0], directions[direction][1])

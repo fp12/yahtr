@@ -1,13 +1,14 @@
 #cython: language_level=3
 
+
 cdef class Hex:
     cdef readonly int q, r
+    cdef list neighbours
 
     cpdef int distance(self, Hex other)
 
-    cpdef list get_neighbours(self)
-
     cpdef Hex get_neighbour(self, size_t direction)
+    cpdef list get_neighbours(self)
 
     cpdef int angle_to_neighbour(self, Hex neighbour)
 
