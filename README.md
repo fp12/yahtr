@@ -10,6 +10,9 @@ Humble attempt at building a Tactical RPG I would play.
 Core concepts:
 * Hex grid, because I want to toy with it
 * Twist on attack system: not based on hex tiles but edges instead
-* Units evolution is for diversity: each unit class has its own purpose so you may not want to evolve them mindlessly
+* Units evolution is for diversity: each unit class has its own purpose so you may not want to evolve them without thinking about it
 
-Let me know if you want to contribute to code or art! I'm open!
+Contributions:
+* Code: not needed for features, but any code advice is welcome!
+* Art/Sounds/Music: I'm not set on a universe/setting yet, so feel free to propose!
+* Localization: feel free to contribute here: [POEditor](https://poeditor.com/join/project/LUAmx4i9PS)
