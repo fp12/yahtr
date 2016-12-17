@@ -8,7 +8,7 @@ from time_bar import TimeBar
 from actions import ActionType
 from utils.event import Event, UniqueEvent
 from utils.log import log_game
-from localization.ids import L_LogAction, L_LogBattleStarted, L_LogNewTurn
+from localization.ids import L_LOG_BATTLE_STARTED, L_LOG_NEW_TURN, L_LOG_ACTION
 
 
 log_battle = log_game.getChild('battle')
@@ -55,7 +55,7 @@ class Battle:
                     self.time_bar.register_units(units)
 
     def start(self):
-        log_battle.info(L_LogBattleStarted)
+        log_battle.info(L_LOG_BATTLE_STARTED)
         self.start_turn()
 
     def _load_new_actions(self, unit, start_action):
@@ -68,7 +68,7 @@ class Battle:
 
     def start_turn(self):
         __, __, unit = self.time_bar.current
-        log_battle.info(L_LogNewTurn.format(unit))
+        log_battle.info(L_LOG_NEW_TURN.format(unit))
         self.actions_history.append((unit, []))
         self.on_new_turn(unit)
         self._load_new_actions(unit, unit.actions_tree)
@@ -210,7 +210,7 @@ class Battle:
     def notify_action_end(self, action_type, **kwargs):
         unit, history = self.actions_history[-1]
         history.append(action_type)
-        log_battle.info(L_LogAction.format(action_type.name, kwargs or ''))
+        log_battle.info(L_LOG_ACTION.format(action_type.name, kwargs or ''))
 
         if action_type == ActionType.EndTurn:
             self.end_turn()
