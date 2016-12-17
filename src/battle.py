@@ -72,12 +72,6 @@ class Battle:
         self.actions_history.append((unit, []))
         self.on_new_turn(unit)
         self._load_new_actions(unit, unit.actions_tree)
-        # rk_skills = unit.get_skills(unit.actions_tree.default.data)
-        # rk_skill = rk_skills[0] if rk_skills else None
-        # self.on_new_actions(unit, unit.actions_tree)
-        # self.on_select_action(unit, unit.actions_tree.default.data, rk_skill)
-        # if unit.ai_controlled:
-        #     unit.owner.start_turn(unit, unit.actions_tree)
 
     def end_turn(self):
         # here check if all units are dead in one major squad
@@ -90,11 +84,6 @@ class Battle:
             self.end_turn()
         else:
             self._load_new_actions(unit, new_action)
-            # rk_skills = unit.get_skills(new_action.default.data)
-            # rk_skill = rk_skills[0] if rk_skills else None
-            # self.on_action_change(unit, new_action.default.data, new_action, rk_skill)
-            # if unit.ai_controlled:
-            #     unit.owner.start_turn(unit, new_action)
 
     def resolve_rotate(self, unit, context):
         self.thread_event[0].set()
@@ -202,9 +191,6 @@ class Battle:
 
     def notify_action_change(self, action_type, rk_skill):
         unit, __ = self.actions_history[-1]
-        # action_node = unit.actions_tree
-        # if history:
-        #     action_node = unit.actions_tree.get_node_from_history(history)
         self.on_select_action(unit, action_type, rk_skill)
 
     def notify_action_end(self, action_type, **kwargs):
