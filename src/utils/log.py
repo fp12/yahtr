@@ -29,14 +29,23 @@ class MarkupFormatter(logging.Formatter):
         return s
 
 
+# Main
+main_formatter = logging.Formatter(fmt='[%(module)-12s][%(levelname)s] %(message)s')
+
+main_handler = logging.StreamHandler()
+main_handler.setFormatter(main_formatter)
+
+
+# Markup
 markup_formatter = MarkupFormatter(fmt='[%(module)-12s] %(message)s')
 
 game_console_handler = GameConsoleHandler()
 game_console_handler.setFormatter(markup_formatter)
 
+
 # getting root logger child so it can work along with kivy's logging system
 log_main = logging.getLogger().getChild('MAIN')
-log_main.addHandler(logging.StreamHandler())
+log_main.addHandler(main_handler)
 log_main.propagate = False  # don't propagate to kivy's logging system
 
 log_game = log_main.getChild('GAME')

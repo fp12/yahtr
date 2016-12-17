@@ -186,6 +186,7 @@ class Battle:
                     if target_type == Target.unit:
                         self.board.unregister_unit(target)
                         self.time_bar.unregister_unit(target)
+                        self.squads[target.owner].remove(target)
 
         self.thread_event[0].set()
 

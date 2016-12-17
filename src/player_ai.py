@@ -24,7 +24,9 @@ class PlayerAI(Player):
         closest_nmi = self.ennemies[0]
         min_dist = current_unit.hex_coords.distance(closest_nmi.hex_coords)
         for u in self.ennemies[1:]:
-            if current_unit.hex_coords.distance(u.hex_coords) < min_dist:
+            cur_dist = current_unit.hex_coords.distance(u.hex_coords)
+            if cur_dist < min_dist:
+                min_dist = cur_dist
                 closest_nmi = u
         return closest_nmi, min_dist
 
@@ -43,10 +45,12 @@ class PlayerAI(Player):
                     for hun in rk_skill.skill.huns:
                         for hit in hun.H:
                             if hit.is_damage:
+                                hit_length = hit.direction.destination.length
                                 # can it hit directly?
-                                if hit.direction.destination.length == min_dist:
+                                if hit_length == min_dist:
                                     damage = rk_skill.hit_value(hit)
-                                    if damage < best_action_score:  # damage is <0
+                                    logger.info('found hit: {} - {} - {}'.format(rk_skill, damage, best_action_score))
+                                    if damage > best_action_score:
                                         best_action_score = damage
                                         best_ranked_skill = (a.data, rk_skill)
                                         # turn the unit so that it can use this skill
