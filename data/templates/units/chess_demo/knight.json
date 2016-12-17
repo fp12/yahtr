@@ -2,7 +2,7 @@
 	"name": "Knight",
 	"description": "",
 	"move": 6,
-	"initiative" : 40,
+	"initiative" : 120,
 	"speed": 100,
 	"health": 1,
 	"color": [0.627451, 0.321569, 0.176471],
