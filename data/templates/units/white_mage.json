@@ -11,11 +11,11 @@
 	"actions_tree_name": "base",
 	"weapons":
 	{
-		"grimoire": "C",
-		"daggers": "D"
+		"grimoire": "c",
+		"daggers": "d"
 	},
 	"skills":
 	{
-		"heal" : "B"
+		"heal" : "b"
 	}
 }

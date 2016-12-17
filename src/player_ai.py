@@ -1,7 +1,7 @@
 from player import Player
 from actions import ActionType
 from utils.log import log_main
-import tie
+from tie import TieType
 
 
 logger = log_main.getChild('AI')
@@ -18,7 +18,7 @@ class PlayerAI(Player):
         return 'AI<{}>'.format(self.name)
 
     def _refresh_ennemies(self):
-        self.ennemies = [u for __, units in self.game.battle.squads.items() for u in units if self.game.battle.get_tie(self, u.owner) == tie.Type.Enemy]
+        self.ennemies = [u for __, units in self.game.battle.squads.items() for u in units if self.game.battle.get_tie(self, u.owner) == TieType.Enemy]
 
     def _get_closest_ennemy(self, current_unit):
         closest_nmi = self.ennemies[0]
@@ -38,7 +38,7 @@ class PlayerAI(Player):
         best_action_score = 0
         best_ranked_skill = ()  # (action type, ranked skill)
         for a in actions_tree:
-            if a.data in [ActionType.Weapon, ActionType.Skill]:
+            if a.data in [ActionType.weapon, ActionType.skill]:
                 for rk_skill in current_unit.get_skills(a.data):
                     for hun in rk_skill.skill.huns:
                         for hit in hun.H:
@@ -51,7 +51,7 @@ class PlayerAI(Player):
                                         best_ranked_skill = (a.data, rk_skill)
                                         # turn the unit so that it can use this skill
                                         current_unit.sim_move(orientation=current_unit.hex_coords.direction_to_distant(closest_nmi.hex_coords))
-            elif a.data == ActionType.Move:
+            elif a.data == ActionType.move:
                 can_move = True
 
         if best_ranked_skill:
@@ -62,10 +62,10 @@ class PlayerAI(Player):
             trajectory = self.game.battle.board.get_close_to(current_unit, closest_nmi)
             if len(trajectory) > 1 or trajectory[0] != current_unit.hex_coords:
                 logger.info('we need to move {}'.format(trajectory))
-                self.game.battle.notify_action_end(ActionType.Move, trajectory=trajectory)
+                self.game.battle.notify_action_end(ActionType.move, trajectory=trajectory)
             else:
                 logger.info('we can\'t even move')
-                self.game.battle.notify_action_end(ActionType.EndTurn)
+                self.game.battle.notify_action_end(ActionType.end_turn)
         else:
             logger.info('nothing we can do yet, end this turn')
-            self.game.battle.notify_action_end(ActionType.EndTurn)
+            self.game.battle.notify_action_end(ActionType.end_turn)

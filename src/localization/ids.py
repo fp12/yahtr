@@ -1,7 +1,7 @@
 # Common actions
-L_MOVE = _('Move')
-L_ROTATE = _('Rotate')
-L_END_TURN = _('EndTurn')
+L_MOVE = _('move')
+L_ROTATE = _('rotate')
+L_END_TURN = _('end_turn')
 
 # Battle log
 L_LOG_BATTLE_STARTED = _('Battle Started')

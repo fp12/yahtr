@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 from game_data import game_data
 from battle import Battle
-import tie
+from tie import TieType
 from player import Player
 from player_ai import PlayerAI
 from unit import Unit
@@ -53,7 +53,7 @@ class Game():
                     self.players.append(p)
 
                 self.battle = Battle(setup.data['board'], self.players)
-                self.battle.set_tie(self.players[0], self.players[1], tie.Type.Enemy)
+                self.battle.set_tie(self.players[0], self.players[1], TieType.enemy)
                 self.battle.deploy(squads)
                 break
 

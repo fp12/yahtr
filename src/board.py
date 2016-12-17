@@ -8,16 +8,15 @@ from core import pathfinding
 from wall import Wall, WallType
 from utils.event import Event
 from utils import attr
-
-import tie
+from tie import TieType
 
 
 class BoardType(Enum):
-    Custom = 0
-    Parallelogram = 1
-    Triangle = 2
-    Hexagon = 3
-    Rectangle = 4
+    custom = 0
+    parallelogram = 1
+    triangle = 2
+    hexagon = 3
+    rectangle = 4
 
 
 class Board():
@@ -33,16 +32,16 @@ class Board():
         self.tiles = [Hex(*qr) for qr in data['adds']] if 'adds' in data else []
         self.walls = [Wall(d) for d in data['walls']] if 'walls' in data else []
 
-        if data['type'] == BoardType.Parallelogram.name:
+        if data['type'] == BoardType.parallelogram.name:
             attr.get_from_dict(self, data['info'], 'q1', 'q2', 'r1', 'r2')
             self._get_tiles_parallelogram()
-        elif data['type'] == BoardType.Triangle.name:
+        elif data['type'] == BoardType.triangle.name:
             attr.get_from_dict(self, data['info'], 'size')
             self._get_tiles_triangle()
-        elif data['type'] == BoardType.Hexagon.name:
+        elif data['type'] == BoardType.hexagon.name:
             attr.get_from_dict(self, data['info'], 'radius')
             self._get_tiles_hexagon()
-        elif data['type'] == BoardType.Rectangle.name:
+        elif data['type'] == BoardType.rectangle.name:
             attr.get_from_dict(self, data['info'], 'height', 'width')
             self._get_tiles_rectangle()
 
@@ -145,7 +144,7 @@ class Board():
     def _get_cost(self, unit, a):
         for n in self.get_all_neighbours(a):
             other_unit = self.get_unit_on(n)
-            if other_unit and self.battle.get_tie(unit.owner, other_unit.owner) == tie.Type.Enemy:
+            if other_unit and self.battle.get_tie(unit.owner, other_unit.owner) == TieType.enemy:
                 return Board.close_to_ennemy_move_cost
         return Board.default_move_cost
 

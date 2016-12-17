@@ -4,11 +4,11 @@ from utils.enum import LocalizedEnum
 
 
 class ActionType(LocalizedEnum):
-    EndTurn = 0
-    Move = 1
-    Rotate = 2
-    Weapon = 3
-    Skill = 4
+    end_turn = 0
+    move = 1
+    rotate = 2
+    weapon = 3
+    skill = 4
 
 
 class ActionTree:

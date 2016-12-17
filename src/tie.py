@@ -1,10 +1,10 @@
 from enum import Enum
 
 
-class Type(Enum):
-    Neutral = 0
-    Ally = 1
-    Enemy = 2
+class TieType(Enum):
+    neutral = 0
+    ally = 1
+    enemy = 2
 
 
 class Tie:

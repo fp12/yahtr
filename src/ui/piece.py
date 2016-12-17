@@ -30,8 +30,8 @@ reachable_color.a = 0.5
 
 
 class Status(Enum):
-    Idle = 0
-    Moving = 1
+    idle = 0
+    moving = 1
 
 
 class PieceBody(HexWidget):
@@ -53,7 +53,7 @@ class Piece(HexWidget):
         self.squad_color = unit.owner.color.rgb + [self.a]
         self.current_skill = None
         self.skill_widget = None
-        self.status = Status.Idle
+        self.status = Status.idle
         self.selected = False
         self.reachable_tiles = []
 
@@ -170,7 +170,7 @@ class Piece(HexWidget):
     def prepare_move(self):
         self.clean_skill()
         self.clean_reachable_tiles()
-        self.change_status(Status.Moving)
+        self.change_status(Status.moving)
 
     def on_unit_skill_move(self, context):
         self.prepare_move()
@@ -234,7 +234,7 @@ class Piece(HexWidget):
             super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
 
     def on_finished_moving(self, end_pos, orientation):
-        self.change_status(Status.Idle)
+        self.change_status(Status.idle)
         self.hex_coords = end_pos
         self.unit.move_to(hex_coords=self.hex_coords, orientation=orientation)
 
@@ -328,7 +328,7 @@ class Piece(HexWidget):
 
     def on_action_selected(self, action_type, rk_skill):
         self.clean_skill()
-        if action_type == actions.ActionType.Move:
+        if action_type == actions.ActionType.move:
             self.display_reachable_tiles()
         else:
             self.clean_reachable_tiles()

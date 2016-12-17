@@ -92,7 +92,7 @@ class GameView(ScatterLayout):
             piece_hovered = self.get_piece_on_hex(self.selector.hex_coords)
             if piece == piece_hovered:
                 piece_hovered.on_hovered_in()
-            if action_type == ActionType.Move and piece and not piece_hovered:
+            if action_type == ActionType.move and piece and not piece_hovered:
                 self.display_trajectory(piece, self.selector.hex_coords)
                 return
         self.trajectory.hide()
@@ -157,12 +157,12 @@ class GameView(ScatterLayout):
         self.center_game_view(selected_piece.pos, duration=0)
 
     def on_piece_status_change(self, new_status):
-        if new_status == Status.Moving:
+        if new_status == Status.moving:
             self.trajectory.hide()
             if self.attach_event:
                 self.attach_event.cancel()
             self.attach_event = Clock.schedule_interval(self.on_piece_attached, 0.016667)  # 1 / 60
-        elif new_status == Status.Idle:
+        elif new_status == Status.idle:
             if self.attach_event:
                 self.attach_event.cancel()
 
@@ -192,8 +192,8 @@ class GameView(ScatterLayout):
 
             piece_selected = self.get_selected_piece()
             if piece_selected:
-                if self.current_action == ActionType.Move:
-                    if piece_selected.status == Status.Moving or new_piece_hovered:
+                if self.current_action == ActionType.move:
+                    if piece_selected.status == Status.moving or new_piece_hovered:
                         self.trajectory.hide()
                     else:
                         orientation = None
@@ -207,7 +207,7 @@ class GameView(ScatterLayout):
                         if orientation:
                             piece_selected.unit.move_to(orientation=orientation)
                             piece_selected.do_rotate()
-                elif self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill] and piece_selected.hex_coords != hover_hex:
+                elif self.current_action in [ActionType.rotate, ActionType.weapon, ActionType.skill] and piece_selected.hex_coords != hover_hex:
                     orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
                     if game_instance.battle.board.unit_can_fit(piece_selected.unit, piece_selected.unit.hex_coords, orientation):
                         piece_selected.unit.move_to(orientation=orientation)
@@ -242,7 +242,7 @@ class GameView(ScatterLayout):
             return
 
         piece_selected = self.get_selected_piece()
-        if piece_selected and self.current_action in [ActionType.Rotate, ActionType.Weapon, ActionType.Skill]:
+        if piece_selected and self.current_action in [ActionType.rotate, ActionType.weapon, ActionType.skill]:
             game_instance.battle.notify_action_end(self.current_action, rk_skill=piece_selected.current_skill)
             piece_selected.clean_skill()
             return True
@@ -255,7 +255,7 @@ class GameView(ScatterLayout):
             tile_touched = self.get_tile_on_hex(self.selector.hex_coords)
             if piece_selected and tile_touched and piece_selected.is_in_move_range(self.selector.hex_coords):
                 self.trajectory.hide()
-                game_instance.battle.notify_action_end(ActionType.Move, trajectory=self.trajectory.steps)
+                game_instance.battle.notify_action_end(ActionType.move, trajectory=self.trajectory.steps)
                 return True
 
     def on_touch_move(self, touch):

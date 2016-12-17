@@ -10,10 +10,10 @@
 	"actions_tree_name": "chess_demo/base",
 	"weapons":
 	{
-		"sword": "B"
+		"sword": "b"
 	},
 	"skills":
 	{
-		"chess_demo/slash": "B"
+		"chess_demo/slash": "b"
 	}
 }

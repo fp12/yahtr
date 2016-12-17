@@ -1,7 +1,7 @@
 import threading
 from copy import copy
 
-import tie
+from tie import Tie, TieType
 from board import Board
 from skill import Target
 from time_bar import TimeBar
@@ -198,15 +198,15 @@ class Battle:
         history.append(action_type)
         log_battle.info(L_LOG_ACTION.format(action_type.name, kwargs or ''))
 
-        if action_type == ActionType.EndTurn:
+        if action_type == ActionType.end_turn:
             self.end_turn()
             return
 
-        if action_type == ActionType.Move:
+        if action_type == ActionType.move:
             action_resolution_function = self.resolve_move
-        elif action_type == ActionType.Rotate:
+        elif action_type == ActionType.rotate:
             action_resolution_function = self.resolve_rotate
-        elif action_type in [ActionType.Weapon, ActionType.Skill]:
+        elif action_type in [ActionType.weapon, ActionType.skill]:
             action_resolution_function = self.resolve_skill
         else:
             log_battle.error('Unsupported action_type')
@@ -222,12 +222,12 @@ class Battle:
             if t.has(p1, p2):
                 t.tie_type = tie_type
                 return
-        self.ties.append(tie.Tie(p1, p2, tie_type))
+        self.ties.append(Tie(p1, p2, tie_type))
 
     def get_tie(self, p1, p2):
         if p1 == p2:
-            return tie.Type.Ally
+            return TieType.ally
         for t in self.ties:
             if t.has(p1, p2):
                 return t.tie_type
-        return tie.Type.Neutral
+        return TieType.neutral

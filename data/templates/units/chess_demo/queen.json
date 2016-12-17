@@ -10,10 +10,10 @@
 	"actions_tree_name": "chess_demo/queen",
 	"weapons":
 	{
-		"daggers": "B"
+		"daggers": "b"
 	},
 	"skills":
 	{
-		"chess_demo/queen_stab": "B"
+		"chess_demo/queen_stab": "b"
 	}
 }

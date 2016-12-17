@@ -15,11 +15,11 @@ class UnitActionTile(ButtonBehavior, HexWidget):
     action_name = ObjectProperty(None)
 
     colors = {
-        ActionType.Move: Color.action_move_rotate,
-        ActionType.Rotate: Color.action_move_rotate,
-        ActionType.Weapon: Color.action_weapon,
-        ActionType.Skill: Color.action_skill,
-        ActionType.EndTurn: Color.action_endturn
+        ActionType.move: Color.action_move_rotate,
+        ActionType.rotate: Color.action_move_rotate,
+        ActionType.weapon: Color.action_weapon,
+        ActionType.skill: Color.action_skill,
+        ActionType.end_turn: Color.action_endturn
     }
 
     def __init__(self, index, action_type, text, rk_skill=None, **kwargs):
@@ -70,11 +70,11 @@ class ActionsBar(RelativeLayout):
         widget_data = []
         index = 1
         for a in action_node:
-            if a.data in [ActionType.Weapon, ActionType.Skill]:
+            if a.data in [ActionType.weapon, ActionType.skill]:
                 for rk_skill in unit.get_skills(a.data):
                     widget_data.append((index, a.data, _(rk_skill.skill.name), rk_skill))
                     index += 1
-            elif a.data != ActionType.EndTurn:
+            elif a.data != ActionType.end_turn:
                 widget_data.append((index, a.data, str(a.data), None))
                 index += 1
 
@@ -85,7 +85,7 @@ class ActionsBar(RelativeLayout):
             q, r = ActionsBar.__Layouts__[count][i]
             self.create_action_widget(q, r, index, action_type, text, rk_skill)
         q, r = ActionsBar.__Layouts__[count][count]
-        self.create_action_widget(q, r, 0, ActionType.EndTurn, str(ActionType.EndTurn))
+        self.create_action_widget(q, r, 0, ActionType.end_turn, str(ActionType.end_turn))
 
         self.selected_button = self.children[-1]
         self.selected_button.select()
@@ -100,8 +100,8 @@ class ActionsBar(RelativeLayout):
         if button and button != self.selected_button:
             self.selected_button.unselect()
 
-            if button.action_type == ActionType.EndTurn:
-                game_instance.battle.notify_action_end(ActionType.EndTurn)
+            if button.action_type == ActionType.end_turn:
+                game_instance.battle.notify_action_end(ActionType.end_turn)
             else:
                 self.selected_button = button
                 self.selected_button.select()

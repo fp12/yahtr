@@ -11,10 +11,10 @@
 	"actions_tree_name": "base",
 	"weapons":
 	{
-		"sword": "C"
+		"sword": "c"
 	},
 	"skills":
 	{
-		"bash" : "B"
+		"bash" : "b"
 	}
 }

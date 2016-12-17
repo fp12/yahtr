@@ -87,10 +87,10 @@ class Unit:
 
     def get_skills(self, action_type):
         skills = []
-        if action_type == ActionType.Weapon:
+        if action_type == ActionType.weapon:
             for ranked_weapon in self.equipped_weapons:
                 skills.extend(ranked_weapon.skills)
-        elif action_type == ActionType.Skill:
+        elif action_type == ActionType.skill:
             skills = self.skills
         return skills
 
