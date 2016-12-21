@@ -19,7 +19,6 @@ class ColoredWidget(Widget):
         if color:
             self.color = color
         super(ColoredWidget, self).__init__(**kwargs)
-        self._old_color = self.color
 
     @property
     def color(self):
@@ -31,7 +30,6 @@ class ColoredWidget(Widget):
             value = value.color
         if len(value) == 3:
             value.append(self.a)
-        self._old_color = [self.r, self.g, self.b, self.a]
         self.r, self.g, self.b, self.a = value
 
     @property
@@ -43,11 +41,6 @@ class ColoredWidget(Widget):
 
     def show(self):
         self.a = 1.
-
-    def restore_old_color(self):
-        if self._old_color:
-            self.r, self.g, self.b, self.a = self._old_color
-        self._old_color = None
 
     def on_color_change(self, r, g, b, a):
         pass

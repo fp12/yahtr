@@ -79,7 +79,7 @@ class TimedWidgetBar(RelativeLayout):
                 unit_on_pos = self.info_widget.unit
         return unit_on_pos
 
-    def on_mouse_pos(self, stuff, pos):
+    def on_mouse_pos(self, __, pos):
         hovered_unit = self.get_unit_on_pos(pos)
         if hovered_unit:
             if hovered_unit != self.last_hovered_unit:

@@ -26,12 +26,6 @@ class Game():
         if self.battle:
             self.battle.update(*args)
 
-    def get_player(self, player_name):
-        for p in self.players:
-            if p.name == player_name:
-                return p
-        return None
-
     def load_battle_setup(self, battle_setup_id):
         assert not self.battle
         squads = OrderedDict()

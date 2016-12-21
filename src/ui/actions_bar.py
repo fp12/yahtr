@@ -119,7 +119,7 @@ class ActionsBar(RelativeLayout):
                 return True
         return super(ActionsBar, self).on_touch_down(touch)
 
-    def on_mouse_pos(self, stuff, pos):
+    def on_mouse_pos(self, __, pos):
         local_pos = self.to_local(*pos)
         hover_hex = self.hex_layout.pixel_to_hex(local_pos)
         for child in self.children:

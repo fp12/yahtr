@@ -20,7 +20,6 @@ class Contour(ColoredWidget):
                     corner2 = corners[corrected_index2] - self.hex_layout.origin
                     edges_points.update({corner1: corner2})
 
-        step = 0
         self.lines = []
         current_point = None
         current_line = []
@@ -44,7 +43,6 @@ class Contour(ColoredWidget):
                         self.lines.append(current_line)
                     p0, current_point = edges_points.popitem()
                     current_line = [p0.x, p0.y, current_point.x, current_point.y]
-            step += 1
         if current_line:
             current_line.append(current_line[0])
             current_line.append(current_line[1])
