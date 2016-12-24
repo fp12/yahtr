@@ -97,6 +97,12 @@ class Piece(HexWidget):
         self.unit.on_sim_move += self.on_unit_sim_move
         self.unit.on_skill_move += self.on_unit_skill_move
 
+    def load(self):
+        self.update_shields()
+
+    def unload(self):
+        self.clean_reachable_tiles()
+
     def do_rotate(self):
         self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
         if self.skill_widget:
@@ -279,9 +285,6 @@ class Piece(HexWidget):
     def hex_test(self, hex_coords):
         return self.unit.hex_test(hex_coords)
 
-    def load(self):
-        self.update_shields()
-
 #    ######  ##    ## #### ##       ##        ######
 #   ##    ## ##   ##   ##  ##       ##       ##    ##
 #   ##       ##  ##    ##  ##       ##       ##
@@ -314,17 +317,17 @@ class Piece(HexWidget):
                 self.parent.add_widget(tile)
                 self.reachable_tiles.append(tile)
 
+    def clean_reachable_tiles(self):
+        for tile in self.reachable_tiles:
+            self.parent.remove_widget(tile)
+        self.reachable_tiles = []
+
     def is_in_move_range(self, hex_coords):
         if self.reachable_tiles:
             for tile in self.reachable_tiles:
                 if tile.hex_coords == hex_coords:
                     return True
         return False
-
-    def clean_reachable_tiles(self):
-        for tile in self.reachable_tiles:
-            self.parent.remove_widget(tile)
-        self.reachable_tiles = []
 
     def on_action_selected(self, action_type, rk_skill):
         self.clean_skill()

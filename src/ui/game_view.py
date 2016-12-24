@@ -71,6 +71,7 @@ class GameView(ScatterLayout):
     def on_unit_removed(self, unit):
         for piece in self.pieces:
             if piece.unit == unit:
+                piece.unload()
                 self.remove_widget(piece)
                 self.pieces.remove(piece)
                 return
