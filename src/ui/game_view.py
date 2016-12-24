@@ -13,10 +13,10 @@ from core.hex_lib import Layout
 from game import game_instance
 from actions import ActionType
 from utils import Color
-from utils.log import log_ui
+from utils.log import create_ui_logger
 
 
-logger = log_ui.getChild('GameView')
+logger = create_ui_logger('GameView')
 
 
 class GameView(ScatterLayout):

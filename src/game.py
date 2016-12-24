@@ -8,10 +8,6 @@ from player_ai import PlayerAI
 from unit import Unit
 from utils import Color
 from core.hex_lib import Hex
-from utils.log import log_main
-
-
-logger = log_main.getChild('game')
 
 
 class Game():

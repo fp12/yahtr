@@ -85,7 +85,7 @@ class Piece(HexWidget):
         self.add_widget(self.contour)
 
         self.do_rotate()
-        self._shields = [{} for __ in range(len(unit.shields))]
+        self._shields = [{} for __ in unit.shields]
         self.update_shields()
 
         # declare events
@@ -251,7 +251,7 @@ class Piece(HexWidget):
             shape_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
 
         for shield_data in self._shields:
-            for shield_part, (dx, dy, _) in shield_data.items():
+            for shield_part, (dx, dy, __) in shield_data.items():
                 shield_part.pos = (self.pos[0] + dx, self.pos[1] + dy)
 
     @check_root_window

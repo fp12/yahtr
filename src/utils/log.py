@@ -48,8 +48,28 @@ log_main = logging.getLogger().getChild('MAIN')
 log_main.addHandler(main_handler)
 log_main.propagate = False  # don't propagate to kivy's logging system
 
+
+# System logging
+log_system = log_main.getChild('SYSTEM')
+
+
+def create_system_logger(name):
+    return log_system.getChild(name)
+
+
+# Game logging
 log_game = log_main.getChild('GAME')
 log_game.addHandler(game_console_handler)
 
+
+def create_game_logger(name):
+    return log_game.getChild(name)
+
+
+# UI logging
 log_ui = log_main.getChild('UI')
 log_ui.addHandler(game_console_handler)
+
+
+def create_ui_logger(name):
+    return log_ui.getChild(name)

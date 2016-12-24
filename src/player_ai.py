@@ -1,10 +1,10 @@
 from player import Player
 from actions import ActionType
-from utils.log import log_main
+from utils.log import create_system_logger
 from tie import TieType
 
 
-logger = log_main.getChild('AI')
+logger = create_system_logger('AI')
 
 
 class PlayerAI(Player):
