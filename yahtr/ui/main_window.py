@@ -16,7 +16,7 @@ from game_data import game_data
 from game import game_instance
 
 
-Builder.load_file('src/ui/kv/main_window.kv')
+Builder.load_file('yahtr/ui/kv/main_window.kv')
 
 
 class MainWindow(App):

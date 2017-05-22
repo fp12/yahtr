@@ -1,6 +1,6 @@
 import unittest
 
-from core.hex_lib import Point, Hex, Layout
+from yahtr.core.hex_lib import Point, Hex, Layout
 
 
 class TestPointCore(unittest.TestCase):

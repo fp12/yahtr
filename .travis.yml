@@ -4,6 +4,5 @@ python:
 install: "pip install Cython --install-option=\"--no-cython-compile\""
 script: 
   - ./build_cython.sh
-  - cd src/
   - python -m unittest -v tests/tests_hex_lib.py
   - python -m unittest -v tests/tests_utils.py

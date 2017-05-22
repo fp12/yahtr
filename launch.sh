@@ -1,1 +1,1 @@
-clear && kivy src/main.py --size=1280x800
+clear && kivy yahtr/main.py --size=1280x800

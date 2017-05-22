@@ -1,7 +1,7 @@
 import unittest
 
-from utils.attr import get_from_dict, copy_from_instance
-from utils.color import Color
+from yahtr.utils.attr import get_from_dict, copy_from_instance
+from yahtr.utils.color import Color
 
 
 class Dummy:
