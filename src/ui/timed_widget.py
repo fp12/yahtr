@@ -15,7 +15,7 @@ class TimedWidget(ButtonBehavior, HexWidget):
     selector = ObjectProperty(None)
     squad_color = ListProperty([1, 1, 1, 1])
 
-    Radius = 40
+    radius = 40
 
     def set_unit(self, unit):
         self.unit = unit
@@ -24,7 +24,7 @@ class TimedWidget(ButtonBehavior, HexWidget):
 
 
 class UnitInfoWidget(TimedWidget):
-    Radius = TimedWidget.Radius * 3
+    radius = TimedWidget.radius * 3
 
 
 class TimedWidgetBar(RelativeLayout):
@@ -33,11 +33,11 @@ class TimedWidgetBar(RelativeLayout):
     def __init__(self, **kwargs):
         super(TimedWidgetBar, self).__init__(**kwargs)
         self.margin = 1
-        self.hex_layout = Layout(origin=self.pos, size=TimedWidget.Radius, flat=True, margin=self.margin)
+        self.hex_layout = Layout(origin=self.pos, size=TimedWidget.radius, flat=True, margin=self.margin)
 
-        info_pos_x = self.x - UnitInfoWidget.Radius - TimedWidget.Radius / 2 - self.margin
-        info_pos_y = self.y - sqrt(3) / 2 * TimedWidget.Radius
-        self.info_layout = Layout(origin=(info_pos_x, info_pos_y), size=UnitInfoWidget.Radius, flat=True, margin=self.margin)
+        info_pos_x = self.x - UnitInfoWidget.radius - TimedWidget.radius / 2 - self.margin
+        info_pos_y = self.y - sqrt(3) / 2 * TimedWidget.radius
+        self.info_layout = Layout(origin=(info_pos_x, info_pos_y), size=UnitInfoWidget.radius, flat=True, margin=self.margin)
         self.info_widget = UnitInfoWidget(q=0, r=0, layout=self.info_layout)
         self.add_widget(self.info_widget)
 
