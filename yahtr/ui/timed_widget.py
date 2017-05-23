@@ -8,6 +8,7 @@ from ui.hex_widget import HexWidget
 
 from game import game_instance
 from core.hex_lib import Layout
+from utils.event import Event
 
 
 class TimedWidget(ButtonBehavior, HexWidget):
@@ -42,6 +43,8 @@ class TimedWidgetBar(RelativeLayout):
         self.add_widget(self.info_widget)
 
         self.last_hovered_unit = None
+
+        self.on_unit_hovered = Event('unit', 'hovered_in')
 
     def get_pos_for_actions_bar(self):
         return (self.info_layout.origin.x - self.margin, self.y)
@@ -86,10 +89,20 @@ class TimedWidgetBar(RelativeLayout):
                 for child in self.children:
                     if child.unit == hovered_unit:
                         child.selector.show()
-                    else:
+                        self.on_unit_hovered(child.unit, True)
+                    elif child.unit == self.last_hovered_unit:
                         child.selector.hide()
+                        self.on_unit_hovered(child.unit, False)
                 self.last_hovered_unit = hovered_unit
             return True
+
+        if self.last_hovered_unit:
+            for child in self.children:
+                if child.unit == self.last_hovered_unit:
+                    child.selector.hide()
+                    self.on_unit_hovered(child.unit, False)
+            self.last_hovered_unit = None
+
         return False
 
     def on_no_mouse_pos(self):
@@ -99,3 +112,12 @@ class TimedWidgetBar(RelativeLayout):
         clicked_unit = self.get_unit_on_pos(touch.pos)
         if clicked_unit:
             return True
+
+    def on_unit_hovered_external(self, unit, hovered_in):
+        # we just assume we can't transition between 2 units without hovering out
+        for child in self.children:
+            if child.unit == unit:
+                if hovered_in:
+                    child.selector.show()
+                else:
+                    child.selector.hide()

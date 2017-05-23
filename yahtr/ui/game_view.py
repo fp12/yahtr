@@ -14,6 +14,7 @@ from game import game_instance
 from actions import ActionType
 from utils import Color
 from utils.log import create_ui_logger
+from utils.event import Event
 
 
 logger = create_ui_logger('GameView')
@@ -38,6 +39,8 @@ class GameView(ScatterLayout):
         self.trajectory = Trajectory()
         self.current_action = None
         self.attach_event = None  # kivy.Clock event used every frame when attached to a piece is moving
+
+        self.on_unit_hovered = Event('unit', 'hovered_in')
 
     def load_board(self):
         for h in game_instance.battle.board.get_tiles():
@@ -124,10 +127,17 @@ class GameView(ScatterLayout):
                 return piece
         return None
 
+    def get_piece_for_unit(self, unit):
+        for piece in self.pieces:
+            if piece.unit == unit:
+                return piece
+        return None
+
     def get_selected_piece(self):
         for piece in self.pieces:
             if piece.selected:
                 return piece
+        return None
 
     def center_game_view(self, pos, duration=0.7):
         scaled_pos = [pos[0] * self.scale, pos[1] * self.scale]
@@ -167,6 +177,17 @@ class GameView(ScatterLayout):
             if self.attach_event:
                 self.attach_event.cancel()
 
+    def on_unit_hovered_external(self, unit, hovered_in):
+        piece = self.get_piece_for_unit(unit)
+        if piece:
+            if hovered_in:
+                piece.on_hovered_in()
+                tile = self.get_tile_on_hex(piece.hex_coords)
+                self.selector.move_to(piece.hex_coords, tile_pos=tile.pos)
+                self.selector.show()
+            else:
+                piece.on_hovered_out()
+
     def on_wall_hit(self, origin, destination, destroyed):
         for w in self.walls:
             if w.origin == origin and w.destination == destination or w.origin == destination and w.destination == origin:
@@ -188,8 +209,10 @@ class GameView(ScatterLayout):
             if old_piece_hovered != new_piece_hovered:
                 if old_piece_hovered:
                     old_piece_hovered.on_hovered_out()
+                    self.on_unit_hovered(old_piece_hovered.unit, False)
                 if new_piece_hovered:
                     new_piece_hovered.on_hovered_in()
+                    self.on_unit_hovered(new_piece_hovered.unit, True)
 
             piece_selected = self.get_selected_piece()
             if piece_selected:
@@ -218,12 +241,12 @@ class GameView(ScatterLayout):
             self.selector.move_to(hover_hex, tile_pos=tile.pos)
             self.selector.show()
             return True
-
+        
+        self.selector.hide()
         self.on_no_mouse_pos()
         return False
 
     def on_no_mouse_pos(self):
-        self.selector.hide()
         self.trajectory.hide()
 
     def on_touch_down(self, touch):

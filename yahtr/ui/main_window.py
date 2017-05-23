@@ -57,6 +57,10 @@ class MainWindow(App):
         game_instance.load_battle_setup('chess_demo')
         game_instance.battle.on_action += self.on_battle_action
 
+        # link widgets through events
+        self.game_view.on_unit_hovered += self.time_bar.on_unit_hovered_external
+        self.time_bar.on_unit_hovered += self.game_view.on_unit_hovered_external
+
         self.game_view.load_board()
         self.game_view.load_squads()
         self.time_bar.create()
