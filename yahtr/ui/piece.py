@@ -21,12 +21,12 @@ from ui.base_widgets import AngledColoredWidget
 from ui.utils import check_root_window
 
 
-hit_color = Color.firebrick
-heal_color = Color.lightgreen
-contour_color = Color.forestgreen
-contour_color.a = 0
-reachable_color = Color.olivedrab
-reachable_color.a = 0.5
+c_hit = Color.firebrick
+c_heal = Color.lightgreen
+c_contour = Color.forestgreen
+c_contour.a = 0
+c_reachable_selected = Color(113, 20, 204, 128)
+c_reachable_not_selected = Color(94, 9, 78, 128)
 
 
 class Status(Enum):
@@ -81,7 +81,7 @@ class Piece(HexWidget):
                     self._shape_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
                     self.add_widget(w)
 
-        self.contour = Contour(unit.shape, layout=self.hex_layout, color=contour_color, pos=self.pos)
+        self.contour = Contour(unit.shape, layout=self.hex_layout, color=c_contour, pos=self.pos)
         self.add_widget(self.contour)
 
         self.do_rotate()
@@ -150,7 +150,7 @@ class Piece(HexWidget):
                 elif diff < 0:
                     for shield_part, (__, __, order) in self._shields[linear_index].items():
                         if shield_value <= order < old_size:
-                            shield_part.color = hit_color
+                            shield_part.color = c_hit
                             anim = Animation(thickness=shield_part.thickness * 2, a=0, duration=0.5, t='in_out_circ')
 
                             app = App.get_running_app()
@@ -267,10 +267,10 @@ class Piece(HexWidget):
             pt = self.hex_layout.hex_to_pixel(self.hex_coords + context.direction)
             target_pos_x = self.x + (pt.x - self.x) / 10
             target_pos_y = self.y + (pt.y - self.y) / 10
-            anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3, **hit_color.rgb_dict)
+            anim = Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3, **c_hit.rgb_dict)
             anim += Animation(pos=(self.x, self.y), r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
         else:
-            anim = Animation(radius=self.radius * 1.2, duration=duration / 3., **heal_color.rgb_dict)
+            anim = Animation(radius=self.radius * 1.2, duration=duration / 3., **c_heal.rgb_dict)
             anim += Animation(radius=self.radius, r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
 
         app = App.get_running_app()
@@ -311,7 +311,7 @@ class Piece(HexWidget):
             for h in reachable_hexes:
                 tile = Tile(h.q, h.r,
                             layout=self.hex_layout,
-                            color=reachable_color,
+                            color=c_reachable_selected if self.selected else c_reachable_not_selected,
                             radius=self.radius - 2,
                             size=(self.radius - 2, self.radius - 2))
                 self.parent.add_widget(tile)
@@ -352,6 +352,7 @@ class Piece(HexWidget):
 
     def do_select(self, select):
         if self.selected != select:
+            self.selected = select
             if select:
                 self.display_reachable_tiles()
                 self.contour.show()
@@ -359,4 +360,3 @@ class Piece(HexWidget):
                 self.clean_skill()
                 self.clean_reachable_tiles()
                 self.contour.hide()
-            self.selected = select
