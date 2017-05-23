@@ -22,4 +22,4 @@ class Player():
         return w
 
     def __repr__(self):
-        return 'P<{}>'.format(self.name)
+        return f'P<{self.name}>'

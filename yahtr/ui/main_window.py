@@ -107,7 +107,7 @@ class MainWindow(App):
     def on_keyboard_down(self, window, keyboard, keycode, text, modifiers):
         code = '{}+{}'.format('.'.join(modifiers), text) if modifiers else text
         if self.debug_print_keys:
-            print('keycode:`{}` | code:`{}`'.format(keycode, code))
+            print(f'keycode:`{keycode}` | code:`{code}`')
         if code in self._key_binder:
             for cb in self._key_binder[code]:
                 cb(keycode, code)

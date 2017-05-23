@@ -10,4 +10,4 @@ class Tile(HexWidget):
         if self.debug_label:
             self.debug_label = ''
         else:
-            self.debug_label = '{0}, {1}'.format(self.hex_coords.q, self.hex_coords.r)
+            self.debug_label = f'{self.hex_coords.q}, {self.hex_coords.r}'

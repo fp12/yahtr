@@ -241,7 +241,7 @@ class GameView(ScatterLayout):
             self.selector.move_to(hover_hex, tile_pos=tile.pos)
             self.selector.show()
             return True
-        
+
         self.selector.hide()
         self.on_no_mouse_pos()
         return False

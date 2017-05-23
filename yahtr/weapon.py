@@ -25,7 +25,7 @@ class WeaponTemplate:
         self.skills = [get_skill(s) for s in data['skills']] if 'skills' in data else []
 
     def __repr__(self):
-        return 'WpTp<{0}>'.format(self.name)
+        return f'WpTp<{self.name}>'
 
 
 class Weapon:
@@ -43,7 +43,7 @@ class Weapon:
         return self.template.skills
 
     def __repr__(self):
-        return 'Wp<{0}>'.format(self.template.name)
+        return f'Wp<{self.template.name}>'
 
 
 class RankedWeapon:
@@ -55,7 +55,7 @@ class RankedWeapon:
         self.skills = [RankedSkill(s, rank) for s in self.weapon.skills]
 
     def __repr__(self):
-        return 'RkWp<{0}:{1}>'.format(self.weapon.template.name, self.rank.name)
+        return f'RkWp<{self.weapon.template.name}:{self.rank.name}>'
 
 
 def load_all(root_path, get_skill):

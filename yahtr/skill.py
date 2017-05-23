@@ -41,7 +41,7 @@ class HexDir:
         self.angle = self.origin.angle_to_neighbour(self.destination - self.origin)
 
     def __repr__(self):
-        return 'From {0} To {1}'.format(self.origin, self.destination)
+        return f'From {self.origin} To {self.destination}'
 
 
 class Hit:
@@ -100,7 +100,7 @@ class HUN:
         return self.ennemy_moves
 
     def __repr__(self):
-        return 'Hits: {0}\n\tUnit move: {1}\n\tNMIs moves: {2}'.format(self.hits, self.unit_move, self.ennemy_moves)
+        return f'Hits: {self.hits}\n\tUnit move: {self.unit_move}\n\tNMIs moves: {self.ennemy_moves}'
 
 
 class Skill:
@@ -125,7 +125,7 @@ class RankedSkill:
         self.rank = rank
 
     def __repr__(self):
-        return 'RkSk<{0}:{1}>'.format(self.skill.name, self.rank.name)
+        return f'RkSk<{self.skill.name}:{self.rank.name}>'
 
     def hit_value(self, hit):
         return hit.values[self.rank.value]

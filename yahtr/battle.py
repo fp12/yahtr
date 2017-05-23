@@ -213,7 +213,7 @@ class Battle:
             logger.error('Unsupported action_type')
             action_resolution_function = None
 
-        assert not self.thread_event, '{}'.format(self.thread_event)
+        assert not self.thread_event, f'{self.thread_event}'
         self.thread_event = (threading.Event(), lambda: self._end_action_end(unit, history))
         action_thread = threading.Thread(target=action_resolution_function, args=(unit, kwargs))
         action_thread.start()

@@ -35,7 +35,7 @@ class UnitActionTile(ButtonBehavior, HexWidget):
         self.action_name.color = [1, 1, 1, 1]
 
     def unselect(self):
-        self.action_key.text = '[b]{}[/b]'.format(self.action_index)
+        self.action_key.text = f'[b]{self.action_index}[/b]'
         self.action_name.color = [0.5, 0.5, 0.5, 1]
 
 

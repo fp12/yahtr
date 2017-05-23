@@ -15,7 +15,7 @@ class PlayerAI(Player):
         self.ennemies = []
 
     def __repr__(self):
-        return 'AI<{}>'.format(self.name)
+        return f'AI<{self.name}>'
 
     def _refresh_ennemies(self):
         self.ennemies = [u for __, units in self.game.battle.squads.items() for u in units if self.game.battle.get_tie(self, u.owner) == TieType.enemy]
@@ -49,7 +49,7 @@ class PlayerAI(Player):
                                 # can it hit directly?
                                 if hit_length == min_dist:
                                     damage = rk_skill.hit_value(hit)
-                                    logger.info('found hit: {} - {} - {}'.format(rk_skill, damage, best_action_score))
+                                    logger.info(f'found hit: {rk_skill} - {damage} - {best_action_score}')
                                     if damage > best_action_score:
                                         best_action_score = damage
                                         best_ranked_skill = (a.data, rk_skill)
@@ -59,13 +59,13 @@ class PlayerAI(Player):
                 can_move = True
 
         if best_ranked_skill:
-            logger.info('chosen {}'.format(best_ranked_skill))
+            logger.info(f'chosen {best_ranked_skill}')
             action_type, rk_skill = best_ranked_skill
             self.game.battle.notify_action_end(action_type, rk_skill=rk_skill)
         elif can_move:
             trajectory = self.game.battle.board.get_close_to(current_unit, closest_nmi)
             if len(trajectory) > 1 or trajectory[0] != current_unit.hex_coords:
-                logger.info('we need to move {}'.format(trajectory))
+                logger.info(f'we need to move {trajectory}')
                 self.game.battle.notify_action_end(ActionType.move, trajectory=trajectory)
             else:
                 logger.info('we can\'t even move')
