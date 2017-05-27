@@ -47,7 +47,7 @@ class TimedWidgetBar(RelativeLayout):
         self.on_unit_hovered = Event('unit', 'hovered_in')
 
     def get_pos_for_actions_bar(self):
-        return (self.info_layout.origin.x - self.margin, self.y)
+        return (self.info_layout.origin.x - self.margin - UnitInfoWidget.radius - TimedWidget.radius / 2, self.y)
 
     def create(self):
         game_instance.battle.on_new_turn += self.on_next

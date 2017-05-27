@@ -44,10 +44,10 @@ class MainWindow(App):
         self.game_console = GameConsole(pos=(10, 10), size_hint=(0.25, 0.25))
         self.layout.add_widget(self.game_console, 0)
 
-        self.time_bar = TimedWidgetBar(y=75, pos_hint={'right': 0.95}, size_hint=(None, 1), width=75)
+        self.time_bar = TimedWidgetBar(pos=(-10, 75), pos_hint={'right': 1}, size_hint=(None, None))
         self.layout.add_widget(self.time_bar, 1)
 
-        self.actions_bar = ActionsBar(pos=self.time_bar.get_pos_for_actions_bar(), size_hint=(None, None))
+        self.actions_bar = ActionsBar(pos=self.time_bar.get_pos_for_actions_bar(), pos_hint={'right': 1}, size_hint=(None, None))
         self.layout.add_widget(self.actions_bar, 2)
 
         self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size, auto_bring_to_front=False)
