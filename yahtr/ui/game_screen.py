@@ -18,8 +18,10 @@ Builder.load_file('yahtr/ui/kv/game_screen.kv')
 
 
 class GameScreen(Screen):
-    def __init__(self, **kwargs):
+    def __init__(self, battle_options, **kwargs):
         super(GameScreen, self).__init__(**kwargs)
+
+        self.battle_options = battle_options
 
         self.debug_print_keys = False
 
@@ -47,7 +49,7 @@ class GameScreen(Screen):
         self.add_widget(self.game_view, 3)
 
         # load dynamic setup
-        game_instance.load_battle_setup('chess_demo')
+        game_instance.load_battle_setup(self.battle_options['setup_name'])
         game_instance.battle.on_action += self.on_battle_action
 
         # link widgets through events
@@ -84,6 +86,14 @@ class GameScreen(Screen):
         game_instance.battle.start()
 
         Clock.schedule_interval(game_instance.update, 1 / 30.)
+
+    def on_pre_leave(self):
+        game_instance.battle.on_action -= self.on_battle_action
+        self.game_view.on_unit_hovered -= self.time_bar.on_unit_hovered_external
+        self.time_bar.on_unit_hovered -= self.game_view.on_unit_hovered_external
+
+        for child in self.children[:]:
+            self.remove_widget(child)
 
     def on_battle_action(self):
         if anim_scheduler.ready_to_start():
