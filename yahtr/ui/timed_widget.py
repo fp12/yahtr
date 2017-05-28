@@ -29,7 +29,7 @@ class UnitInfoWidget(TimedWidget):
 
 
 class TimedWidgetBar(RelativeLayout):
-    Coords = [(0, 0), (1, 0), (1, 1), (0, 2), (0, 3), (1, 3), (1, 4), (0, 5), (0, 6), (1, 6)]
+    coords = [(0, 0), (1, 0), (1, 1), (0, 2), (0, 3), (1, 3), (1, 4), (0, 5), (0, 6), (1, 6)]
 
     def __init__(self, **kwargs):
         super(TimedWidgetBar, self).__init__(**kwargs)
@@ -60,10 +60,10 @@ class TimedWidgetBar(RelativeLayout):
         for child in self.children[:]:
             if child != self.info_widget:
                 self.remove_widget(child)
-        simulation = game_instance.battle.time_bar.simulate_for(len(TimedWidgetBar.Coords) + 1)
+        simulation = game_instance.battle.time_bar.simulate_for(len(TimedWidgetBar.coords) + 1)
         for index, (priority, __, unit) in enumerate(simulation):
             if index > 0:
-                q, r = TimedWidgetBar.Coords[index - 1]
+                q, r = TimedWidgetBar.coords[index - 1]
                 new_widget = TimedWidget(q=q, r=r, layout=self.hex_layout)
                 new_widget.set_unit(unit)
                 self.add_widget(new_widget)

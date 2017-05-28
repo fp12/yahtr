@@ -172,9 +172,8 @@ class GameView(ScatterLayout):
             if self.attach_event:
                 self.attach_event.cancel()
             self.attach_event = Clock.schedule_interval(self.on_piece_attached, 0.016667)  # 1 / 60
-        elif new_status == Status.idle:
-            if self.attach_event:
-                self.attach_event.cancel()
+        elif new_status == Status.idle and self.attach_event:
+            self.attach_event.cancel()
 
     def on_unit_hovered_external(self, unit, hovered_in):
         piece = self.get_piece_for_unit(unit)
@@ -275,14 +274,13 @@ class GameView(ScatterLayout):
         if piece_touched and not piece_selected:
             return piece_touched.on_touched_down()
 
-        if not piece_touched:
-            if piece_selected and self.current_action in [ActionType.move]:
-                tile_touched = self.get_tile_on_hex(self.selector.hex_coords)
-                if tile_touched and piece_selected.is_in_move_range(self.selector.hex_coords):
-                    self.trajectory.hide()
-                    game_instance.battle.notify_action_end(ActionType.move, trajectory=self.trajectory.steps)
-                    self.current_action = None
-                    return True
+        if not piece_touched and piece_selected and self.current_action in [ActionType.move]:
+            tile_touched = self.get_tile_on_hex(self.selector.hex_coords)
+            if tile_touched and piece_selected.is_in_move_range(self.selector.hex_coords):
+                self.trajectory.hide()
+                game_instance.battle.notify_action_end(ActionType.move, trajectory=self.trajectory.steps)
+                self.current_action = None
+                return True
 
     def on_touch_move(self, touch):
         if touch.grab_current is not self:

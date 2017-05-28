@@ -170,8 +170,7 @@ class Battle:
                     continue
 
                 ctx.hit = hit
-                is_damage = hit.is_damage
-                if is_damage and hit.valid_on_target(Target.shield):
+                if hit.is_damage and hit.valid_on_target(Target.shield):
                     shield_index = hitted_unit.get_shield(origin_tile, hitted_tile)
                     if shield_index != -1:
                         ctx.targets.append((hitted_unit, Target.shield))
@@ -179,7 +178,7 @@ class Battle:
                         continue
 
                 ctx.targets.append((hitted_unit, Target.unit))
-                hitted_unit.health_change(hit_value * (-1 if is_damage else 1), ctx)
+                hitted_unit.health_change(hit_value * (-1 if hit.is_damage else 1), ctx)
 
             if hun.U:
                 get_move_context(ctx, unit, hun.U)
