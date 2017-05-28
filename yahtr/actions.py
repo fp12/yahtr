@@ -9,7 +9,7 @@ class ActionType(LocalizedEnum):
     rotate = 2
     weapon = 3
     skill = 4
-    undomove = 5
+    undo_move = 5
 
 
 class ActionTree:

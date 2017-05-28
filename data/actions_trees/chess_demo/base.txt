@@ -1,6 +1,6 @@
 # base actions tree for most classes
 move
-  undomove
+  undo_move
   weapon
   skill
   rotate

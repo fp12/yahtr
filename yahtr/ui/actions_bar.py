@@ -16,7 +16,7 @@ class UnitActionTile(ButtonBehavior, HexWidget):
 
     colors = {
         ActionType.move: Color.action_move_rotate,
-        ActionType.undomove: Color.action_move_rotate,
+        ActionType.undo_move: Color.action_move_rotate,
         ActionType.rotate: Color.action_move_rotate,
         ActionType.weapon: Color.action_weapon,
         ActionType.skill: Color.action_skill,
@@ -88,9 +88,6 @@ class ActionsBar(RelativeLayout):
         q, r = ActionsBar.__Layouts__[count][count]
         self.create_action_widget(q, r, 0, ActionType.end_turn, str(ActionType.end_turn))
 
-        self.selected_button = self.children[-1]
-        self.selected_button.select()
-
     def _on_action_selected(self, index=None, button=None):
         if not button:
             for child in self.children:
@@ -98,20 +95,22 @@ class ActionsBar(RelativeLayout):
                     button = child
                     break
 
-        if button and button != self.selected_button:
-            self.selected_button.unselect()
-
-            if button.action_type in [ActionType.undomove, ActionType.end_turn]:
-                game_instance.battle.notify_action_end(button.action_type)
+        if button:
+            if button is self.selected_button:
+                if button.action_type in [ActionType.undo_move, ActionType.end_turn]:
+                    game_instance.battle.notify_action_end(button.action_type)
             else:
+                if self.selected_button:
+                    self.selected_button.unselect()
                 self.selected_button = button
                 self.selected_button.select()
+
                 game_instance.battle.notify_action_change(button.action_type, button.rk_skill)
 
     def on_key_pressed(self, code, key):
         self._on_action_selected(index=int(key))
 
-    def on_touch_down(self, touch):
+    def on_touch_up(self, touch):
         local_pos = self.to_local(*touch.pos)
         hover_hex = self.hex_layout.pixel_to_hex(local_pos)
         for child in self.children:

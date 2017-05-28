@@ -31,7 +31,6 @@ class GameView(ScatterLayout):
     def __init__(self, **kwargs):
         super(GameView, self).__init__(**kwargs)
         self.hex_layout = Layout(origin=self.center, size=self.hex_radius, flat=game_instance.flat_layout, margin=self.hex_margin)
-        self.piece = None
         self.pieces = []
         self.tiles = []
         self.walls = []
@@ -268,6 +267,7 @@ class GameView(ScatterLayout):
         piece_selected = self.get_selected_piece()
         if piece_selected and self.current_action in [ActionType.rotate, ActionType.weapon, ActionType.skill]:
             game_instance.battle.notify_action_end(self.current_action, rk_skill=piece_selected.current_skill)
+            self.current_action = None
             piece_selected.clean_skill()
             return True
 
@@ -276,11 +276,13 @@ class GameView(ScatterLayout):
             return piece_touched.on_touched_down()
 
         if not piece_touched:
-            tile_touched = self.get_tile_on_hex(self.selector.hex_coords)
-            if piece_selected and tile_touched and piece_selected.is_in_move_range(self.selector.hex_coords):
-                self.trajectory.hide()
-                game_instance.battle.notify_action_end(ActionType.move, trajectory=self.trajectory.steps)
-                return True
+            if piece_selected and self.current_action in [ActionType.move]:
+                tile_touched = self.get_tile_on_hex(self.selector.hex_coords)
+                if tile_touched and piece_selected.is_in_move_range(self.selector.hex_coords):
+                    self.trajectory.hide()
+                    game_instance.battle.notify_action_end(ActionType.move, trajectory=self.trajectory.steps)
+                    self.current_action = None
+                    return True
 
     def on_touch_move(self, touch):
         if touch.grab_current is not self:

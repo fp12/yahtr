@@ -113,6 +113,11 @@ class TimedWidgetBar(RelativeLayout):
         if clicked_unit:
             return True
 
+    def on_touch_up(self, touch):
+        clicked_unit = self.get_unit_on_pos(touch.pos)
+        if clicked_unit:
+            return True
+
     def on_unit_hovered_external(self, unit, hovered_in):
         # we just assume we can't transition between 2 units without hovering out
         for child in self.children:

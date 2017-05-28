@@ -59,10 +59,7 @@ class Battle:
         self.start_turn()
 
     def _load_new_actions(self, unit, start_action):
-        rk_skills = unit.get_skills(start_action.default.data)
-        rk_skill = rk_skills[0] if rk_skills else None
         self.on_new_actions(unit, start_action)
-        self.on_select_action(unit, start_action.default.data, rk_skill)
         if unit.ai_controlled:
             unit.owner.start_turn(unit, start_action)
 
@@ -86,9 +83,11 @@ class Battle:
             self._load_new_actions(unit, new_action)
 
     def resolve_rotate(self, unit, context):
+        """ Note: NOT executed on main thread """
         self.thread_event[0].set()
 
     def resolve_move(self, unit, context):
+        """ Note: NOT executed on main thread """
         trajectory = context.get('trajectory')
         assert trajectory
 
@@ -100,7 +99,8 @@ class Battle:
 
         self.thread_event[0].set()
 
-    def resolve_undomove(self, unit, context):
+    def resolve_undo_move(self, unit, context):
+        """ Note: NOT executed on main thread """
         unit.sim_move([unit.hex_coords, unit.prev_hex_coords])
 
         ui_thread_event = self.on_action()
@@ -111,7 +111,7 @@ class Battle:
         assert unit is history_unit
         assert len(history) >= 2
 
-        del history[-1]  # remove the undomove action
+        del history[-1]  # remove the undo_move action
         del history[-1]  # remove the move action
 
         self.thread_event[0].set()
@@ -221,8 +221,8 @@ class Battle:
 
         if action_type == ActionType.move:
             action_resolution_function = self.resolve_move
-        elif action_type == ActionType.undomove:
-            action_resolution_function = self.resolve_undomove
+        elif action_type == ActionType.undo_move:
+            action_resolution_function = self.resolve_undo_move
         elif action_type == ActionType.rotate:
             action_resolution_function = self.resolve_rotate
         elif action_type in [ActionType.weapon, ActionType.skill]:
