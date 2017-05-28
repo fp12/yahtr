@@ -16,6 +16,7 @@ class UnitActionTile(ButtonBehavior, HexWidget):
 
     colors = {
         ActionType.move: Color.action_move_rotate,
+        ActionType.undomove: Color.action_move_rotate,
         ActionType.rotate: Color.action_move_rotate,
         ActionType.weapon: Color.action_weapon,
         ActionType.skill: Color.action_skill,
@@ -36,7 +37,7 @@ class UnitActionTile(ButtonBehavior, HexWidget):
 
     def unselect(self):
         self.action_key.text = f'[b]{self.action_index}[/b]'
-        self.action_name.color = [0.5, 0.5, 0.5, 1]
+        self.action_name.color = [0.3, 0.3, 0.3, 1]
 
 
 class ActionsBar(RelativeLayout):
@@ -100,8 +101,8 @@ class ActionsBar(RelativeLayout):
         if button and button != self.selected_button:
             self.selected_button.unselect()
 
-            if button.action_type == ActionType.end_turn:
-                game_instance.battle.notify_action_end(ActionType.end_turn)
+            if button.action_type in [ActionType.undomove, ActionType.end_turn]:
+                game_instance.battle.notify_action_end(button.action_type)
             else:
                 self.selected_button = button
                 self.selected_button.select()

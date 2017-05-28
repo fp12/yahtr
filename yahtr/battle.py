@@ -100,6 +100,22 @@ class Battle:
 
         self.thread_event[0].set()
 
+    def resolve_undomove(self, unit, context):
+        unit.sim_move([unit.hex_coords, unit.prev_hex_coords])
+
+        ui_thread_event = self.on_action()
+        if ui_thread_event:
+            ui_thread_event.wait()
+
+        history_unit, history = self.actions_history[-1]
+        assert unit is history_unit
+        assert len(history) >= 2
+
+        del history[-1]  # remove the undomove action
+        del history[-1]  # remove the move action
+
+        self.thread_event[0].set()
+
     def resolve_skill(self, unit, context):
         """ Note: NOT executed on main thread """
         rk_skill = context.get('rk_skill')
@@ -205,6 +221,8 @@ class Battle:
 
         if action_type == ActionType.move:
             action_resolution_function = self.resolve_move
+        elif action_type == ActionType.undomove:
+            action_resolution_function = self.resolve_undomove
         elif action_type == ActionType.rotate:
             action_resolution_function = self.resolve_rotate
         elif action_type in [ActionType.weapon, ActionType.skill]:

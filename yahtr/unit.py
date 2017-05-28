@@ -46,6 +46,9 @@ class Unit:
         if not self.shields:
             self.shields = [0 for __ in range(6)]
 
+        self.prev_hex_coords = None
+        self.prev_orientation = None
+
         # events
         self.on_health_change = Event('health', 'context')
         self.on_shield_change = Event()
@@ -62,9 +65,11 @@ class Unit:
     def move_to(self, hex_coords=None, orientation=None):
         calc_shape = False
         if hex_coords and hex_coords != self.hex_coords:
+            self.prev_hex_coords = self.hex_coords
             self.hex_coords = hex_coords
             calc_shape = True
         if orientation and orientation != self.orientation:
+            self.prev_orientation = self.orientation
             self.orientation = orientation
             calc_shape = True
         if calc_shape:

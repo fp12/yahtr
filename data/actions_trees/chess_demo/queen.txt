@@ -1,16 +1,21 @@
 # The Queen can move after attacking
 move
+  undomove
   weapon
     move
+      undomove
       rotate
   skill
     move
+      undomove
       rotate
   rotate
 weapon
   move
+    undomove
     rotate
 skill
   move
+    undomove
     rotate
 rotate

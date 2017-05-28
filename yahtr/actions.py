@@ -1,6 +1,6 @@
 import data_loader
 from utils.tree import Tree, Node
-from utils.enum import LocalizedEnum
+from localization.enum import LocalizedEnum
 
 
 class ActionType(LocalizedEnum):
@@ -9,6 +9,7 @@ class ActionType(LocalizedEnum):
     rotate = 2
     weapon = 3
     skill = 4
+    undomove = 5
 
 
 class ActionTree:

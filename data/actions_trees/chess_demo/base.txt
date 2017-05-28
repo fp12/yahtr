@@ -1,5 +1,6 @@
 # base actions tree for most classes
 move
+  undomove
   weapon
   skill
   rotate
