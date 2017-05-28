@@ -1,0 +1,12 @@
+#:kivy 1.10.0
+
+<MainMenu>:
+    BoxLayout:
+        Button:
+            text: 'Chess Demo'
+            on_press: root.manager.current = 'game_screen'
+        Button:
+            text: 'Credits'
+            on_press: root.manager.current = 'credits'
+        Button:
+            text: 'Quit'

@@ -12,6 +12,7 @@ from utils import Color
 from utils.event import Event
 import actions
 
+from ui.anim_scheduler import anim_scheduler
 from ui.hex_widget import HexWidget
 from ui.tile import Tile
 from ui.action_widgets import ActionBuilder
@@ -153,8 +154,7 @@ class Piece(HexWidget):
                             shield_part.color = c_hit
                             anim = Animation(thickness=shield_part.thickness * 2, a=0, duration=0.5, t='in_out_circ')
 
-                            app = App.get_running_app()
-                            app.anim_scheduler.add(anim, shield_part, 0, del_part)
+                            anim_scheduler.add(anim, shield_part, 0, del_part)
 
 #   ##     ##  #######  ##     ## ########
 #   ###   ### ##     ## ##     ## ##
@@ -204,8 +204,7 @@ class Piece(HexWidget):
         elif context.move_info.move_type == MoveType.pushed:
             anim = Animation(pos=pos, duration=0.3, t='out_back')
 
-        app = App.get_running_app()
-        app.anim_scheduler.add(anim, self, context.move_info.order, lambda *args: self.on_finished_moving(context.end_coords, context.end_orientation))
+        anim_scheduler.add(anim, self, context.move_info.order, lambda *args: self.on_finished_moving(context.end_coords, context.end_orientation))
 
     def move_to(self, hex_coords, tile_pos=None, trajectory=None):
         """ override from HexWidget """
@@ -233,8 +232,7 @@ class Piece(HexWidget):
 
             previous = trajectory[-2] if len(trajectory) > 1 else self.hex_coords
             destination = trajectory[-1]
-            app = App.get_running_app()
-            app.anim_scheduler.add(anim, self, 0, lambda *args: self.on_finished_moving(destination, destination - previous))
+            anim_scheduler.add(anim, self, 0, lambda *args: self.on_finished_moving(destination, destination - previous))
 
         else:
             super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
@@ -273,13 +271,12 @@ class Piece(HexWidget):
             anim = Animation(radius=self.radius * 1.2, duration=duration / 3., **c_heal.rgb_dict)
             anim += Animation(radius=self.radius, r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
 
-        app = App.get_running_app()
-        app.anim_scheduler.add(anim, self, context.hit.order)
+        anim_scheduler.add(anim, self, context.hit.order)
 
         for target, target_type in context.targets_killed:
             if self.unit == target:
                 anim = Animation(a=0, duration=duration)
-                app.anim_scheduler.add(anim, self, 99)
+                anim_scheduler.add(anim, self, 99)
                 break
 
     def hex_test(self, hex_coords):

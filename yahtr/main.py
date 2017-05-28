@@ -4,8 +4,13 @@ localization.core.init()
 import kivy
 kivy.require('1.10.0')
 
-from ui.main_window import MainWindow
+from ui.yahtr_app import YAHTRApp
+
+from game_data import game_data
 
 
 if __name__ == '__main__':
-    MainWindow().run()
+    # load static data
+    game_data.load()
+
+    YAHTRApp().run()

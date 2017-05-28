@@ -41,3 +41,6 @@ class AnimScheduler:
         self.animation_pending = True
         self.thread_event = thread_event
         self._start()
+
+
+anim_scheduler = AnimScheduler()
