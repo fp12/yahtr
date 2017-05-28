@@ -4,16 +4,19 @@ from kivy.deps import sdl2, glew
 
 block_cipher = None
 
-added_data = [ ('..\\data\\img\\*.png', 'data\\img\\' ),
-               ('..\\data\\maps\\*.json', 'data\\maps\\' ),
-               ('..\\data\\skills\\*.json', 'data\\skills\\' ),
-               ('..\\data\\templates\\units\\*.json', 'data\\templates\\units\\' ),
-               ('..\\data\\templates\\weapons\\*.json', 'data\\templates\\weapons\\'),
-               ('..\\src\\ui\\kv\\*.kv', 'src\\ui\\kv\\')]
+added_data = [ ('..\\data\\actions_trees\\chess_demo\\*.txt', 'data\\actions_trees\\chess_demo\\' ),
+               ('..\\data\\battle_setups\\*.json', 'data\\battle_setups\\' ),
+               ('..\\data\\boards\\chess_demo\\*.json', 'data\\boards\\chess_demo\\' ),
+               ('..\\data\\img\\*.png', 'data\\img\\' ),
+               ('..\\data\\loc\\*.*', 'data\\loc\\' ),
+               ('..\\data\\skills\\chess_demo\\*.json', 'data\\skills\\chess_demo\\' ),
+               ('..\\data\\templates\\units\\chess_demo\\*.json', 'data\\templates\\units\\chess_demo\\' ),
+               ('..\\data\\templates\\weapons\\chess_demo\\*.json', 'data\\templates\\weapons\\chess_demo\\'),
+               ('..\\yahtr\\ui\\kv\\*.kv', 'yahtr\\ui\\kv\\')]
 
 options = [ ('--size=1280x800', None, 'OPTION') ]
 
-a = Analysis(['..\\src\\main.py'],
+a = Analysis(['..\\yahtr\\main.py'],
              pathex=['.'],
              binaries=None,
              datas=added_data,
@@ -24,7 +27,9 @@ a = Analysis(['..\\src\\main.py'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher)
+
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+
 exe = EXE(pyz,
           a.scripts,
           options,
@@ -34,6 +39,7 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           console=True )
+
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
