@@ -1,6 +1,6 @@
 from kivy.properties import StringProperty
 
-from ui.hex_widget import HexWidget
+from yahtr.ui.hex_widget import HexWidget
 
 
 class Tile(HexWidget):

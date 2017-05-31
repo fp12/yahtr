@@ -1,8 +1,8 @@
-import skill
-import weapon
-import unit
-import actions
-import battle_setup
+from yahtr.skill import load_all as load_all_skills
+from yahtr.weapon import load_all as load_all_weapons
+from yahtr.unit import load_all as load_all_units
+from yahtr.actions import load_all as load_all_actions
+from yahtr.battle_setup import load_all as load_all_battle_setups
 
 
 class GameData:
@@ -16,11 +16,11 @@ class GameData:
         self.battle_setups = []
 
     def load(self, root_path=''):
-        self.skills = skill.load_all(root_path)
-        self.actions_trees = actions.load_all(root_path)
-        self.weapons_templates = weapon.load_all(root_path, self.get_skill)
-        self.units_templates = unit.load_all(root_path, self.get_skill, self.get_actions_tree)
-        self.battle_setups = battle_setup.load_all(root_path)
+        self.skills = load_all_skills(root_path)
+        self.actions_trees = load_all_actions(root_path)
+        self.weapons_templates = load_all_weapons(root_path, self.get_skill)
+        self.units_templates = load_all_units(root_path, self.get_skill, self.get_actions_tree)
+        self.battle_setups = load_all_battle_setups(root_path)
 
     def get_skill(self, skill_id):
         for s in self.skills:

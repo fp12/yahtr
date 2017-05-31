@@ -2,9 +2,9 @@ from math import pi, cos, sin
 
 from kivy.properties import NumericProperty, ListProperty
 
-from ui.base_widgets import ColoredWidget
+from yahtr.ui.base_widgets import ColoredWidget
 
-from core.hex_lib import Hex
+from yahtr.core.hex_lib import Hex
 
 
 class HexWidget(ColoredWidget):

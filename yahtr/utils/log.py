@@ -1,7 +1,7 @@
 import logging
 import logging.handlers
 
-from utils.event import Event
+from yahtr.utils.event import Event
 
 
 class GameConsoleHandler(logging.Handler):

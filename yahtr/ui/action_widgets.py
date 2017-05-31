@@ -1,10 +1,10 @@
 from kivy.properties import NumericProperty, StringProperty
 from kivy.uix.scatter import Scatter
 
-from ui.base_widgets import AngledWidget, AngledColoredWidget
+from yahtr.ui.base_widgets import AngledWidget, AngledColoredWidget
 
-from utils import Color
-from skill import Effect
+from yahtr.utils import Color
+from yahtr.skill import Effect
 
 
 class ActionArrow(Scatter):

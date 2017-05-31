@@ -1,13 +1,13 @@
 from collections import OrderedDict
 
-from game_data import game_data
-from battle import Battle
-from tie import TieType
-from player import Player
-from player_ai import PlayerAI
-from unit import Unit
-from utils import Color
-from core.hex_lib import Hex
+from yahtr.game_data import game_data
+from yahtr.battle import Battle
+from yahtr.tie import TieType
+from yahtr.player import Player
+from yahtr.player_ai import PlayerAI
+from yahtr.unit import Unit
+from yahtr.utils import Color
+from yahtr.core.hex_lib import Hex
 
 
 class Game():

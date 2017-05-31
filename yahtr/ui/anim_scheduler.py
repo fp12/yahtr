@@ -1,6 +1,6 @@
 from kivy.clock import mainthread
 
-from utils import EqualPriorityQueue
+from yahtr.utils import EqualPriorityQueue
 
 
 class AnimScheduler:

@@ -1,14 +1,14 @@
 import threading
 from copy import copy
 
-from tie import Tie, TieType
-from board import Board
-from skill import Target
-from time_bar import TimeBar
-from actions import ActionType
-from utils.event import Event, UniqueEvent
-from utils.log import create_game_logger
-from localization.ids import L_LOG_BATTLE_STARTED, L_LOG_NEW_TURN, L_LOG_ACTION
+from yahtr.tie import Tie, TieType
+from yahtr.board import Board
+from yahtr.skill import Target
+from yahtr.time_bar import TimeBar
+from yahtr.actions import ActionType
+from yahtr.utils.event import Event, UniqueEvent
+from yahtr.utils.log import create_game_logger
+from yahtr.localization.ids import L_LOG_BATTLE_STARTED, L_LOG_NEW_TURN, L_LOG_ACTION
 
 
 logger = create_game_logger('battle')

@@ -3,18 +3,18 @@ from kivy.animation import Animation
 from kivy.graphics.transformation import Matrix
 from kivy.clock import Clock
 
-from ui.tile import Tile
-from ui.piece import Piece, Status
-from ui.selector import Selector
-from ui.trajectory import Trajectory
-from ui.wall_widget import WallWidget
+from yahtr.ui.tile import Tile
+from yahtr.ui.piece import Piece, Status
+from yahtr.ui.selector import Selector
+from yahtr.ui.trajectory import Trajectory
+from yahtr.ui.wall_widget import WallWidget
 
-from core.hex_lib import Layout
-from game import game_instance
-from actions import ActionType
-from utils import Color
-from utils.log import create_ui_logger
-from utils.event import Event
+from yahtr.core.hex_lib import Layout
+from yahtr.game import game_instance
+from yahtr.actions import ActionType
+from yahtr.utils import Color
+from yahtr.utils.log import create_ui_logger
+from yahtr.utils.event import Event
 
 
 logger = create_ui_logger('GameView')

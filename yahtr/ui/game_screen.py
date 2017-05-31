@@ -5,13 +5,13 @@ from kivy.uix.screenmanager import Screen
 from kivy.core.window import Window
 from kivy.clock import Clock
 
-from ui.game_view import GameView
-from ui.timed_widget import TimedWidgetBar
-from ui.actions_bar import ActionsBar
-from ui.game_console import GameConsole
-from ui.anim_scheduler import anim_scheduler
+from yahtr.ui.game_view import GameView
+from yahtr.ui.timed_widget import TimedWidgetBar
+from yahtr.ui.actions_bar import ActionsBar
+from yahtr.ui.game_console import GameConsole
+from yahtr.ui.anim_scheduler import anim_scheduler
 
-from game import game_instance
+from yahtr.game import game_instance
 
 
 Builder.load_file('yahtr/ui/kv/game_screen.kv')

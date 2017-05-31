@@ -1,7 +1,7 @@
 from kivy.properties import NumericProperty
 
-from ui.hex_widget import HexWidget
-from ui.base_widgets import AngledWidget
+from yahtr.ui.hex_widget import HexWidget
+from yahtr.ui.base_widgets import AngledWidget
 
 
 class ShieldWidget(HexWidget, AngledWidget):

@@ -3,7 +3,7 @@ from kivy.properties import ObjectProperty
 from kivy.uix.scrollview import ScrollView
 from kivy.effects.scroll import ScrollEffect
 
-from utils.log import game_console_handler
+from yahtr.utils.log import game_console_handler
 
 
 class GameConsole(ScrollView):

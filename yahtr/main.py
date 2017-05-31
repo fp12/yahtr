@@ -1,11 +1,11 @@
 import sys
 import getopt
 
-from game_data import game_data
-import localization.core
-localization.core.init()
+from yahtr.game_data import game_data
+from yahtr.localization.core import init as init_localization
+init_localization()
 
-from ui.yahtr_app import YAHTRApp
+from yahtr.ui.yahtr_app import YAHTRApp
 
 
 if __name__ == '__main__':

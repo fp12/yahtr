@@ -2,12 +2,12 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.properties import ObjectProperty
 
-from ui.hex_widget import HexWidget
+from yahtr.ui.hex_widget import HexWidget
 
-from game import game_instance
-from actions import ActionType
-from core.hex_lib import Layout
-from utils import Color
+from yahtr.game import game_instance
+from yahtr.actions import ActionType
+from yahtr.core.hex_lib import Layout
+from yahtr.utils import Color
 
 
 class UnitActionTile(ButtonBehavior, HexWidget):

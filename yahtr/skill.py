@@ -1,8 +1,8 @@
 from enum import Enum
 
-import data_loader
-from core.hex_lib import Hex
-from utils import attr
+from yahtr.data_loader import local_load
+from yahtr.core.hex_lib import Hex
+from yahtr.utils import attr
 
 
 class Effect(Enum):
@@ -132,5 +132,5 @@ class RankedSkill:
 
 
 def load_all(root_path):
-    raw_skills = data_loader.local_load(root_path + 'data/skills/', '.json')
+    raw_skills = local_load(root_path + 'data/skills/', '.json')
     return [Skill(file, data) for file, data in raw_skills.items()]

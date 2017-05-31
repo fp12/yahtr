@@ -1,7 +1,7 @@
 from kivy.graphics import Color, Line
 
-from ui.base_widgets import ColoredWidget
-from ui.utils import check_root_window
+from yahtr.ui.base_widgets import ColoredWidget
+from yahtr.ui.utils import check_root_window
 
 
 class Contour(ColoredWidget):

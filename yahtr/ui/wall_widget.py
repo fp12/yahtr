@@ -1,7 +1,7 @@
-from ui.base_widgets import AngledColoredWidget
+from yahtr.ui.base_widgets import AngledColoredWidget
 
-from utils import Color
-from wall import WallType
+from yahtr.utils import Color
+from yahtr.wall import WallType
 
 
 class WallWidget(AngledColoredWidget):

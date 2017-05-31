@@ -1,13 +1,13 @@
-import localization.core
-localization.core.init()
+import yahtr.localization.core
+yahtr.localization.core.init()
 
-from game_data import game_data
+from yahtr.game_data import game_data
 
 
 def main():
-    game_data.load('../')
+    game_data.load()
 
-    with open('../data/loc/yahtr.pot', 'a') as fp:
+    with open('data/loc/yahtr.pot', 'a') as fp:
         for sk in game_data.skills:
             print('#: data\\{}:name'.format(sk.id), file=fp)
             print('msgid "{}"'.format(sk.name), file=fp)

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from core.hex_lib import Hex
+from yahtr.core.hex_lib import Hex
 
 
 class WallType(Enum):

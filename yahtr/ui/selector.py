@@ -1,7 +1,7 @@
 from kivy.properties import NumericProperty
 from kivy.animation import Animation
 
-from ui.hex_widget import HexWidget
+from yahtr.ui.hex_widget import HexWidget
 
 
 class Selector(HexWidget):

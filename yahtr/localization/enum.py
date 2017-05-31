@@ -1,6 +1,6 @@
 from enum import Enum
 
-from localization.core import LocStr
+from yahtr.localization.core import LocStr
 
 
 class LocalizedEnum(Enum):

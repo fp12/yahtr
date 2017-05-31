@@ -1,8 +1,8 @@
 from enum import Enum
 
-import data_loader
-from skill import RankedSkill
-from utils import attr
+from yahtr.data_loader import local_load
+from yahtr.skill import RankedSkill
+from yahtr.utils import attr
 
 
 class Type(Enum):
@@ -59,5 +59,5 @@ class RankedWeapon:
 
 
 def load_all(root_path, get_skill):
-    raw_weapons = data_loader.local_load(root_path + 'data/templates/weapons/', '.json')
+    raw_weapons = local_load(root_path + 'data/templates/weapons/', '.json')
     return [WeaponTemplate(file, data, get_skill) for file, data in raw_weapons.items()]

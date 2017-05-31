@@ -1,6 +1,6 @@
-import data_loader
-from utils.tree import Tree, Node
-from localization.enum import LocalizedEnum
+from yahtr.data_loader import local_load
+from yahtr.utils.tree import Tree, Node
+from yahtr.localization.enum import LocalizedEnum
 
 
 class ActionType(LocalizedEnum):
@@ -45,5 +45,5 @@ class ActionTree:
 
 
 def load_all(root_path):
-    raw_data = data_loader.local_load(root_path + 'data/actions_trees/', '.txt')
+    raw_data = local_load(root_path + 'data/actions_trees/', '.txt')
     return [ActionTree(file, data) for file, data in raw_data.items()]

@@ -1,7 +1,7 @@
 from kivy.properties import NumericProperty, BooleanProperty
 from kivy.uix.widget import Widget
 
-from utils import Color
+from yahtr.utils import Color
 
 
 class AngledWidget(Widget):

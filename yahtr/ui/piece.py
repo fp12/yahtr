@@ -1,25 +1,24 @@
 from enum import Enum
 
-from kivy.app import App
 from kivy.properties import NumericProperty, ListProperty
 from kivy.animation import Animation
 
-from core.hex_lib import hex_angle, index_of_direction
+from yahtr.core.hex_lib import hex_angle, index_of_direction
 
-from game import game_instance
-from skill import MoveType
-from utils import Color
-from utils.event import Event
-import actions
+from yahtr.game import game_instance
+from yahtr.skill import MoveType
+from yahtr.utils import Color
+from yahtr.utils.event import Event
+from yahtr.actions import ActionType
 
-from ui.anim_scheduler import anim_scheduler
-from ui.hex_widget import HexWidget
-from ui.tile import Tile
-from ui.action_widgets import ActionBuilder
-from ui.shield_widget import ShieldWidget
-from ui.contour import Contour
-from ui.base_widgets import AngledColoredWidget
-from ui.utils import check_root_window
+from yahtr.ui.anim_scheduler import anim_scheduler
+from yahtr.ui.hex_widget import HexWidget
+from yahtr.ui.tile import Tile
+from yahtr.ui.action_widgets import ActionBuilder
+from yahtr.ui.shield_widget import ShieldWidget
+from yahtr.ui.contour import Contour
+from yahtr.ui.base_widgets import AngledColoredWidget
+from yahtr.ui.utils import check_root_window
 
 
 c_hit = Color.firebrick
@@ -328,7 +327,7 @@ class Piece(HexWidget):
 
     def on_action_selected(self, action_type, rk_skill):
         self.clean_skill()
-        if action_type == actions.ActionType.move:
+        if action_type == ActionType.move:
             self.display_reachable_tiles()
         else:
             self.clean_reachable_tiles()

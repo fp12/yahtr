@@ -1,4 +1,4 @@
-import data_loader
+from yahtr.data_loader import local_load
 
 
 class BattleSetup:
@@ -8,5 +8,5 @@ class BattleSetup:
 
 
 def load_all(root_path):
-    raw_data = data_loader.local_load(root_path + 'data/battle_setups/', '.json')
+    raw_data = local_load(root_path + 'data/battle_setups/', '.json')
     return [BattleSetup(file, data) for file, data in raw_data.items()]

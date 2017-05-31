@@ -1,13 +1,13 @@
 import copy
 
-import data_loader
-from core.hex_lib import Hex, index_of_direction
-from utils import attr, clamp
-from utils.event import Event
-from actions import ActionType
-from rank import Rank
-from skill import RankedSkill, Target
-from weapon import RankedWeapon
+from yahtr.data_loader import local_load
+from yahtr.core.hex_lib import Hex, index_of_direction
+from yahtr.utils import attr, clamp
+from yahtr.utils.event import Event
+from yahtr.actions import ActionType
+from yahtr.rank import Rank
+from yahtr.skill import RankedSkill, Target
+from yahtr.weapon import RankedWeapon
 
 
 class UnitTemplate:
@@ -134,5 +134,5 @@ class Unit:
 
 
 def load_all(root_path, get_skill, get_actions_tree):
-    raw_units = data_loader.local_load(root_path + 'data/templates/units/', '.json')
+    raw_units = local_load(root_path + 'data/templates/units/', '.json')
     return [UnitTemplate(file, data, get_skill, get_actions_tree) for file, data in raw_units.items()]

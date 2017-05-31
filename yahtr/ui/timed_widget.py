@@ -4,11 +4,11 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.properties import ObjectProperty, ListProperty
 from kivy.uix.behaviors import ButtonBehavior
 
-from ui.hex_widget import HexWidget
+from yahtr.ui.hex_widget import HexWidget
 
-from game import game_instance
-from core.hex_lib import Layout
-from utils.event import Event
+from yahtr.game import game_instance
+from yahtr.core.hex_lib import Layout
+from yahtr.utils.event import Event
 
 
 class TimedWidget(ButtonBehavior, HexWidget):

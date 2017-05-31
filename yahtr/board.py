@@ -2,13 +2,13 @@ from enum import Enum
 from math import floor
 from copy import copy
 
-import data_loader
-from core.hex_lib import Hex, get_hex_direction
-from core import pathfinding
-from wall import Wall, WallType
-from utils.event import Event
-from utils import attr
-from tie import TieType
+from yahtr.data_loader import local_load_single
+from yahtr.core.hex_lib import Hex, get_hex_direction
+from yahtr.core import pathfinding
+from yahtr.wall import Wall, WallType
+from yahtr.utils.event import Event
+from yahtr.utils import attr
+from yahtr.tie import TieType
 
 
 class BoardType(Enum):
@@ -27,7 +27,7 @@ class Board():
         self.battle = battle
         self.name = name
 
-        data = data_loader.local_load_single('data/boards/', name, '.json')
+        data = local_load_single('data/boards/', name, '.json')
         self.holes = data['holes'] if 'holes' in data else None
         self.tiles = [Hex(*qr) for qr in data['adds']] if 'adds' in data else []
         self.walls = [Wall(d) for d in data['walls']] if 'walls' in data else []

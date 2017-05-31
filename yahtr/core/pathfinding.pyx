@@ -1,7 +1,7 @@
 #cython: language_level=3
 
-from utils import PriorityQueue
-from .hex_lib cimport Hex
+from yahtr.utils import PriorityQueue
+from yahtr.core.hex_lib cimport Hex
 
 
 cdef class Path:

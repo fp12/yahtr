@@ -1,7 +1,7 @@
-from player import Player
-from actions import ActionType
-from utils.log import create_system_logger
-from tie import TieType
+from yahtr.player import Player
+from yahtr.actions import ActionType
+from yahtr.utils.log import create_system_logger
+from yahtr.tie import TieType
 
 
 logger = create_system_logger('AI')

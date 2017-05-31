@@ -1,5 +1,5 @@
-from weapon import Weapon
-from game_data import game_data
+from yahtr.weapon import Weapon
+from yahtr.game_data import game_data
 
 
 class Player():
