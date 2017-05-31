@@ -6,6 +6,15 @@
 #:include yahtr/ui/kv/action_widgets.kv
 #:include yahtr/ui/kv/game_console.kv
 
+<GameScreen>:
+    Button:
+        text: 'Main Menu'
+        on_press: root.manager.current = 'main_menu'
+        pos: -50, -50
+        pos_hint: {'right': 1, 'top': 1}
+        size: 100, 25
+        size_hint: None, None
+
 <AngledWidget>
     canvas.before:
         PushMatrix

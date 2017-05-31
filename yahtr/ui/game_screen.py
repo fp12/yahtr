@@ -122,9 +122,11 @@ class GameScreen(Screen):
         dispatch_success = False
         for child in self.children[:]:
             if dispatch_success:
-                child.on_no_mouse_pos()
+                if getattr(child, 'on_no_mouse_pos', None):
+                    child.on_no_mouse_pos()
             else:
-                dispatch_success = child.on_mouse_pos(*args)
+                if getattr(child, 'on_mouse_pos', None):
+                    dispatch_success = child.on_mouse_pos(*args)
 
     def print_children(self, *args):
         def recurse(w, tab):

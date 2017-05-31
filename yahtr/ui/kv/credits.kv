@@ -1,7 +1,21 @@
 #:kivy 1.10.0
+##:include yahtr/ui/kv/debug.kv
 
 <Credits>:
-    BoxLayout:
+    FloatLayout:
+        Label:
+            text: '[b]Developer[/b]\nfp12 (Fabien Poupineau) [ref=https://twitter.com/fp12gaming]@fp12gaming[/ref]\n\n\n[b]Beta testers[/b]\nJim & Juju'
+            pos_hint: {'center_x': .5, 'y': .75}
+            size_hint: None, None
+            halign: 'center'
+            markup: True
+            on_ref_press:
+                import webbrowser
+                webbrowser.open(args[1])
         Button:
             text: 'Main Menu'
             on_press: root.manager.current = 'main_menu'
+            pos: -50, -50
+            pos_hint: {'right': 1, 'top': 1}
+            size: 100, 25
+            size_hint: None, None
