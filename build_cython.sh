@@ -1,2 +1,1 @@
-cd ./yahtr
-python3 tools/build_cython.py build_ext --inplace
+python -m tools.build_cython build_ext --inplace
