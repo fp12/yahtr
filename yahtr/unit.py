@@ -73,7 +73,7 @@ class Unit:
             self.orientation = orientation
             calc_shape = True
         if calc_shape:
-            self.current_shape = self.calc_shape_at(self.hex_coords, self.orientation)
+            self.current_shape = list(self.calc_shape_at(self.hex_coords, self.orientation))
 
     def sim_move(self, trajectory=None, orientation=None):
         """ Move is ordered from simulation (AI, events...) and UI need to be aware
@@ -100,12 +100,10 @@ class Unit:
         return skills
 
     def calc_shape_at(self, position, orientation):
-        shape = []
         for shape_part in self.shape:
             new_pos = copy.copy(shape_part).rotate_to(orientation)
             new_pos += position
-            shape.append(new_pos)
-        return shape
+            yield new_pos
 
     def hex_test(self, hex_coords):
         if hex_coords in self.current_shape:
