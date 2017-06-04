@@ -30,7 +30,8 @@ class GameScreen(Screen):
         self.actions_bar = None
         self.game_console = None
 
-        self._key_binder = {}
+        self.key_binder = {}
+        self.update_event = None
 
         Window.bind(on_key_down=self.on_keyboard_down, mouse_pos=self.on_mouse_pos)
 
@@ -61,34 +62,39 @@ class GameScreen(Screen):
         self.time_bar.create()
         self.actions_bar.create()
 
-        self._key_binder.update({'q': [self.game_view.on_debug_key, self.on_debug_key],
-                                 'shift+=': [self.game_view.on_zoom_down],
-                                 '+': [self.game_view.on_zoom_down],
-                                 '-': [self.game_view.on_zoom_up],
-                                 'a': [self.game_view.on_move_key],
-                                 's': [self.game_view.on_move_key],
-                                 'd': [self.game_view.on_move_key],
-                                 'w': [self.game_view.on_move_key],
-                                 ' ': [self.game_view.on_center_key],
-                                 'c': [self.print_children],
-                                 '0': [self.actions_bar.on_key_pressed],
-                                 '1': [self.actions_bar.on_key_pressed],
-                                 '2': [self.actions_bar.on_key_pressed],
-                                 '3': [self.actions_bar.on_key_pressed],
-                                 '4': [self.actions_bar.on_key_pressed],
-                                 '5': [self.actions_bar.on_key_pressed],
-                                 '6': [self.actions_bar.on_key_pressed],
-                                 '7': [self.actions_bar.on_key_pressed],
-                                 '8': [self.actions_bar.on_key_pressed],
-                                 '9': [self.actions_bar.on_key_pressed]
-                                 })
+        self.key_binder.update({'q': [self.game_view.on_debug_key, self.on_debug_key],
+                                'shift+=': [self.game_view.on_zoom_down],
+                                '=': [self.game_view.on_zoom_down],
+                                '+': [self.game_view.on_zoom_down],
+                                '-': [self.game_view.on_zoom_up],
+                                'a': [self.game_view.on_move_key],
+                                's': [self.game_view.on_move_key],
+                                'd': [self.game_view.on_move_key],
+                                'w': [self.game_view.on_move_key],
+                                ' ': [self.game_view.on_center_key],
+                                'c': [self.print_children],
+                                '0': [self.actions_bar.on_key_pressed],
+                                '1': [self.actions_bar.on_key_pressed],
+                                '2': [self.actions_bar.on_key_pressed],
+                                '3': [self.actions_bar.on_key_pressed],
+                                '4': [self.actions_bar.on_key_pressed],
+                                '5': [self.actions_bar.on_key_pressed],
+                                '6': [self.actions_bar.on_key_pressed],
+                                '7': [self.actions_bar.on_key_pressed],
+                                '8': [self.actions_bar.on_key_pressed],
+                                '9': [self.actions_bar.on_key_pressed]
+                                })
 
         game_instance.battle.start()
 
-        Clock.schedule_interval(game_instance.update, 1 / 30.)
+        self.update_event = Clock.schedule_interval(game_instance.update, 1 / 30.)
 
     def on_pre_leave(self):
+        self.update_event.cancel()
+
         game_instance.battle.on_action -= self.on_battle_action
+        game_instance.terminate()
+
         self.game_view.on_unit_hovered -= self.time_bar.on_unit_hovered_external
         self.time_bar.on_unit_hovered -= self.game_view.on_unit_hovered_external
 
@@ -106,8 +112,8 @@ class GameScreen(Screen):
         code = '{}+{}'.format('.'.join(modifiers), text) if modifiers else text
         if self.debug_print_keys:
             print(f'keycode:`{keycode}` | code:`{code}`')
-        if code in self._key_binder:
-            for cb in self._key_binder[code]:
+        if code in self.key_binder:
+            for cb in self.key_binder[code]:
                 cb(keycode, code)
             return True
 

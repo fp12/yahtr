@@ -47,5 +47,9 @@ class Game():
                 self.battle.deploy(squads)
                 break
 
+    def terminate(self):
+        self.battle = None
+        self.players = []
+
 
 game_instance = Game()

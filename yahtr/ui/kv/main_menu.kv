@@ -9,24 +9,23 @@
             halign: 'center'
             font_size: '50sp'
         Button:
-            text: 'Custom Game'
-            pos_hint: {'center_x': .33, 'y': .5}
-            size: 120, 40
+            text: 'Features Demo'
+            pos_hint: {'center_x': .3, 'y': .5}
+            size: 150, 40
             size_hint: None, None
             halign: 'center'
-            disabled: True
-            #on_press: root.on_go_to_chess_demo()
+            on_press: root.on_go_to_features_demo()
         Button:
             text: 'Chess Demo'
             pos_hint: {'center_x': .5, 'y': .5}
-            size: 120, 40
+            size: 150, 40
             size_hint: None, None
             halign: 'center'
             on_press: root.on_go_to_chess_demo()
         Button:
             text: 'Campaign'
-            pos_hint: {'center_x': .66, 'y': .5}
-            size: 120, 40
+            pos_hint: {'center_x': .7, 'y': .5}
+            size: 150, 40
             size_hint: None, None
             halign: 'center'
             disabled: True

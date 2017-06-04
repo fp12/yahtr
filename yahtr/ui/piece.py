@@ -57,12 +57,12 @@ class Piece(HexWidget):
         self.selected = False
         self.reachable_tiles = []
 
-        self._shape_parts = {}
+        self.shape_parts = {}
         done_list = []
         for shape_part in self.unit.shape:
             part_hex = self.hex_coords + shape_part
             w = PieceBody(q=part_hex.q, r=part_hex.r, layout=self.hex_layout, color=self.color)
-            self._shape_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
+            self.shape_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
             self.add_widget(w)
 
             for shape_part_other in self.unit.shape:
@@ -78,14 +78,14 @@ class Piece(HexWidget):
                            hex_pos.y + (hex_pos_other.y - hex_pos.y) / 2 - size[1] / 2)
                     angle = shape_part.angle_to_neighbour(shape_part_other - shape_part)
                     w = PieceInterBody(pos=pos, size=size, angle=angle, color=self.color, rotate_from_center=True)
-                    self._shape_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
+                    self.shape_parts.update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1])})
                     self.add_widget(w)
 
         self.contour = Contour(unit.shape, layout=self.hex_layout, color=c_contour, pos=self.pos)
         self.add_widget(self.contour)
 
         self.do_rotate()
-        self._shields = [{} for __ in unit.shields]
+        self.shields = [{} for __ in unit.shields]
         self.update_shields()
 
         # declare events
@@ -125,7 +125,7 @@ class Piece(HexWidget):
     def update_shields(self):
         def del_part(anim, widget):
             self.remove_widget(widget)
-            for d in self._shields:
+            for d in self.shields:
                 if widget in d:
                     del d[widget]
                     return
@@ -134,7 +134,7 @@ class Piece(HexWidget):
             for shield_index in range(6):
                 linear_index = shape_part_index * 6 + shield_index
                 shield_value = self.unit.shields[linear_index]
-                old_size = len(self._shields[linear_index])
+                old_size = len(self.shields[linear_index])
                 diff = shield_value - old_size
                 if diff > 0:
                     for i in range(old_size, diff):
@@ -146,9 +146,9 @@ class Piece(HexWidget):
                                          radius=self.radius - (2 + 4) * i, thickness=8 - i * 2,
                                          angle=hex_angle(shield_index))
                         self.add_widget(w)
-                        self._shields[linear_index].update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1], i)})
+                        self.shields[linear_index].update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1], i)})
                 elif diff < 0:
-                    for shield_part, (__, __, order) in self._shields[linear_index].items():
+                    for shield_part, (__, __, order) in self.shields[linear_index].items():
                         if shield_value <= order < old_size:
                             shield_part.color = c_hit
                             anim = Animation(thickness=shield_part.thickness * 2, a=0, duration=0.5, t='in_out_circ')
@@ -244,16 +244,16 @@ class Piece(HexWidget):
     @check_root_window
     def on_pos(self, *args):
         self.contour.pos = self.pos
-        for shape_part, offset in self._shape_parts.items():
+        for shape_part, offset in self.shape_parts.items():
             shape_part.pos = (self.pos[0] + offset[0], self.pos[1] + offset[1])
 
-        for shield_data in self._shields:
+        for shield_data in self.shields:
             for shield_part, (dx, dy, __) in shield_data.items():
                 shield_part.pos = (self.pos[0] + dx, self.pos[1] + dy)
 
     @check_root_window
     def on_color_change(self, r, g, b, a):
-        for shape_part, _ in self._shape_parts.items():
+        for shape_part, _ in self.shape_parts.items():
             shape_part.color = (r, g, b, a)
 
     def on_unit_health_change(self, health_change, context):

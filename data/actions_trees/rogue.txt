@@ -1,5 +1,6 @@
 # Rogues can attack twice
 move
+  undo_move
   weapon
     weapon
   skill

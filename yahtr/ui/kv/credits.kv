@@ -4,8 +4,14 @@
 <Credits>:
     FloatLayout:
         Label:
-            text: '[b]Developer[/b]\nfp12 (Fabien Poupineau) [ref=https://twitter.com/fp12gaming]@fp12gaming[/ref]\n\n\n[b]Beta testers[/b]\nJim & Juju'
+            text: 'Yet Another Hex Tactical RPG'
             pos_hint: {'center_x': .5, 'y': .75}
+            size_hint: None, None
+            halign: 'center'
+            font_size: '50sp'
+        Label:
+            text: root.credits_text
+            pos_hint: {'center_x': .5, 'y': .5}
             size_hint: None, None
             halign: 'center'
             markup: True

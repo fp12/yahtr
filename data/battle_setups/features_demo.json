@@ -1,0 +1,34 @@
+{
+	"board": "features_demo/demo_map",
+	"players":
+	[
+		{
+			"name": "Player",
+			"control": "human",
+			"color": "player_team",
+			"squad": 
+			[
+				{
+					"template": "chess_demo/king",
+					"position": [-1, -7],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/king_sword"]
+				}
+			]
+		},
+		{
+			"name": "Player",
+			"control": "human",
+			"color": "ai_team_1",
+			"squad": 
+			[
+				{
+					"template": "chess_demo/king",
+					"position": [-1, 7],
+					"orientation": [0, 1],
+					"weapons": ["chess_demo/king_sword"]
+				}
+			]
+		}
+	]
+}
