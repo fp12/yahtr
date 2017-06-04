@@ -148,18 +148,18 @@ class Board():
                 return Board.close_to_ennemy_move_cost
         return Board.default_move_cost
 
-    def get_best_path(self, unit, goal):
+    def get_best_path(self, unit, goal: Hex):
         if goal not in self.tiles:
             return []
 
-        def heuristic(a, b):
+        def heuristic(a: Hex, b: Hex):
             return a.distance(b)
 
-        def get_cost(a):
+        def get_cost(a: Hex):
             # could be cached later
             return self._get_cost(unit, a)
 
-        def get_neighbours(a):
+        def get_neighbours(a: Hex):
             return self.get_free_neighbours(unit, a)
 
         # if the unit can fit in at least 1 direction, go!
@@ -171,24 +171,24 @@ class Board():
     def get_close_to(self, unit, target):
         target_shape = copy(target.current_shape)
 
-        def heuristic(a, b):
+        def heuristic(a: Hex, b: Hex):
             return a.distance(b)
 
-        def get_cost(a):
+        def get_cost(a: Hex):
             # could be cached later
             return self._get_cost(unit, a)
 
-        def get_neighbours(a):
+        def get_neighbours(a: Hex):
             return self.get_free_neighbours(unit, a)
 
         return pathfinding.Path(unit.hex_coords, unit.move, heuristic, get_neighbours, get_cost).get_best_to_shape(target_shape)
 
     def get_reachable(self, unit):
-        def get_cost(a):
+        def get_cost(a: Hex):
             # could be cached later
             return self._get_cost(unit, a)
 
-        def get_neighbours(a):
+        def get_neighbours(a: Hex):
             return self.get_free_neighbours(unit, a)
 
         return pathfinding.Reachable(unit.hex_coords, unit.move, get_neighbours, get_cost).get()
