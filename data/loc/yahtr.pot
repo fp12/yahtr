@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-05-31 08:20-0400\n"
+"POT-Creation-Date: 2017-06-05 00:51-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,27 +15,31 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: yahtr\localization\ids.py:2
+#: yahtr\localization\ids.py:4
 msgid "move"
 msgstr ""
 
-#: yahtr\localization\ids.py:3
+#: yahtr\localization\ids.py:5
 msgid "rotate"
 msgstr ""
 
-#: yahtr\localization\ids.py:4
+#: yahtr\localization\ids.py:6
 msgid "end_turn"
 msgstr ""
 
 #: yahtr\localization\ids.py:7
+msgid "undo_move"
+msgstr ""
+
+#: yahtr\localization\ids.py:11
 msgid "Battle Started"
 msgstr ""
 
-#: yahtr\localization\ids.py:8
+#: yahtr\localization\ids.py:12
 msgid "New turn started [{}]"
 msgstr ""
 
-#: yahtr\localization\ids.py:9
+#: yahtr\localization\ids.py:13
 msgid "Action: {} {}"
 msgstr ""
 
