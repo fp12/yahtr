@@ -5,7 +5,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.core.window import Window
 from kivy.clock import Clock
 
-from yahtr.ui.game_view import GameView
+from yahtr.ui.board_view import BoardView
 from yahtr.ui.timed_widget import TimedWidgetBar
 from yahtr.ui.actions_bar import ActionsBar
 from yahtr.ui.game_console import GameConsole
@@ -25,7 +25,7 @@ class GameScreen(Screen):
 
         self.debug_print_keys = False
 
-        self.game_view = None
+        self.board_view = None
         self.time_bar = None
         self.actions_bar = None
         self.game_console = None
@@ -46,32 +46,32 @@ class GameScreen(Screen):
         self.actions_bar = ActionsBar(pos=self.time_bar.get_pos_for_actions_bar(), pos_hint={'right': 1}, size_hint=(None, None))
         self.add_widget(self.actions_bar, 2)
 
-        self.game_view = GameView(pos=(0, 0), size_hint=(None, None), size=Window.size, auto_bring_to_front=False)
-        self.add_widget(self.game_view, 3)
+        self.board_view = BoardView(pos=(0, 0), size_hint=(None, None), size=Window.size, auto_bring_to_front=False)
+        self.add_widget(self.board_view, 3)
 
         # load dynamic setup
         game_instance.load_battle_setup(self.battle_options['setup_name'])
         game_instance.battle.on_action += self.on_battle_action
 
         # link widgets through events
-        self.game_view.on_unit_hovered += self.time_bar.on_unit_hovered_external
-        self.time_bar.on_unit_hovered += self.game_view.on_unit_hovered_external
+        self.board_view.on_unit_hovered += self.time_bar.on_unit_hovered_external
+        self.time_bar.on_unit_hovered += self.board_view.on_unit_hovered_external
 
-        self.game_view.load_board()
-        self.game_view.load_squads()
+        self.board_view.load_board()
+        self.board_view.load_squads()
         self.time_bar.create()
         self.actions_bar.create()
 
-        self.key_binder.update({'q': [self.game_view.on_debug_key, self.on_debug_key],
-                                'shift+=': [self.game_view.on_zoom_down],
-                                '=': [self.game_view.on_zoom_down],
-                                '+': [self.game_view.on_zoom_down],
-                                '-': [self.game_view.on_zoom_up],
-                                'a': [self.game_view.on_move_key],
-                                's': [self.game_view.on_move_key],
-                                'd': [self.game_view.on_move_key],
-                                'w': [self.game_view.on_move_key],
-                                ' ': [self.game_view.on_center_key],
+        self.key_binder.update({'q': [self.board_view.on_debug_key, self.on_debug_key],
+                                'shift+=': [self.board_view.on_zoom_down],
+                                '=': [self.board_view.on_zoom_down],
+                                '+': [self.board_view.on_zoom_down],
+                                '-': [self.board_view.on_zoom_up],
+                                'a': [self.board_view.on_move_key],
+                                's': [self.board_view.on_move_key],
+                                'd': [self.board_view.on_move_key],
+                                'w': [self.board_view.on_move_key],
+                                ' ': [self.board_view.on_center_key],
                                 'c': [self.print_children],
                                 '0': [self.actions_bar.on_key_pressed],
                                 '1': [self.actions_bar.on_key_pressed],
@@ -95,8 +95,8 @@ class GameScreen(Screen):
         game_instance.battle.on_action -= self.on_battle_action
         game_instance.terminate()
 
-        self.game_view.on_unit_hovered -= self.time_bar.on_unit_hovered_external
-        self.time_bar.on_unit_hovered -= self.game_view.on_unit_hovered_external
+        self.board_view.on_unit_hovered -= self.time_bar.on_unit_hovered_external
+        self.time_bar.on_unit_hovered -= self.board_view.on_unit_hovered_external
 
         for child in self.children[:]:
             self.remove_widget(child)

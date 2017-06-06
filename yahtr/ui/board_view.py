@@ -17,10 +17,10 @@ from yahtr.utils.log import create_ui_logger
 from yahtr.utils.event import Event
 
 
-logger = create_ui_logger('GameView')
+logger = create_ui_logger('BoardView')
 
 
-class GameView(ScatterLayout):
+class BoardView(ScatterLayout):
     hex_radius = 60
     hex_margin = 3
     trajectory_color_ok = Color(0, 0.392157, 0, 0.85)
@@ -29,7 +29,7 @@ class GameView(ScatterLayout):
     selector_color = Color.darkseagreen
 
     def __init__(self, **kwargs):
-        super(GameView, self).__init__(**kwargs)
+        super(BoardView, self).__init__(**kwargs)
         self.hex_layout = Layout(origin=self.center, size=self.hex_radius, flat=game_instance.flat_layout, margin=self.hex_margin)
         self.pieces = []
         self.tiles = []
@@ -284,7 +284,7 @@ class GameView(ScatterLayout):
 
     def on_touch_move(self, touch):
         if touch.grab_current is not self:
-            return super(GameView, self).on_touch_move(touch)
+            return super(BoardView, self).on_touch_move(touch)
 
         touch.ud['frame_count'] += 1
         self.x += touch.dx
