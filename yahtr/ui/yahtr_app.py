@@ -1,8 +1,8 @@
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, FadeTransition
 
-from yahtr.ui.main_menu import MainMenu
-from yahtr.ui.credits import Credits
+from yahtr.ui.screens.main_menu import MainMenu
+from yahtr.ui.screens.credits import Credits
 
 
 class YAHTRApp(App):

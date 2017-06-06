@@ -1,7 +1,7 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
-from yahtr.ui.game_screen import GameScreen
+from yahtr.ui.screens.game_screen import GameScreen
 
 
 Builder.load_file('yahtr/ui/kv/main_menu.kv')
