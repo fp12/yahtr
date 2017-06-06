@@ -1,5 +1,3 @@
-#:kivy 1.10.0
-
 <MainMenu>:
     FloatLayout:
         Label:
@@ -30,6 +28,14 @@
             halign: 'center'
             disabled: True
             #on_press: root.on_go_to_chess_demo()
+        Button:
+            text: 'Editor'
+            size: 120, 25
+            pos: 0, 30
+            pos_hint: {'right': 1}
+            size_hint: None, None
+            halign: 'center'
+            on_press: root.on_go_to_editor()
         Button:
             text: 'Credits'
             pos_hint: {'right': 1, 'y': 0}

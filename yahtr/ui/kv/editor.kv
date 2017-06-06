@@ -1,0 +1,80 @@
+#:include yahtr/ui/kv/selectable_label.kv
+
+
+<ActionsTreesTPI@TabbedPanelItem>
+    text: 'Actions Trees'
+
+
+<SkillsTPI@TabbedPanelItem>
+    text: 'Skills'
+
+
+<WeaponsTPI@TabbedPanelItem>
+    text: 'Weapons'
+
+
+<UnitsTPI@TabbedPanelItem>
+    text: 'Units'
+
+
+<BoardsTPI@TabbedPanelItem>
+    text: 'Boards'
+
+
+<BattleSetupsTPI@TabbedPanelItem>
+    text: 'Battle setups'
+
+
+<EditorTP@TabbedPanel>:
+    ActionsTreesTPI:
+        id: actions_trees        
+
+    SkillsTPI:
+        id: skills      
+        
+    WeaponsTPI:
+        id: weapons_templates
+        
+    UnitsTPI:
+        id: units_templates
+        
+    BoardsTPI:
+        id: boards
+        
+    BattleSetupsTPI:
+        id: battle_setups
+
+
+<Editor>:
+    rv: rv
+    tp: tp
+
+    Button:
+        text: 'Main Menu'
+        on_press: root.manager.current = 'main_menu'
+        pos_hint: {'right': 1, 'top': 1}
+        size: 100, 25
+        size_hint: None, None
+
+    RecycleView:
+        id: rv
+        size_hint: .15, 0.95
+        pos: 0, -50
+        pos_hint: {'top': 0.95}
+        viewclass: 'SelectableLabel'
+        SelectableRecycleBoxLayout:
+            default_size: None, dp(25)
+            default_size_hint: 1, None
+            size_hint_y: None
+            height: self.minimum_height
+            orientation: 'vertical'
+            spacing: dp(2)
+
+    EditorTP:
+        id: tp
+        size_hint: .85, 1
+        pos_hint: {'right': 1}
+        do_default_tab: False
+
+        on_current_tab: self.parent.on_tab_change(self.current_tab)
+            

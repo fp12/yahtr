@@ -13,6 +13,7 @@ class GameData:
         self.weapons_templates = []
         self.units_templates = []
         self.actions_trees = []
+        self.boards = []
         self.battle_setups = []
 
     def load(self, root_path=''):
@@ -20,6 +21,7 @@ class GameData:
         self.actions_trees = load_all_actions(root_path)
         self.weapons_templates = load_all_weapons(root_path, self.get_skill)
         self.units_templates = load_all_units(root_path, self.get_skill, self.get_actions_tree)
+        self.boards = []
         self.battle_setups = load_all_battle_setups(root_path)
 
     def get_skill(self, skill_id):

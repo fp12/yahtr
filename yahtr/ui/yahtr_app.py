@@ -20,5 +20,7 @@ class YAHTRApp(App):
 
         if self.mode == 'chess_demo':
             main_menu.on_go_to_chess_demo()
+        elif self.mode == 'editor':
+            main_menu.on_go_to_editor()
 
         return self.screen_manager

@@ -2,6 +2,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from yahtr.ui.screens.game_screen import GameScreen
+from yahtr.ui.screens.editor import Editor
 
 
 Builder.load_file('yahtr/ui/kv/main_menu.kv')
@@ -17,3 +18,7 @@ class MainMenu(Screen):
         options = {'setup_name': 'chess_demo'}
         game_screen = GameScreen(battle_options=options, name='game_screen')
         self.manager.switch_to(game_screen)
+
+    def on_go_to_editor(self):
+        editor = Editor()
+        self.manager.switch_to(editor)
