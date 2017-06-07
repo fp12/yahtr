@@ -131,6 +131,6 @@ class RankedSkill:
         return hit.values[self.rank.value]
 
 
-def load_all(root_path):
-    raw_skills = local_load(root_path + 'data/skills/', '.json')
+def load_all():
+    raw_skills = local_load('data/skills/', '.json')
     return [Skill(file, data) for file, data in raw_skills.items()]

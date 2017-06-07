@@ -131,6 +131,6 @@ class Unit:
         return -1
 
 
-def load_all(root_path, get_skill, get_actions_tree):
-    raw_units = local_load(root_path + 'data/templates/units/', '.json')
+def load_all(get_skill, get_actions_tree):
+    raw_units = local_load('data/templates/units/', '.json')
     return [UnitTemplate(file, data, get_skill, get_actions_tree) for file, data in raw_units.items()]

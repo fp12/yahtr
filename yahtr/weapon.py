@@ -58,6 +58,6 @@ class RankedWeapon:
         return f'RkWp<{self.weapon.template.name}:{self.rank.name}>'
 
 
-def load_all(root_path, get_skill):
-    raw_weapons = local_load(root_path + 'data/templates/weapons/', '.json')
+def load_all(get_skill):
+    raw_weapons = local_load('data/templates/weapons/', '.json')
     return [WeaponTemplate(file, data, get_skill) for file, data in raw_weapons.items()]

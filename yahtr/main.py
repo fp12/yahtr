@@ -16,6 +16,6 @@ if __name__ == '__main__':
             mode = arg
 
     # load static data
-    game_data.load()
+    game_data.load_all()
 
     YAHTRApp(mode).run()

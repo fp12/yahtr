@@ -5,7 +5,7 @@ from yahtr.game_data import game_data
 
 
 def main():
-    game_data.load()
+    game_data.load_all()
 
     with open('data/loc/yahtr.pot', 'a') as fp:
         for sk in game_data.skills:

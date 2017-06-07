@@ -44,6 +44,6 @@ class ActionTree:
             current_tabs_count = tabs_count
 
 
-def load_all(root_path):
-    raw_data = local_load(root_path + 'data/actions_trees/', '.txt')
+def load_all():
+    raw_data = local_load('data/actions_trees/', '.txt')
     return [ActionTree(file, data) for file, data in raw_data.items()]
