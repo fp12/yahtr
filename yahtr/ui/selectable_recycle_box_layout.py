@@ -5,9 +5,17 @@ from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.properties import BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 
+from yahtr.utils.event import Event
+
 
 class SelectableRecycleBoxLayout(FocusBehavior, LayoutSelectionBehavior, RecycleBoxLayout):
+    on_selection = Event('index', 'value')
+
     """ Adds selection and focus behaviour to the view. """
+    def apply_selection(self, id, widget, selected):
+        if selected:
+            self.on_selection(id, widget.value)
+        return super(SelectableRecycleBoxLayout, self).apply_selection(id, widget, selected)
 
 
 class SelectableLabel(RecycleDataViewBehavior, BoxLayout):
@@ -31,7 +39,3 @@ class SelectableLabel(RecycleDataViewBehavior, BoxLayout):
     def apply_selection(self, rv, index, is_selected):
         """ Respond to the selection of items in the view."""
         self.selected = is_selected
-        if is_selected:
-            print("selection changed to {0}".format(rv.data[index]))
-        else:
-            print("selection removed for {0}".format(rv.data[index]))

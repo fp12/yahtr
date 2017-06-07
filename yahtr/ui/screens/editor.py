@@ -24,13 +24,16 @@ class Editor(Screen):
     def __init__(self, **kwargs):
         super(Editor, self).__init__(**kwargs)
         self.tab_data = TabData.actions_trees
-        print(self.tp)
-        print(f'Previous tab data was {self.tab_data.name}, new is {TabData(1)}')
         self.refresh_rv()
+        self.rv_layout.on_selection += self.on_data_change
 
     def refresh_rv(self):
         self.rv.data = [{'value': data.id} for data in getattr(game_data, self.tab_data.name)]
+        self.rv_layout.clear_selection()
 
     def on_tab_change(self, widget):
         self.tab_data = TabData[find_id(self.tp, widget)]
         self.refresh_rv()
+
+    def on_data_change(self, id, value):
+        pass

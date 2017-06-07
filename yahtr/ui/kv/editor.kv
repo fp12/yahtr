@@ -47,6 +47,7 @@
 
 <Editor>:
     rv: rv
+    rv_layout: rv_layout
     tp: tp
 
     Button:
@@ -63,6 +64,7 @@
         pos_hint: {'top': 0.95}
         viewclass: 'SelectableLabel'
         SelectableRecycleBoxLayout:
+            id: rv_layout
             default_size: None, dp(25)
             default_size_hint: 1, None
             size_hint_y: None
