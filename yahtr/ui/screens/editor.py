@@ -36,4 +36,7 @@ class Editor(Screen):
         self.refresh_rv()
 
     def on_data_change(self, id, value):
-        pass
+        if self.tab_data is TabData.actions_trees:
+            data = next((at for at in game_data.actions_trees if at.id == value), None)
+            if data:
+                self.tp.current_tab.title.text = repr(data.tree)
