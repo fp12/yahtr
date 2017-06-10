@@ -1,6 +1,6 @@
 import copy
 
-from yahtr.data_loader import local_load
+from yahtr.data_loader import local_load, local_load_single
 from yahtr.core.hex_lib import Hex, index_of_direction
 from yahtr.utils import attr, clamp
 from yahtr.utils.event import Event
@@ -131,6 +131,17 @@ class Unit:
         return -1
 
 
-def load_all(get_skill, get_actions_tree):
-    raw_units = local_load('data/templates/units/', '.json')
+__path = 'data/templates/units/'
+__ext = '.json'
+
+
+def load_all_unit_templates(get_skill, get_actions_tree):
+    raw_units = local_load(__path, __ext)
     return [UnitTemplate(file, data, get_skill, get_actions_tree) for file, data in raw_units.items()]
+
+
+def load_one_unit_template(unit_template_id, get_skill, get_actions_tree):
+    data = local_load_single(__path, unit_template_id, __ext)
+    if data:
+        return UnitTemplate(unit_template_id, data, get_skill, get_actions_tree)
+    return None

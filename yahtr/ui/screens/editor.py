@@ -14,8 +14,8 @@ Builder.load_file('yahtr/ui/kv/editor.kv')
 class TabData(Enum):
     actions_trees = 0
     skills = 1
-    weapons_templates = 2
-    units_templates = 3
+    weapon_templates = 2
+    unit_templates = 3
     boards = 4
     battle_setups = 5
 

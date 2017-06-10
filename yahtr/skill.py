@@ -1,6 +1,6 @@
 from enum import Enum
 
-from yahtr.data_loader import local_load
+from yahtr.data_loader import local_load, local_load_single
 from yahtr.core.hex_lib import Hex
 from yahtr.utils import attr
 
@@ -131,6 +131,17 @@ class RankedSkill:
         return hit.values[self.rank.value]
 
 
-def load_all():
-    raw_skills = local_load('data/skills/', '.json')
+__path = 'data/skills/'
+__ext = '.json'
+
+
+def load_all_skills():
+    raw_skills = local_load(__path, __ext)
     return [Skill(file, data) for file, data in raw_skills.items()]
+
+
+def load_one_skill(skill_id):
+    data = local_load_single(__path, skill_id, __ext)
+    if data:
+        return Skill(skill_id, data)
+    return None

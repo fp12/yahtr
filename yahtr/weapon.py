@@ -1,6 +1,6 @@
 from enum import Enum
 
-from yahtr.data_loader import local_load
+from yahtr.data_loader import local_load, local_load_single
 from yahtr.skill import RankedSkill
 from yahtr.utils import attr
 
@@ -58,6 +58,17 @@ class RankedWeapon:
         return f'RkWp<{self.weapon.template.name}:{self.rank.name}>'
 
 
-def load_all(get_skill):
-    raw_weapons = local_load('data/templates/weapons/', '.json')
+__path = 'data/templates/weapons/'
+__ext = '.json'
+
+
+def load_all_weapon_templates(get_skill):
+    raw_weapons = local_load(__path, __ext)
     return [WeaponTemplate(file, data, get_skill) for file, data in raw_weapons.items()]
+
+
+def load_one_weapon_template(weapon_template_id, get_skill):
+    data = local_load_single(__path, weapon_template_id, __ext)
+    if data:
+        return WeaponTemplate(weapon_template_id, data, get_skill)
+    return None

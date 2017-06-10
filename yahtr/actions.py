@@ -1,4 +1,4 @@
-from yahtr.data_loader import local_load
+from yahtr.data_loader import local_load, local_load_single
 from yahtr.utils.tree import Tree, Node
 from yahtr.localization.enum import LocalizedEnum
 
@@ -44,6 +44,17 @@ class ActionTree:
             current_tabs_count = tabs_count
 
 
-def load_all():
-    raw_data = local_load('data/actions_trees/', '.txt')
+__path = 'data/actions_trees/'
+__ext = '.txt'
+
+
+def load_all_actions_trees():
+    raw_data = local_load(__path, __ext)
     return [ActionTree(file, data) for file, data in raw_data.items()]
+
+
+def load_one_actions_tree(actions_tree_id):
+    data = local_load_single(__path, actions_tree_id, __ext)
+    if data:
+        return ActionTree(actions_tree_id, data)
+    return None
