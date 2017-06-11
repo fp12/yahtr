@@ -2,6 +2,7 @@ from yahtr.skill import load_all_skills, load_one_skill
 from yahtr.weapon import load_all_weapon_templates, load_one_weapon_template
 from yahtr.unit import load_all_unit_templates, load_one_unit_template
 from yahtr.actions import load_all_actions_trees, load_one_actions_tree
+from yahtr.board import load_all_board_templates, load_one_board_template
 from yahtr.battle_setup import load_all_battle_setups, load_one_battle_setup
 
 
@@ -10,10 +11,10 @@ class GameData:
 
     def __init__(self):
         self.skills = []
+        self.actions_trees = []
         self.weapon_templates = []
         self.unit_templates = []
-        self.actions_trees = []
-        self.boards = []
+        self.board_templates = []
         self.battle_setups = []
 
     def load_all(self):
@@ -21,7 +22,7 @@ class GameData:
         self.actions_trees = load_all_actions_trees()
         self.weapon_templates = load_all_weapon_templates(self.get_skill)
         self.unit_templates = load_all_unit_templates(self.get_skill, self.get_actions_tree)
-        self.boards = []
+        self.board_templates = load_all_board_templates()
         self.battle_setups = load_all_battle_setups()
 
     def get_skill(self, skill_id):
@@ -58,6 +59,15 @@ class GameData:
         data = load_one_unit_template(unit_template_id, self.get_skill, self.get_actions_tree)
         if data:
             self.unit_templates.append(data)
+        return data
+
+    def get_board_template(self, board_id):
+        for b in self.board_templates:
+            if b.id == board_id:
+                return b
+        data = load_one_board_template(board_id)
+        if data:
+            self.board_templates.append(data)
         return data
 
     def get_battle_setup(self, battle_setup_id):

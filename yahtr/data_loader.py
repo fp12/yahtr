@@ -20,5 +20,8 @@ def local_load(folder, ext):
 
 def local_load_single(folder, file, ext):
     with open(folder + file + ext) as f:
-        return json.load(f)
+        if ext == '.json':
+            return json.load(f)
+        else:
+            return f.readlines()
     return {}

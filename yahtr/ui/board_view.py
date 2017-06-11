@@ -42,7 +42,7 @@ class BoardView(ScatterLayout):
         self.on_unit_hovered = Event('unit', 'hovered_in')
 
     def load_board(self):
-        for h in game_instance.battle.board.get_tiles():
+        for h in game_instance.battle.board.tiles:
             tile = Tile(h.q, h.r, layout=self.hex_layout, color=self.tile_color, size=(self.hex_radius, self.hex_radius))
             self.add_widget(tile)
             self.tiles.append(tile)

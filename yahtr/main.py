@@ -1,7 +1,6 @@
 import sys
 import getopt
 
-from yahtr.game_data import game_data
 from yahtr.localization.core import init as init_localization
 init_localization()
 
@@ -14,8 +13,5 @@ if __name__ == '__main__':
     for opt, arg in opts:
         if opt in ('--mode',):
             mode = arg
-
-    # load static data
-    game_data.load_all()
 
     YAHTRApp(mode).run()

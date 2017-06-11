@@ -1,14 +1,14 @@
 from enum import Enum
-from math import floor
 from copy import copy
 
-from yahtr.data_loader import local_load_single
+from yahtr.data_loader import local_load, local_load_single
 from yahtr.core.hex_lib import Hex, get_hex_direction
 from yahtr.core import pathfinding
 from yahtr.wall import Wall, WallType
 from yahtr.utils.event import Event
 from yahtr.utils import attr
 from yahtr.tie import TieType
+from yahtr.board_creator import build_parallelogram, build_triangle, build_hexagon, build_rectangle
 
 
 class BoardType(Enum):
@@ -19,48 +19,52 @@ class BoardType(Enum):
     rectangle = 4
 
 
-class Board():
-    default_move_cost = 1
-    close_to_ennemy_move_cost = 2
+class BoardTemplate:
+    """ Board as defined in data """
 
-    def __init__(self, battle, name):
-        self.battle = battle
-        self.name = name
+    __attributes = ['info']
+    __creators = {
+            BoardType.parallelogram: build_parallelogram,
+            BoardType.triangle: build_triangle,
+            BoardType.hexagon: build_hexagon,
+            BoardType.rectangle: build_rectangle
+        }
 
-        data = local_load_single('data/boards/', name, '.json')
-        self.holes = data['holes'] if 'holes' in data else None
+    def __init__(self, file, data):
+        self.id = file
+        attr.get_from_dict(self, data, *BoardTemplate.__attributes)
+        self.type = BoardType[data['type']]
+        self.holes = [Hex(*qr) for qr in data['holes']] if 'holes' in data else []
         self.tiles = [Hex(*qr) for qr in data['adds']] if 'adds' in data else []
         self.walls = [Wall(d) for d in data['walls']] if 'walls' in data else []
 
-        if data['type'] == BoardType.parallelogram.name:
-            attr.get_from_dict(self, data['info'], 'q1', 'q2', 'r1', 'r2')
-            self._get_tiles_parallelogram()
-        elif data['type'] == BoardType.triangle.name:
-            attr.get_from_dict(self, data['info'], 'size')
-            self._get_tiles_triangle()
-        elif data['type'] == BoardType.hexagon.name:
-            attr.get_from_dict(self, data['info'], 'radius')
-            self._get_tiles_hexagon()
-        elif data['type'] == BoardType.rectangle.name:
-            attr.get_from_dict(self, data['info'], 'height', 'width')
-            self._get_tiles_rectangle()
+        BoardTemplate.__creators[self.type](self.tiles, self.holes, **self.info)
+
+
+class Board:
+    """ Board as instantiated ingame """
+
+    __attributes = ['holes', 'tiles', 'walls']
+
+    default_move_cost = 1
+    close_to_ennemy_move_cost = 2
+
+    def __init__(self, template, battle):
+        self.template = template
+        attr.copy_from_instance(template, self, *Board.__attributes)
+        self.battle = battle
 
         self.units = []  # ref
 
         self.on_wall_hit = Event('origin', 'destination', 'destroyed')
         self.on_unit_removed = Event('unit')
 
-    def register_units(self, units):
+    def register_units(self, units: list):
         self.units.extend(units)
 
     def unregister_unit(self, unit):
         self.on_unit_removed(unit)
         self.units.remove(unit)
-
-    def _validate_not_hole(self, q, r):
-        if self.holes and [q, r] in self.holes:
-            return False
-        return True
 
     def get_wall_between(self, origin, destination):
         return next((w for w in self.walls if w == (origin, destination)), None)
@@ -71,36 +75,6 @@ class Board():
             self.walls.remove(wall)
         else:
             self.on_wall_hit(wall.origin, wall.destination, destroyed=False)
-
-    def get_tiles(self):
-        return self.tiles
-
-    def _get_tiles_parallelogram(self):
-        for q in range(self.q1, self.q2 + 1):
-            for r in range(self.r1, self.r2 + 1):
-                if self._validate_not_hole(q, r):
-                    self.tiles.append(Hex(q, r))
-
-    def _get_tiles_triangle(self):
-        for q in range(self.size + 1):
-            for r in range(self.size - q, self.size + 1):
-                if self._validate_not_hole(q, r):
-                    self.tiles.append(Hex(q, r))
-
-    def _get_tiles_hexagon(self):
-        for q in range(-self.radius, self.radius + 1):
-            r1 = max(-self.radius, -q - self.radius)
-            r2 = min(self.radius, -q + self.radius)
-            for r in range(r1, r2 + 1):
-                if self._validate_not_hole(q, r):
-                    self.tiles.append(Hex(q, r))
-
-    def _get_tiles_rectangle(self):
-        for r in range(self.height):
-            r_offset = floor(r / 2.)
-            for q in range(-r_offset, self.width - r_offset):
-                if self._validate_not_hole(q, r):
-                    self.tiles.append(Hex(q, r))
 
     def get_unit_on(self, hex_coords, include_shape=True):
         for u in self.units:
@@ -192,3 +166,19 @@ class Board():
             return self.get_free_neighbours(unit, a)
 
         return pathfinding.Reachable(unit.hex_coords, unit.move, get_neighbours, get_cost).get()
+
+
+__path = 'data/boards/'
+__ext = '.json'
+
+
+def load_all_board_templates():
+    raw_data = local_load(__path, __ext)
+    return [BoardTemplate(file, data) for file, data in raw_data.items()]
+
+
+def load_one_board_template(board_id):
+    data = local_load_single(__path, board_id, __ext)
+    if data:
+        return BoardTemplate(board_id, data)
+    return None

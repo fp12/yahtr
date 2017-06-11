@@ -120,7 +120,7 @@ class Skill:
 class RankedSkill:
     """ Skill instanciated inside a weapon or a unit """
 
-    def __init__(self, skill, rank):
+    def __init__(self, skill: Skill, rank):
         self.skill = skill
         self.rank = rank
 

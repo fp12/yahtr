@@ -16,7 +16,7 @@ class TabData(Enum):
     skills = 1
     weapon_templates = 2
     unit_templates = 3
-    boards = 4
+    board_templates = 4
     battle_setups = 5
 
 
