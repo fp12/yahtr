@@ -21,8 +21,10 @@ class TabData(Enum):
 
 
 class Editor(Screen):
+    screen_name = 'main_menu'
+
     def __init__(self, **kwargs):
-        super(Editor, self).__init__(**kwargs)
+        super(Editor, self).__init__(name=Editor.screen_name, **kwargs)
         self.tab_data = TabData.actions_trees
         self.refresh_rv()
         self.rv_layout.on_selection += self.on_data_change

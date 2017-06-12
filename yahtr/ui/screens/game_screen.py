@@ -18,8 +18,10 @@ Builder.load_file('yahtr/ui/kv/game_screen.kv')
 
 
 class GameScreen(Screen):
+    screen_name = 'game_screen'
+
     def __init__(self, battle_options, **kwargs):
-        super(GameScreen, self).__init__(**kwargs)
+        super(GameScreen, self).__init__(name=GameScreen.screen_name, **kwargs)
 
         self.battle_options = battle_options
 

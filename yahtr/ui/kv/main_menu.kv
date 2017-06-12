@@ -12,14 +12,14 @@
             size: 150, 40
             size_hint: None, None
             halign: 'center'
-            on_press: root.on_go_to_features_demo()
+            on_press: app.go_to_features_demo()
         Button:
             text: 'Chess Demo'
             pos_hint: {'center_x': .5, 'y': .5}
             size: 150, 40
             size_hint: None, None
             halign: 'center'
-            on_press: root.on_go_to_chess_demo()
+            on_press: app.go_to_chess_demo()
         Button:
             text: 'Campaign'
             pos_hint: {'center_x': .7, 'y': .5}
@@ -27,7 +27,7 @@
             size_hint: None, None
             halign: 'center'
             disabled: True
-            #on_press: root.on_go_to_chess_demo()
+            #on_press: app.go_to_chess_demo()
         Button:
             text: 'Editor'
             size: 120, 25
@@ -35,14 +35,14 @@
             pos_hint: {'right': 1}
             size_hint: None, None
             halign: 'center'
-            on_press: root.on_go_to_editor()
+            on_press: app.go_to_editor()
         Button:
             text: 'Credits'
             pos_hint: {'right': 1, 'y': 0}
             size: 120, 25
             size_hint: None, None
             halign: 'center'
-            on_press: root.manager.current = 'credits'
+            on_press: app.go_to_credits()
         Button:
             text: 'Quit'
             on_press: app.stop()
