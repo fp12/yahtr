@@ -20,7 +20,7 @@
                 webbrowser.open(args[1])
         Button:
             text: 'Main Menu'
-            on_press: root.manager.current = 'main_menu'
+            on_press: app.go_to_main_menu()
             pos: -50, -50
             pos_hint: {'right': 1, 'top': 1}
             size: 100, 25
