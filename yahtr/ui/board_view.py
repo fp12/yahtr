@@ -43,7 +43,7 @@ class BoardView(ScatterLayout):
 
     def load_board(self):
         for h in game_instance.battle.board.tiles:
-            tile = Tile(h.q, h.r, layout=self.hex_layout, color=self.tile_color, size=(self.hex_radius, self.hex_radius))
+            tile = Tile(q=h.q, r=h.r, layout=self.hex_layout, color=self.tile_color, size=(self.hex_radius, self.hex_radius))
             self.add_widget(tile)
             self.tiles.append(tile)
 

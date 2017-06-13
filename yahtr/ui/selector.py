@@ -10,7 +10,7 @@ class Selector(HexWidget):
     def setup(self, q, r, layout, radius=None):
         super(Selector, self).setup(q, r, layout, radius)
         self.margin = radius or self.hex_layout.margin
-        self.animate()
+        # self.animate()
 
     def animate(self, *args):
         Animation.cancel_all(self)

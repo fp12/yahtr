@@ -305,7 +305,7 @@ class Piece(HexWidget):
         if not self.reachable_tiles:
             reachable_hexes = game_instance.battle.board.get_reachable(self.unit)
             for h in reachable_hexes:
-                tile = Tile(h.q, h.r,
+                tile = Tile(q=h.q, r=h.r,
                             layout=self.hex_layout,
                             color=c_reachable_selected if self.selected else c_reachable_not_selected,
                             radius=self.radius - 2,

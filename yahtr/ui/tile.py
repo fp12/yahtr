@@ -1,10 +1,15 @@
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ListProperty
 
 from yahtr.ui.hex_widget import HexWidget
 
 
 class Tile(HexWidget):
     debug_label = StringProperty('')
+    line_rgba = ListProperty((0, 0, 0, 0))
+
+    def __init__(self, line_rgba=None, **kwargs):
+        self.line_rgba = line_rgba if line_rgba else [0, 0, 0, 0]
+        super(Tile, self).__init__(**kwargs)
 
     def toggle_debug_label(self):
         if self.debug_label:

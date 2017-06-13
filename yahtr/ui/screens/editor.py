@@ -4,6 +4,8 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 import yahtr.ui.selectable_recycle_box_layout  # force import needed for kv files :(
+import yahtr.ui.hex_grid  # force import needed for kv files :(
+import yahtr.ui.editor.board_editor  # force import needed for kv files :(
 from yahtr.ui.utils import find_id
 from yahtr.game_data import game_data
 

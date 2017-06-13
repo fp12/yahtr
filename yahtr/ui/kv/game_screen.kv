@@ -1,4 +1,3 @@
-#:kivy 1.10.0
 ##:include yahtr/ui/kv/debug.kv
 #:include yahtr/ui/kv/piece.kv
 #:include yahtr/ui/kv/time_bar.kv
@@ -14,6 +13,7 @@
         pos_hint: {'right': 1, 'top': 1}
         size: 100, 25
         size_hint: None, None
+
 
 <AngledWidget>
     canvas.before:
@@ -33,6 +33,15 @@
             vertices: (self.x + self.coss[0] * self.radius, self.y + self.sins[0] * self.radius, 0, 0, self.x + self.coss[1] * self.radius, self.y + self.sins[1] * self.radius, 0, 0, self.x + self.coss[2] * self.radius, self.y + self.sins[2] * self.radius, 0, 0, self.x + self.coss[3] * self.radius, self.y + self.sins[3] * self.radius, 0, 0, self.x + self.coss[4] * self.radius, self.y + self.sins[4] * self.radius, 0, 0, self.x + self.coss[5] * self.radius, self.y + self.sins[5] * self.radius, 0, 0)
             indices: (0, 1, 2, 3, 4, 5)
             mode: "triangle_fan"
+        Color:
+            rgba: self.line_rgba[0], self.line_rgba[1], self.line_rgba[2], self.line_rgba[3]
+        Line:
+            points: (self.x + self.coss[0] * self.radius, self.y + self.sins[0] * self.radius, self.x + self.coss[1] * self.radius, self.y + self.sins[1] * self.radius, self.x + self.coss[2] * self.radius, self.y + self.sins[2] * self.radius, self.x + self.coss[3] * self.radius, self.y + self.sins[3] * self.radius, self.x + self.coss[4] * self.radius, self.y + self.sins[4] * self.radius, self.x + self.coss[5] * self.radius, self.y + self.sins[5] * self.radius)
+            cap: 'none'
+            width: 1.0
+            close: True
+            dash_length: 5
+            dash_offset: 5
     Label:
         index: 0
         size: root.size
