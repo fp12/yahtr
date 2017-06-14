@@ -7,5 +7,5 @@ build
 dist
 src/core/*.html
 .vs
-venv
+venv*
 *.pyproj
