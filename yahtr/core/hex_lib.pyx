@@ -99,9 +99,7 @@ cdef class Hex:
 
     cpdef int angle_to_neighbour(self, Hex neighbour):
         cdef short i = index_of_direction(neighbour)
-        if 0 <= i < NHEX:
-            return hex_angle(i)
-        return 0
+        return hex_angle(i) if 0 <= i < NHEX else 0
 
     cpdef Hex rotate_to(self, Hex direction):
         cdef short i = index_of_direction(direction)

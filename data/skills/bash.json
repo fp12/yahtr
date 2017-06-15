@@ -9,7 +9,7 @@
 				{
 					"move": [0, 1, 0, 2],
 					"type": "pushed",
-					"check": "goal_free",
+					"check": ["goal_free"],
 					"order": 1
 				}
 			]

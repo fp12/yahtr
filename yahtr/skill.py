@@ -17,16 +17,26 @@ class Effect(Enum):
 
 class MoveCheck(Enum):
     none = 0  # should that even exist?
-    goal_free = 1  # just making sure end point is not occupied
+
+    goal_free = 10  # just making sure end point is not occupied
+    goal_hole = 11  # what could I do with that?
+    goal_teammate = 12  # a teammate unit is on the end point
+    goal_ennemy = 13  # an ennemy unit is on the end point
+
+    trajectory_free = 20  # trajectory is on normal tiles
+    trajectory_hole = 21  # trajectory is on holes
+    trajectory_ally = 22  # jumping over ally
+    trajectory_ennemy = 23  # jumping over ennemies
 
 
 class MoveType(Enum):
     none = 0
     blink = 1
     pushed = 2
+    jump = 3
 
 
-class Target:
+class Target(Enum):
     none = 0
     unit = 1
     shield = 2
@@ -75,7 +85,7 @@ class UnitMove:
         self.move = HexDir(data['move']) if 'move' in data else None
         self.orientation = HexDir(data['orientation']) if 'orientation' in data else None
         self.move_type = MoveType[data['type']] if 'type' in data else MoveType.none
-        self.check = MoveCheck[data.get('check')] if 'check' in data else MoveCheck.none
+        self.check = [MoveCheck[c] for c in data['check']] if 'check' in data else []
         self.order = data['order'] if 'order' in data else 0
 
 

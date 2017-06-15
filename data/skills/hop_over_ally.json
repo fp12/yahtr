@@ -1,0 +1,16 @@
+{
+	"name": "L_NAME_HOP_OVER_ALLY",
+	"description": "L_DESC_HOP_OVER_ALLY",
+	"HUN":
+	[
+		{
+			"U":
+			{
+				"move": [0, 0, 0, 2],
+				"type": "jump",
+				"check": ["goal_free", "trajectory_ally"],
+				"order": 0
+			}
+		}
+	]
+}

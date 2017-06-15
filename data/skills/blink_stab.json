@@ -18,7 +18,7 @@
 				"move": [0, 0, 0, 2],
 				"orientation" : [0, 0, 0, -1],
 				"type": "blink",
-				"check": "goal_free",
+				"check": ["goal_free"],
 				"order": 0
 			}
 		}
