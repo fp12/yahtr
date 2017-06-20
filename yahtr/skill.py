@@ -90,7 +90,7 @@ class UnitMove:
 
 
 class HUN:
-    """ Hit - Unit - eNmeny data format for skills """
+    """ Hit - Unit - eNneny data format for skills """
 
     def __init__(self, hun):
         self.hits = [Hit(h) for h in hun['H']] if 'H' in hun else []
