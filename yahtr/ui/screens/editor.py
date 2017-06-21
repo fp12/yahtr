@@ -39,8 +39,12 @@ class Editor(Screen):
         self.tab_data = TabData[find_id(self.tp, widget)]
         self.refresh_rv()
 
-    def on_data_change(self, id, value):
+    def on_data_change(self, instance, value):
         if self.tab_data is TabData.actions_trees:
-            data = next((at for at in game_data.actions_trees if at.id == value), None)
+            data = game_data.get_actions_tree(value)
             if data:
-                self.tp.current_tab.title.text = repr(data.tree)
+                self.tp.current_tab.title.text = repr(data)
+        elif self.tab_data is TabData.board_templates:
+            data = game_data.get_board_template(value)
+            if data:
+                self.tp.current_tab.grid.load_grid(data.tiles)

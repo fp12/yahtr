@@ -4,6 +4,7 @@
 #:include yahtr/ui/kv/action_bar.kv
 #:include yahtr/ui/kv/action_widgets.kv
 #:include yahtr/ui/kv/game_console.kv
+#:include yahtr/ui/kv/selector.kv
 
 <GameScreen>:
     Button:
@@ -59,15 +60,3 @@
         Rectangle:
             pos: (self.x - self.width / 2, self.y - self.height / 2)
             size: self.size
-
-
-<Selector>
-    canvas:
-        Color:
-            rgba: self.r, self.g, self.b, self.a
-        Line:
-            points: [self.x + self.coss[0] * (self.radius + self.margin/2), self.y + self.sins[0] * (self.radius + self.margin/2), self.x + self.coss[1] * (self.radius + self.margin/2), self.y + self.sins[1] * (self.radius + self.margin/2), self.x + self.coss[2] * (self.radius + self.margin/2), self.y + self.sins[2] * (self.radius + self.margin/2), self.x + self.coss[3] * (self.radius + self.margin/2), self.y + self.sins[3] * (self.radius + self.margin/2), self.x + self.coss[4] * (self.radius + self.margin/2), self.y + self.sins[4] * (self.radius + self.margin/2), self.x + self.coss[5] * (self.radius + self.margin/2), self.y + self.sins[5] * (self.radius + self.margin/2)]
-            joint: 'bevel'
-            cap: 'none'
-            width: self.margin
-            close: True
