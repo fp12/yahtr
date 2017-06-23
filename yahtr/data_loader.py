@@ -25,3 +25,9 @@ def local_load_single(folder, file, ext):
         else:
             return f.readlines()
     return {}
+
+
+def local_save_single(folder, file_id, ext, data):
+    with open(folder + file_id + ext, 'w') as f:
+        if ext == '.json':
+            json.dump(data, f, indent=4)

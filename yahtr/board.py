@@ -1,7 +1,7 @@
 from enum import Enum
 from copy import copy
 
-from yahtr.data_loader import local_load, local_load_single
+from yahtr.data_loader import local_load, local_load_single, local_save_single
 from yahtr.core.hex_lib import Hex, get_hex_direction
 from yahtr.core import pathfinding
 from yahtr.wall import Wall, WallType
@@ -39,6 +39,15 @@ class BoardTemplate:
         self.walls = [Wall(d) for d in data['walls']] if 'walls' in data else []
 
         BoardTemplate.__creators[self.type](self.tiles, self.holes, **self.info)
+
+    def save(self):
+        return {
+            'type': self.type.name,
+            'info': self.info,
+            'holes': [[h.q, h.r] for h in self.holes],
+            'adds': [[h.q, h.r] for h in self.tiles],
+            'walls': [w.save() for w in self.walls],
+        }
 
 
 class Board:
@@ -182,3 +191,7 @@ def load_one_board_template(board_id):
     if data:
         return BoardTemplate(board_id, data)
     return None
+
+
+def save_one_board_template(board_template):
+    local_save_single(__path, board_template.id, __ext, board_template.save())

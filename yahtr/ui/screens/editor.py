@@ -47,4 +47,4 @@ class Editor(Screen):
         elif self.tab_data is TabData.board_templates:
             data = game_data.get_board_template(value)
             if data:
-                self.tp.current_tab.grid.load_grid(data.tiles)
+                self.tp.current_tab.set_active(data)

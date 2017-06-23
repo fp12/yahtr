@@ -24,3 +24,10 @@ class Wall:
             return other.origin == self.origin and other.destination == self.destination
         o1, o2 = other
         return (o1 == self.origin and o2 == self.destination) or (o1 == self.destination and o2 == self.origin)
+
+    def save(self):
+        return [
+            self.origin.q, self.origin.r,
+            self.destination.q, self.destination.r,
+            *[t.value for t in self.types]
+            ]
