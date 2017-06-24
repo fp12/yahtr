@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-from yahtr.game_data import game_data
+from yahtr.data.bank import data_bank
 from yahtr.battle import Battle
 from yahtr.tie import TieType
 from yahtr.player import Player
@@ -24,7 +24,7 @@ class Game():
 
     def load_battle_setup(self, battle_setup_id):
         assert not self.battle
-        setup = game_data.get_battle_setup(battle_setup_id)
+        setup = data_bank.get_battle_setup(battle_setup_id)
         assert setup is not None
 
         squads = OrderedDict()
@@ -33,7 +33,7 @@ class Game():
             p = player_class(self, player_info['name'], Color(player_info['color']))
             squads[p] = []
             for unit_info in player_info['squad']:
-                template = game_data.get_unit_template(unit_info['template'])
+                template = data_bank.get_unit_template(unit_info['template'])
                 u = Unit(template)
                 for weapon_name in unit_info['weapons']:
                     w = p.add_weapon(weapon_name)

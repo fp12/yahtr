@@ -12,6 +12,7 @@ from yahtr.ui.game_console import GameConsole
 from yahtr.ui.anim_scheduler import anim_scheduler
 
 from yahtr.game import game_instance
+from yahtr.data.bank import data_bank
 
 
 Builder.load_file('yahtr/ui/kv/game_screen.kv')
@@ -102,6 +103,8 @@ class GameScreen(Screen):
 
         for child in self.children[:]:
             self.remove_widget(child)
+
+        data_bank.unload_all()
 
     def on_battle_action(self):
         if anim_scheduler.ready_to_start():

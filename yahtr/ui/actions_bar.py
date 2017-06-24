@@ -5,7 +5,7 @@ from kivy.properties import ObjectProperty
 from yahtr.ui.hex_widget import HexWidget
 
 from yahtr.game import game_instance
-from yahtr.actions import ActionType
+from yahtr.data.actions import ActionType
 from yahtr.core.hex_lib import Layout
 from yahtr.utils import Color
 

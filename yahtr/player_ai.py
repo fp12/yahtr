@@ -1,5 +1,5 @@
 from yahtr.player import Player
-from yahtr.actions import ActionType
+from yahtr.data.actions import ActionType
 from yahtr.utils.log import create_system_logger
 from yahtr.tie import TieType
 

@@ -6,8 +6,6 @@ from yahtr.ui.screens.credits import Credits
 from yahtr.ui.screens.game_screen import GameScreen
 from yahtr.ui.screens.editor import Editor
 
-from yahtr.game_data import game_data
-
 
 class YAHTRApp(App):
     def __init__(self, mode, **kwargs):
@@ -38,7 +36,6 @@ class YAHTRApp(App):
         self.screen_manager.switch_to(game_screen)
 
     def go_to_editor(self):
-        game_data.load_all()
         self.screen_manager.switch_to(Editor())
 
     def go_to_main_menu(self):

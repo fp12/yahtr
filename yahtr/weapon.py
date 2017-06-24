@@ -1,31 +1,4 @@
-from enum import Enum
-
-from yahtr.data_loader import local_load, local_load_single
 from yahtr.skill import RankedSkill
-from yahtr.utils import attr
-
-
-class Type(Enum):
-    sword = 1
-    daggers = 2
-    spear = 3
-    scythe = 4
-    grimoire = 5
-
-
-class WeaponTemplate:
-    """ Weapon as defined in data """
-
-    __attributes = ['name', 'description']
-
-    def __init__(self, file, data, get_skill):
-        self.id = file
-        attr.get_from_dict(self, data, *WeaponTemplate.__attributes)
-        self.wp_type = Type[data['type']]
-        self.skills = [get_skill(s) for s in data['skills']] if 'skills' in data else []
-
-    def __repr__(self):
-        return f'WpTp<{self.name}>'
 
 
 class Weapon:
@@ -56,19 +29,3 @@ class RankedWeapon:
 
     def __repr__(self):
         return f'RkWp<{self.weapon.template.name}:{self.rank.name}>'
-
-
-__path = 'data/templates/weapons/'
-__ext = '.json'
-
-
-def load_all_weapon_templates(get_skill):
-    raw_weapons = local_load(__path, __ext)
-    return [WeaponTemplate(file, data, get_skill) for file, data in raw_weapons.items()]
-
-
-def load_one_weapon_template(weapon_template_id, get_skill):
-    data = local_load_single(__path, weapon_template_id, __ext)
-    if data:
-        return WeaponTemplate(weapon_template_id, data, get_skill)
-    return None

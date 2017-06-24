@@ -1,53 +1,11 @@
-from enum import Enum
 from copy import copy
 
-from yahtr.data_loader import local_load, local_load_single, local_save_single
 from yahtr.core.hex_lib import Hex, get_hex_direction
 from yahtr.core import pathfinding
-from yahtr.wall import Wall, WallType
+from yahtr.wall import WallType
 from yahtr.utils.event import Event
 from yahtr.utils import attr
 from yahtr.tie import TieType
-from yahtr.board_creator import build_parallelogram, build_triangle, build_hexagon, build_rectangle
-
-
-class BoardType(Enum):
-    custom = 0
-    parallelogram = 1
-    triangle = 2
-    hexagon = 3
-    rectangle = 4
-
-
-class BoardTemplate:
-    """ Board as defined in data """
-
-    __attributes = ['info']
-    __creators = {
-            BoardType.parallelogram: build_parallelogram,
-            BoardType.triangle: build_triangle,
-            BoardType.hexagon: build_hexagon,
-            BoardType.rectangle: build_rectangle
-        }
-
-    def __init__(self, file, data):
-        self.id = file
-        attr.get_from_dict(self, data, *BoardTemplate.__attributes)
-        self.type = BoardType[data['type']]
-        self.holes = [Hex(*qr) for qr in data['holes']] if 'holes' in data else []
-        self.tiles = [Hex(*qr) for qr in data['adds']] if 'adds' in data else []
-        self.walls = [Wall(d) for d in data['walls']] if 'walls' in data else []
-
-        BoardTemplate.__creators[self.type](self.tiles, self.holes, **self.info)
-
-    def save(self):
-        return {
-            'type': self.type.name,
-            'info': self.info,
-            'holes': [[h.q, h.r] for h in self.holes],
-            'adds': [[h.q, h.r] for h in self.tiles],
-            'walls': [w.save() for w in self.walls],
-        }
 
 
 class Board:
@@ -175,23 +133,3 @@ class Board:
             return self.get_free_neighbours(unit, a)
 
         return pathfinding.Reachable(unit.hex_coords, unit.move, get_neighbours, get_cost).get()
-
-
-__path = 'data/boards/'
-__ext = '.json'
-
-
-def load_all_board_templates():
-    raw_data = local_load(__path, __ext)
-    return [BoardTemplate(file, data) for file, data in raw_data.items()]
-
-
-def load_one_board_template(board_id):
-    data = local_load_single(__path, board_id, __ext)
-    if data:
-        return BoardTemplate(board_id, data)
-    return None
-
-
-def save_one_board_template(board_template):
-    local_save_single(__path, board_template.id, __ext, board_template.save())

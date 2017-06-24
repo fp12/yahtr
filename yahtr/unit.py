@@ -1,33 +1,12 @@
 import copy
 
-from yahtr.data_loader import local_load, local_load_single
-from yahtr.core.hex_lib import Hex, index_of_direction
+from yahtr.core.hex_lib import index_of_direction
 from yahtr.utils import attr, clamp
 from yahtr.utils.event import Event
-from yahtr.actions import ActionType
+from yahtr.data.actions import ActionType
+from yahtr.data.skill_template import Target
 from yahtr.rank import Rank
-from yahtr.skill import RankedSkill, Target
 from yahtr.weapon import RankedWeapon
-
-
-class UnitTemplate:
-    """ Unit as defined in data """
-
-    __attributes = ['name', 'description', 'move', 'initiative', 'speed', 'shields', 'color', 'weapons', 'health']
-
-    def __init__(self, file, data, get_skill, get_actions_tree):
-        self.id = file
-        attr.get_from_dict(self, data, *UnitTemplate.__attributes)
-        self.actions_tree = get_actions_tree(data['actions_tree_name'])
-
-        self.skills = [RankedSkill(get_skill(n), Rank[rank]) for n, rank in data['skills'].items()] if 'skills' in data else []
-
-        self.shape = [Hex(0, 0)]
-        if 'shape' in data:
-            self.shape = []
-            shape_def = data['shape']
-            for index in range(0, len(shape_def), 2):
-                self.shape.append(Hex(q=shape_def[index], r=shape_def[index + 1]))
 
 
 class Unit:
@@ -129,19 +108,3 @@ class Unit:
                 if self.shields[shield_index] > 0:
                     return shield_index
         return -1
-
-
-__path = 'data/templates/units/'
-__ext = '.json'
-
-
-def load_all_unit_templates(get_skill, get_actions_tree):
-    raw_units = local_load(__path, __ext)
-    return [UnitTemplate(file, data, get_skill, get_actions_tree) for file, data in raw_units.items()]
-
-
-def load_one_unit_template(unit_template_id, get_skill, get_actions_tree):
-    data = local_load_single(__path, unit_template_id, __ext)
-    if data:
-        return UnitTemplate(unit_template_id, data, get_skill, get_actions_tree)
-    return None

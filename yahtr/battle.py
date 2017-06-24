@@ -3,10 +3,10 @@ from copy import copy
 
 from yahtr.tie import Tie, TieType
 from yahtr.board import Board
-from yahtr.game_data import game_data
-from yahtr.skill import Target
+from yahtr.data.bank import data_bank
+from yahtr.data.skill_template import Target
 from yahtr.time_bar import TimeBar
-from yahtr.actions import ActionType
+from yahtr.data.actions import ActionType
 from yahtr.utils.event import Event, UniqueEvent
 from yahtr.utils.log import create_game_logger
 from yahtr.localization.ids import L_LOG_BATTLE_STARTED, L_LOG_NEW_TURN, L_LOG_ACTION
@@ -27,7 +27,7 @@ class SkillContext:
 
 class Battle:
     def __init__(self, board_id, players):
-        self.board = Board(game_data.get_board_template(board_id), self)
+        self.board = Board(data_bank.get_board_template(board_id), self)
         self.time_bar = TimeBar()
         self.squads = {p: [] for p in players}
         self.ties = []

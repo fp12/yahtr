@@ -31,3 +31,21 @@ def local_save_single(folder, file_id, ext, data):
     with open(folder + file_id + ext, 'w') as f:
         if ext == '.json':
             json.dump(data, f, indent=4)
+
+
+class DataTemplate:
+    """
+    Abstract base class (most likely a contract)
+    for data template classes
+    """
+
+    __path: str = 'data/'  #: path to assets
+    __ext: str = '.json'  #: extension
+    __attributes = []  #: attributes to get
+
+    local_load = local_load
+    local_load_single = local_load_single
+    local_save_single = local_save_single
+
+    def __dir__(self):
+        return super().__dir__() + self.__attributes

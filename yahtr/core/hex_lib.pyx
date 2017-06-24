@@ -133,6 +133,20 @@ cdef class Hex:
         return Hex(q, r)
 
 
+cdef class HexDir:
+    cdef readonly Hex origin, destination
+    cdef readonly double angle
+    
+    def __cinit__(self, data):
+        q0, r0, q1, r1 = data
+        self.origin = Hex(q=q0, r=r0)
+        self.destination = Hex(q=q1, r=r1)
+        self.angle = self.origin.angle_to_neighbour(self.destination - self.origin)
+
+    def __repr__(self):
+        return f'From {self.origin} To {self.destination}'
+
+
 cdef class Point:
     cdef readonly double x, y
 

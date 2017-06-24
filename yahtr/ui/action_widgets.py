@@ -4,7 +4,7 @@ from kivy.uix.scatter import Scatter
 from yahtr.ui.base_widgets import AngledWidget, AngledColoredWidget
 
 from yahtr.utils import Color
-from yahtr.skill import Effect
+from yahtr.data.skill_template import Effect
 
 
 class ActionArrow(Scatter):

@@ -1,4 +1,4 @@
-from yahtr.data_loader import local_load, local_load_single
+from yahtr.data.core import DataTemplate
 from yahtr.utils.tree import Tree, Node
 from yahtr.localization.enum import LocalizedEnum
 
@@ -12,9 +12,12 @@ class ActionType(LocalizedEnum):
     undo_move = 5
 
 
-class ActionTree:
-    separator = '  '
-    comment_token = '#'
+class ActionsTree(DataTemplate):
+    __path = 'data/actions_trees/'
+    __ext = '.txt'
+
+    __separator = '  '
+    __comment_token = '#'
 
     def __init__(self, file, data):
         self.id = file
@@ -25,9 +28,9 @@ class ActionTree:
         current_tabs_count = -1
         cursor = [self.tree]
         for line in data:
-            if line.startswith(self.comment_token):
+            if line.startswith(self.__comment_token):
                 continue
-            tabs_count = line.count(self.separator)
+            tabs_count = line.count(self.__separator)
             action_type = ActionType[line.strip()]
             current_node = Node(action_type)
             if tabs_count > current_tabs_count:
@@ -43,18 +46,14 @@ class ActionTree:
             cursor.append(current_node)
             current_tabs_count = tabs_count
 
+    @staticmethod
+    def load_all():
+        raw_data = DataTemplate.local_load(ActionsTree.__path, ActionsTree.__ext)
+        return [ActionsTree(file, data) for file, data in raw_data.items()]
 
-__path = 'data/actions_trees/'
-__ext = '.txt'
-
-
-def load_all_actions_trees():
-    raw_data = local_load(__path, __ext)
-    return [ActionTree(file, data) for file, data in raw_data.items()]
-
-
-def load_one_actions_tree(actions_tree_id):
-    data = local_load_single(__path, actions_tree_id, __ext)
-    if data:
-        return ActionTree(actions_tree_id, data)
-    return None
+    @staticmethod
+    def load_one(actions_tree_id):
+        data = DataTemplate.local_load_single(ActionsTree.__path, actions_tree_id, ActionsTree.__ext)
+        if data:
+            return ActionsTree(actions_tree_id, data)
+        return None

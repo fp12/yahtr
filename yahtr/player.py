@@ -1,5 +1,5 @@
 from yahtr.weapon import Weapon
-from yahtr.game_data import game_data
+from yahtr.data.bank import data_bank
 
 
 class Player():
@@ -17,7 +17,7 @@ class Player():
         self.units.append(unit)
 
     def add_weapon(self, weapon_template):
-        w = Weapon(game_data.get_weapon_template(weapon_template))
+        w = Weapon(data_bank.get_weapon_template(weapon_template))
         self.weapons.append(w)
         return w
 

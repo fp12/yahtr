@@ -6,10 +6,10 @@ from kivy.animation import Animation
 from yahtr.core.hex_lib import hex_angle, index_of_direction
 
 from yahtr.game import game_instance
-from yahtr.skill import MoveType
+from yahtr.data.skill_template import MoveType
 from yahtr.utils import Color
 from yahtr.utils.event import Event
-from yahtr.actions import ActionType
+from yahtr.data.actions import ActionType
 
 from yahtr.ui.anim_scheduler import anim_scheduler
 from yahtr.ui.hex_widget import HexWidget
@@ -199,6 +199,7 @@ class Piece(HexWidget):
                 if abs(context.target_angle - self.angle) > 180:
                     self.angle -= 360
                 anim &= Animation(angle=context.target_angle, duration=0.2)
+
         elif context.move_info.move_type == MoveType.blink:
             anim = Animation(a=0, duration=0.1)
             if pos:
@@ -208,8 +209,10 @@ class Piece(HexWidget):
                     self.angle -= 360
                 anim += Animation(angle=context.target_angle, duration=0)
             anim += Animation(a=1, duration=0.2)
+
         elif context.move_info.move_type == MoveType.pushed:
             anim = Animation(pos=pos, duration=0.3, t='out_back')
+
         elif context.move_info.move_type == MoveType.jump_over_tile:
             duration = 1
             target_pos_x = self.x - (pos[0] - self.x) / 15

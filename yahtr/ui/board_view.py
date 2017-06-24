@@ -11,7 +11,7 @@ from yahtr.ui.wall_widget import WallWidget
 
 from yahtr.core.hex_lib import Layout
 from yahtr.game import game_instance
-from yahtr.actions import ActionType
+from yahtr.data.actions import ActionType
 from yahtr.utils import Color
 from yahtr.utils.log import create_ui_logger
 from yahtr.utils.event import Event
