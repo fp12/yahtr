@@ -57,7 +57,7 @@ class ActionBuilder(AngledWidget):
                     pos = self.pos
 
                 move_color = self.default_unit_move_color  # changed with checks
-                move_indic = ActionUnitMove(angle=hun.U.orientation.angle,
+                move_indic = ActionUnitMove(angle=hun.U.orientation.angle if hun.U.orientation else 0,
                                             pos=pos,
                                             color=move_color,
                                             size=(self.hex_layout.size.x / 2, self.hex_layout.size.y / 2))

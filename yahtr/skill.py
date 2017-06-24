@@ -33,7 +33,8 @@ class MoveType(Enum):
     none = 0
     blink = 1
     pushed = 2
-    jump = 3
+    jump_over_tile = 3
+    jump_over_ally = 4
 
 
 class Target(Enum):

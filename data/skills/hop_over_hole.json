@@ -7,7 +7,8 @@
 			"U":
 			{
 				"move": [0, 0, 0, 2],
-				"type": "jump",
+				"orientation" : [0, 0, 0, 1],
+				"type": "jump_over_tile",
 				"check": ["goal_free", "trajectory_hole"],
 				"order": 0
 			}

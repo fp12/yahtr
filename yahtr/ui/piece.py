@@ -122,6 +122,12 @@ class Piece(HexWidget):
 #    ######  ##     ## #### ######## ######## ########   ######
 #   ############################################################
 
+    def get_shield_thickness(self):
+        return self.radius / 7
+
+    def get_shield_radius(self, order):
+        return self.radius - self.get_shield_thickness() * order
+
     def update_shields(self):
         def del_part(anim, widget):
             self.remove_widget(widget)
@@ -143,7 +149,8 @@ class Piece(HexWidget):
                         w = ShieldWidget(q=shape_coord.q, r=shape_coord.r,
                                          layout=self.hex_layout,
                                          color=[col, col, col, 1],
-                                         radius=self.radius - (2 + 4) * i, thickness=8 - i * 2,
+                                         thickness=self.get_shield_thickness(),
+                                         radius=self.get_shield_radius(i),
                                          angle=hex_angle(shield_index))
                         self.add_widget(w)
                         self.shields[linear_index].update({w: (w.pos[0] - self.pos[0], w.pos[1] - self.pos[1], i)})
@@ -173,6 +180,7 @@ class Piece(HexWidget):
             self.do_rotate()
 
     def prepare_move(self):
+        self.contour.hide()
         self.clean_skill()
         self.clean_reachable_tiles()
         self.change_status(Status.moving)
@@ -202,6 +210,23 @@ class Piece(HexWidget):
             anim += Animation(a=1, duration=0.2)
         elif context.move_info.move_type == MoveType.pushed:
             anim = Animation(pos=pos, duration=0.3, t='out_back')
+        elif context.move_info.move_type == MoveType.jump_over_tile:
+            duration = 1
+            target_pos_x = self.x - (pos[0] - self.x) / 15
+            target_pos_y = self.y - (pos[1] - self.y) / 15
+
+            prep_anim = Animation(radius=self.radius * .85, duration=duration / 3)
+            prep_anim &= Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3)
+
+            target_pos_x = pos[0] + (pos[0] - self.x) / 25
+            target_pos_y = pos[1] + (pos[1] - self.y) / 25
+            jump_anim = Animation(radius=self.radius * 1.2, duration=duration / 3, t='out_back')
+            jump_anim &= Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3)
+
+            land_anim = Animation(radius=self.radius, duration=duration / 3, t='out_bounce')
+            land_anim &= Animation(pos=pos, duration=duration / 3)
+
+            anim = prep_anim + jump_anim + land_anim
 
         anim_scheduler.add(anim, self, context.move_info.order, lambda *args: self.on_finished_moving(context.end_coords, context.end_orientation))
 
@@ -239,6 +264,7 @@ class Piece(HexWidget):
     def on_finished_moving(self, end_pos, orientation):
         self.change_status(Status.idle)
         self.hex_coords = end_pos
+        self.contour.show()
         self.unit.move_to(hex_coords=self.hex_coords, orientation=orientation)
 
     @check_root_window
@@ -250,6 +276,16 @@ class Piece(HexWidget):
         for shield_data in self.shields:
             for shield_part, (dx, dy, __) in shield_data.items():
                 shield_part.pos = (self.pos[0] + dx, self.pos[1] + dy)
+
+    @check_root_window
+    def on_radius(self, *args):
+        for shape_part, offset in self.shape_parts.items():
+            shape_part.radius = self.radius
+
+        for shield_data in self.shields:
+            for shield_part, (dx, dy, i) in shield_data.items():
+                shield_part.thickness = self.get_shield_thickness()
+                shield_part.radius = self.get_shield_radius(i)
 
     @check_root_window
     def on_color_change(self, r, g, b, a):

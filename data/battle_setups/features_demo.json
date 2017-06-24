@@ -9,10 +9,10 @@
 			"squad": 
 			[
 				{
-					"template": "chess_demo/king",
+					"template": "test",
 					"position": [-1, -7],
 					"orientation": [0, 1],
-					"weapons": ["chess_demo/king_sword"]
+					"weapons": ["default_spear"]
 				}
 			]
 		},
