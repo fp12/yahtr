@@ -38,7 +38,7 @@ class Editor(Screen):
         data_bank.unload_all()
 
     def refresh_rv(self):
-        self.rv.data = [{'value': data.id} for data in getattr(data_bank, self.tab_data.name)]
+        self.rv.data = [{'value': data.file_id} for data in getattr(data_bank, self.tab_data.name)]
         self.rv_layout.clear_selection()
 
     def on_tab_change(self, widget):

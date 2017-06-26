@@ -13,12 +13,12 @@ class UnitTemplate(DataTemplate):
 
     __attributes = ['name', 'description', 'move', 'initiative', 'speed', 'shields', 'color', 'weapons', 'health']
 
-    def __init__(self, file, data, get_skill, get_actions_tree):
-        self.id = file
+    def __init__(self, file_id, data, get_skill, get_actions_tree, **kwargs):
+        super(UnitTemplate, self).__init__(file_id, **kwargs)
         attr.get_from_dict(self, data, *UnitTemplate.__attributes)
-        self.actions_tree = get_actions_tree(data['actions_tree_name'])
+        self.actions_tree = get_actions_tree(data['actions_tree_name'], parent=self)
 
-        self.skills = [RankedSkill(get_skill(n), Rank[rank]) for n, rank in data['skills'].items()] if 'skills' in data else []
+        self.skills = [RankedSkill(get_skill(n, parent=self), Rank[rank]) for n, rank in data['skills'].items()] if 'skills' in data else []
 
         self.shape = [Hex(0, 0)]
         if 'shape' in data:
@@ -28,13 +28,13 @@ class UnitTemplate(DataTemplate):
                 self.shape.append(Hex(q=shape_def[index], r=shape_def[index + 1]))
 
     @staticmethod
-    def load_all(get_skill, get_actions_tree):
+    def load_all(get_skill, get_actions_tree, **kwargs):
         raw_units = DataTemplate.local_load(UnitTemplate.__path, UnitTemplate.__ext)
-        return [UnitTemplate(file, data, get_skill, get_actions_tree) for file, data in raw_units.items()]
+        return [UnitTemplate(file, data, get_skill, get_actions_tree, **kwargs) for file, data in raw_units.items()]
 
     @staticmethod
-    def load_one(unit_template_id, get_skill, get_actions_tree):
+    def load_one(unit_template_id, get_skill, get_actions_tree, **kwargs):
         data = DataTemplate.local_load_single(UnitTemplate.__path, unit_template_id, UnitTemplate.__ext)
         if data:
-            return UnitTemplate(unit_template_id, data, get_skill, get_actions_tree)
+            return UnitTemplate(unit_template_id, data, get_skill, get_actions_tree, **kwargs)
         return None

@@ -29,8 +29,8 @@ class BoardTemplate(DataTemplate):
             BoardType.rectangle: build_rectangle
         }
 
-    def __init__(self, file, data):
-        self.id = file
+    def __init__(self, file_id, data, **kwargs):
+        super(BoardTemplate, self).__init__(file_id, **kwargs)
         attr.get_from_dict(self, data, *BoardTemplate.__attributes)
         self.type = BoardType[data['type']]
         self.holes = [Hex(*qr) for qr in data['holes']] if 'holes' in data else []
@@ -50,17 +50,17 @@ class BoardTemplate(DataTemplate):
         }
 
     @staticmethod
-    def load_all():
+    def load_all(**kwargs):
         raw_data = DataTemplate.local_load(BoardTemplate.__path, BoardTemplate.__ext)
-        return [BoardTemplate(file, data) for file, data in raw_data.items()]
+        return [BoardTemplate(file, data, **kwargs) for file, data in raw_data.items()]
 
     @staticmethod
-    def load_one(board_id):
+    def load_one(board_id, **kwargs):
         data = DataTemplate.local_load_single(BoardTemplate.__path, board_id, BoardTemplate.__ext)
         if data:
-            return BoardTemplate(board_id, data)
+            return BoardTemplate(board_id, data, **kwargs)
         return None
 
     @staticmethod
     def save_one(board_template):
-        DataTemplate.local_save_single(BoardTemplate.__path, board_template.id, BoardTemplate.__ext, board_template.save())
+        DataTemplate.local_save_single(BoardTemplate.__path, board_template.file_id, BoardTemplate.__ext, board_template.save())

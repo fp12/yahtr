@@ -69,6 +69,9 @@ class Hit:
                          Effect.hit_shield_only,
                          Effect.hit_wall_only] for e in self.effects)
 
+    def __repr__(self):
+        return f'{" ".join([e.name for e in self.effects])}'
+
 
 class UnitMove:
     def __init__(self, data):
@@ -111,8 +114,8 @@ class SkillTemplate(DataTemplate):
 
     __attributes = ['name', 'description']
 
-    def __init__(self, file, data):
-        self.id = file
+    def __init__(self, file_id, data, **kwargs):
+        super(SkillTemplate, self).__init__(file_id, **kwargs)
         attr.get_from_dict(self, data, *SkillTemplate.__attributes)
         self.huns = [HUN(hun) for hun in data['HUN']] if 'HUN' in data else []
 
@@ -120,13 +123,13 @@ class SkillTemplate(DataTemplate):
         return 'Sk<{0}>\n\t{1}'.format(self.name, '\n\t'.join(map(repr, self.huns)))
 
     @staticmethod
-    def load_all():
+    def load_all(**kwargs):
         raw_skills = DataTemplate.local_load(SkillTemplate.__path, SkillTemplate.__ext)
-        return [SkillTemplate(file, data) for file, data in raw_skills.items()]
+        return [SkillTemplate(file, data, **kwargs) for file, data in raw_skills.items()]
 
     @staticmethod
-    def load_one(skill_id):
+    def load_one(skill_id, **kwargs):
         data = DataTemplate.local_load_single(SkillTemplate.__path, skill_id, SkillTemplate.__ext)
         if data:
-            return SkillTemplate(skill_id, data)
+            return SkillTemplate(skill_id, data, **kwargs)
         return None

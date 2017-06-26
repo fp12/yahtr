@@ -19,8 +19,8 @@ class ActionsTree(DataTemplate):
     __separator = '  '
     __comment_token = '#'
 
-    def __init__(self, file, data):
-        self.id = file
+    def __init__(self, file_id, data, **kwargs):
+        super(ActionsTree, self).__init__(file_id, **kwargs)
         self.tree = Tree()
         self.__load_tree(data)
 
@@ -47,13 +47,13 @@ class ActionsTree(DataTemplate):
             current_tabs_count = tabs_count
 
     @staticmethod
-    def load_all():
+    def load_all(**kwargs):
         raw_data = DataTemplate.local_load(ActionsTree.__path, ActionsTree.__ext)
-        return [ActionsTree(file, data) for file, data in raw_data.items()]
+        return [ActionsTree(file, data, **kwargs) for file, data in raw_data.items()]
 
     @staticmethod
-    def load_one(actions_tree_id):
+    def load_one(actions_tree_id, **kwargs):
         data = DataTemplate.local_load_single(ActionsTree.__path, actions_tree_id, ActionsTree.__ext)
         if data:
-            return ActionsTree(actions_tree_id, data)
+            return ActionsTree(actions_tree_id, data, **kwargs)
         return None

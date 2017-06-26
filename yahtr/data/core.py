@@ -47,5 +47,13 @@ class DataTemplate:
     local_load_single = local_load_single
     local_save_single = local_save_single
 
+    def __init__(self, file_id, **kwargs):
+        self.file_id = file_id
+        parent = kwargs.get('parent')
+        self.parents = [parent] if parent else []
+
+    def add_dependency(self, obj):
+        self.parents.append(obj)
+
     def __dir__(self):
         return super().__dir__() + self.__attributes
