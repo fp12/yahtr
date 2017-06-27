@@ -93,7 +93,10 @@ class Piece(HexWidget):
 
         # register to events
         self.unit.on_health_change += self.on_unit_health_change
+        self.unit.on_unit_targeted += self.on_unit_targeted
         self.unit.on_shield_change += self.update_shields
+        self.unit.on_shield_targeted += self.on_shield_targeted
+        self.unit.on_targeted_end += self.on_targeted_end
         self.unit.on_sim_move += self.on_unit_sim_move
         self.unit.on_skill_move += self.on_unit_skill_move
 
@@ -128,6 +131,11 @@ class Piece(HexWidget):
     def get_shield_radius(self, order):
         return self.radius - self.get_shield_thickness() * order
 
+    @staticmethod
+    def get_shield_color(index):
+        col = .6 - index * (0.6 / 3.)
+        return [col, col, col, 1]
+
     def update_shields(self):
         def del_part(anim, widget):
             self.remove_widget(widget)
@@ -144,11 +152,10 @@ class Piece(HexWidget):
                 diff = shield_value - old_size
                 if diff > 0:
                     for i in range(old_size, diff):
-                        col = .6 - i * (0.6 / 3.)
                         shape_coord = self.hex_coords + shape_part
                         w = ShieldWidget(q=shape_coord.q, r=shape_coord.r,
                                          layout=self.hex_layout,
-                                         color=[col, col, col, 1],
+                                         color=self.get_shield_color(i),
                                          thickness=self.get_shield_thickness(),
                                          radius=self.get_shield_radius(i),
                                          angle=hex_angle(shield_index))
@@ -159,8 +166,22 @@ class Piece(HexWidget):
                         if shield_value <= order < old_size:
                             shield_part.color = c_hit
                             anim = Animation(thickness=shield_part.thickness * 2, a=0, duration=0.5, t='in_out_circ')
-
                             anim_scheduler.add(anim, shield_part, 0, del_part)
+
+    def on_shield_targeted(self, shield_index):
+        shield_part = max(self.shields[shield_index], key=lambda k: self.shields[shield_index][k][2])
+        duration = 3
+        anim = Animation(**c_hit.rgb_dict, duration=duration / 3)
+        anim += Animation(r=shield_part.r, g=shield_part.g, b=shield_part.b, duration=duration * 2 / 3)
+        anim.repeat = True
+        anim.start(shield_part)
+
+    def _on_targeted_end_shields(self):
+        for shield_data in self.shields:
+            if shield_data:
+                shield_part = max(shield_data, key=lambda k: shield_data[k][2])
+                Animation.cancel_all(shield_part)
+                shield_part.color = self.get_shield_color(shield_data[shield_part][2])
 
 #   ##     ##  #######  ##     ## ########
 #   ###   ### ##     ## ##     ## ##
@@ -215,10 +236,10 @@ class Piece(HexWidget):
 
         elif context.move_info.move_type == MoveType.jump_over_tile:
             duration = 1
-            target_pos_x = self.x - (pos[0] - self.x) / 15
-            target_pos_y = self.y - (pos[1] - self.y) / 15
+            target_pos_x = self.x - (pos[0] - self.x) / 30
+            target_pos_y = self.y - (pos[1] - self.y) / 30
 
-            prep_anim = Animation(radius=self.radius * .85, duration=duration / 3)
+            prep_anim = Animation(radius=self.radius * .95, duration=duration / 3)
             prep_anim &= Animation(pos=(target_pos_x, target_pos_y), duration=duration / 3)
 
             target_pos_x = pos[0] + (pos[0] - self.x) / 25
@@ -316,6 +337,19 @@ class Piece(HexWidget):
                 anim = Animation(a=0, duration=duration)
                 anim_scheduler.add(anim, self, 99)
                 break
+
+    def on_unit_targeted(self):
+        self.on_targeted_end()
+        duration = 3
+        anim = Animation(**c_hit.rgb_dict, duration=duration / 3)
+        anim += Animation(r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
+        anim.repeat = True
+        anim.start(self)
+
+    def on_targeted_end(self):
+        Animation.cancel_all(self)
+        self.color = self.unit.color
+        self._on_targeted_end_shields()
 
     def hex_test(self, hex_coords):
         return self.unit.hex_test(hex_coords)

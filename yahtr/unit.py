@@ -30,7 +30,10 @@ class Unit:
 
         # events
         self.on_health_change = Event('health', 'context')
+        self.on_unit_targeted = Event()
         self.on_shield_change = Event()
+        self.on_shield_targeted = Event('shield_index')
+        self.on_targeted_end = Event()
         self.on_sim_move = Event('trajectory', 'orientation')
         self.on_skill_move = Event('context', 'unit')
 
@@ -93,11 +96,20 @@ class Unit:
         self.health = clamp(0, self.health + health, self.template.health)
         if self.health <= 0:
             context.targets_killed.append((self, Target.unit))
-        self.on_health_change(health, context),
+        self.on_health_change(health, context)
+
+    def unit_targeted(self, health, context):
+        self.on_unit_targeted()
 
     def shield_change(self, shield_index, context):
         self.shields[shield_index] -= 1
         self.on_shield_change()
+
+    def shield_targeted(self, shield_index, context):
+        self.on_shield_targeted(shield_index)
+
+    def end_targeting(self):
+        self.on_targeted_end()
 
     def get_shield(self, origin, destination):
         for shape_part_index, shape_part in enumerate(self.current_shape):

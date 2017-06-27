@@ -33,6 +33,7 @@ class Battle:
         self.ties = []
         self.actions_history = []  # (unit, [ actions ])
         self.thread_event = ()  # (threading.Event, callback)
+        self.targets = []  # list of targeted units, walls...
 
         # events
         self.on_new_turn = Event('unit')
@@ -117,35 +118,36 @@ class Battle:
 
         self.thread_event[0].set()
 
+    @staticmethod
+    def get_move_context(context: SkillContext, unit, move_info):
+        epsilon = 0.000001
+        context.move_info = move_info
+        context.end_coords = copy(unit.hex_coords)
+        if move_info.move:
+            move_direction = move_info.move.destination - move_info.move.origin
+            coords_offset = move_direction.rotate_to(context.base_unit_orientation)
+            context.end_coords += coords_offset
+
+        context.end_orientation = copy(context.base_unit_orientation)
+        context.target_angle = 0
+        if move_info.orientation:
+            context.end_orientation = copy(move_info.orientation.destination).rotate_to(context.base_unit_orientation)
+            base_angle = context.base_unit_coords.angle_to_neighbour(context.base_unit_orientation)
+            context.target_angle = base_angle + move_info.orientation.angle
+            if move_info.orientation.angle == -180 and context.previous_target_angle:
+                if context.target_angle > context.previous_target_angle:
+                    context.previous_target_angle = context.target_angle
+                    context.target_angle -= epsilon
+                else:
+                    context.previous_target_angle = context.target_angle
+                    context.target_angle += epsilon
+            else:
+                context.previous_target_angle = context.target_angle
+
     def resolve_skill(self, unit, context):
         """ Note: NOT executed on main thread """
         rk_skill = context.get('rk_skill')
         assert rk_skill
-
-        def get_move_context(context, unit, move_info):
-            epsilon = 0.000001
-            context.move_info = move_info
-            context.end_coords = copy(unit.hex_coords)
-            if move_info.move:
-                move_direction = move_info.move.destination - move_info.move.origin
-                coords_offset = move_direction.rotate_to(context.base_unit_orientation)
-                context.end_coords += coords_offset
-
-            context.end_orientation = copy(context.base_unit_orientation)
-            context.target_angle = 0
-            if move_info.orientation:
-                context.end_orientation = copy(move_info.orientation.destination).rotate_to(context.base_unit_orientation)
-                base_angle = context.base_unit_coords.angle_to_neighbour(context.base_unit_orientation)
-                context.target_angle = base_angle + move_info.orientation.angle
-                if move_info.orientation.angle == -180 and context.previous_target_angle:
-                    if context.target_angle > context.previous_target_angle:
-                        context.previous_target_angle = context.target_angle
-                        context.target_angle -= epsilon
-                    else:
-                        context.previous_target_angle = context.target_angle
-                        context.target_angle += epsilon
-                else:
-                    context.previous_target_angle = context.target_angle
 
         ctx = SkillContext(unit)
 
@@ -182,7 +184,7 @@ class Battle:
                 hitted_unit.health_change(hit_value * (-1 if hit.is_damage else 1), ctx)
 
             if hun.U:
-                get_move_context(ctx, unit, hun.U)
+                self.get_move_context(ctx, unit, hun.U)
                 unit.skill_move(ctx)
 
             for move_info in hun.N:
@@ -190,7 +192,7 @@ class Battle:
                 move_origin = ctx.base_unit_coords + move_origin_offset
                 moved_unit = self.board.get_unit_on(move_origin)
                 if moved_unit:
-                    get_move_context(ctx, moved_unit, move_info)
+                    self.get_move_context(ctx, moved_unit, move_info)
                     moved_unit.skill_move(ctx)
 
             ui_thread_event = self.on_action()
@@ -206,11 +208,66 @@ class Battle:
 
         self.thread_event[0].set()
 
+    def pre_resolve_skill(self, action_type, rk_skill):
+        unit, history = self.actions_history[-1]
+
+        ctx = SkillContext(unit)
+
+        for hun in rk_skill.skill.huns:
+            for hit in hun.H:
+                hit_value = rk_skill.hit_value(hit)
+                if hit_value == 0:
+                    continue
+
+                base_direction = hit.direction.destination - hit.direction.origin
+                ctx.direction = base_direction.rotate_to(ctx.base_unit_orientation)
+                hitted_tile = ctx.base_unit_coords + copy(hit.direction.destination).rotate_to(ctx.base_unit_orientation)
+                origin_tile = hitted_tile - ctx.direction
+                if hit.valid_on_target(Target.wall):
+                    hitted_wall = self.board.get_wall_between(hitted_tile, origin_tile)
+                    if hitted_wall:
+                        ctx.targets.append((hitted_wall, Target.wall))
+                        # TODO: WALL HIT
+                        continue
+
+                hitted_unit = self.board.get_unit_on(hitted_tile)
+                if not hitted_unit:
+                    continue
+
+                ctx.hit = hit
+                if hit.is_damage and hit.valid_on_target(Target.shield):
+                    shield_index = hitted_unit.get_shield(origin_tile, hitted_tile)
+                    if shield_index != -1:
+                        ctx.targets.append((hitted_unit, Target.shield))
+                        hitted_unit.shield_targeted(shield_index, ctx)
+                        self.targets.append(hitted_unit)
+                        continue
+
+                ctx.targets.append((hitted_unit, Target.unit))
+                hitted_unit.unit_targeted(hit_value * (-1 if hit.is_damage else 1), ctx)
+                self.targets.append(hitted_unit)
+
+            if hun.U:
+                self.get_move_context(ctx, unit, hun.U)
+                # TODO: UNIT MOVE
+
+            for move_info in hun.N:
+                move_origin_offset = copy(move_info.move.origin).rotate_to(ctx.base_unit_orientation)
+                move_origin = ctx.base_unit_coords + move_origin_offset
+                moved_unit = self.board.get_unit_on(move_origin)
+                if moved_unit:
+                    self.get_move_context(ctx, moved_unit, move_info)
+                    # TODO: NMI MOVE
+
     def notify_action_change(self, action_type, rk_skill):
+        self.clean_targets()
+
         unit, __ = self.actions_history[-1]
         self.on_select_action(unit, action_type, rk_skill)
 
     def notify_action_end(self, action_type, **kwargs):
+        self.clean_targets()
+
         unit, history = self.actions_history[-1]
         history.append(action_type)
         logger.info(L_LOG_ACTION.format(action_type.name, kwargs or ''))
@@ -233,8 +290,24 @@ class Battle:
 
         assert not self.thread_event, f'{self.thread_event}'
         self.thread_event = (threading.Event(), lambda: self._end_action_end(unit, history))
-        action_thread = threading.Thread(target=action_resolution_function, args=(unit, kwargs))
-        action_thread.start()
+        thread = threading.Thread(target=action_resolution_function, args=(unit, kwargs))
+        thread.start()
+
+    def notify_action_validation(self, action_type, rk_skill):
+        self.clean_targets()
+
+        # ActionType.move is validated by pathfinding
+        # ActionType.rotate and undo_move don't need validation
+        if action_type not in [ActionType.weapon, ActionType.skill]:
+            return
+
+        self.pre_resolve_skill(action_type, rk_skill)
+
+    def clean_targets(self):
+        if self.targets:
+            for t in self.targets:
+                t.end_targeting()
+            self.targets = []
 
     def set_tie(self, p1, p2, tie_type):
         for t in self.ties:

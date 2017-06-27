@@ -231,9 +231,10 @@ class BoardView(ScatterLayout):
                             piece_selected.do_rotate()
                 elif self.current_action in [ActionType.rotate, ActionType.weapon, ActionType.skill] and piece_selected.hex_coords != hover_hex:
                     orientation = piece_selected.hex_coords.direction_to_distant(hover_hex)
-                    if game_instance.battle.board.unit_can_fit(piece_selected.unit, piece_selected.unit.hex_coords, orientation):
+                    if orientation != piece_selected.unit.orientation and game_instance.battle.board.unit_can_fit(piece_selected.unit, piece_selected.unit.hex_coords, orientation):
                         piece_selected.unit.move_to(orientation=orientation)
                         piece_selected.do_rotate()
+                        game_instance.battle.notify_action_validation(self.current_action, piece_selected.current_skill)
 
             # finally move the selector
             self.selector.move_to(hover_hex, tile_pos=tile.pos)
