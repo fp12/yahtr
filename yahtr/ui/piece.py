@@ -11,7 +11,7 @@ from yahtr.utils import Color
 from yahtr.utils.event import Event
 from yahtr.data.actions import ActionType
 
-from yahtr.ui.anim_scheduler import anim_scheduler
+from yahtr.ui.utils.anim_scheduler import anim_scheduler
 from yahtr.ui.hex_widget import HexWidget
 from yahtr.ui.tile import Tile
 from yahtr.ui.action_widgets import ActionBuilder

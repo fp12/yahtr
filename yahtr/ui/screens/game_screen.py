@@ -9,7 +9,7 @@ from yahtr.ui.board_view import BoardView
 from yahtr.ui.timed_widget import TimedWidgetBar
 from yahtr.ui.actions_bar import ActionsBar
 from yahtr.ui.game_console import GameConsole
-from yahtr.ui.anim_scheduler import anim_scheduler
+from yahtr.ui.utils.anim_scheduler import anim_scheduler
 
 from yahtr.game import game_instance
 from yahtr.data.bank import data_bank
