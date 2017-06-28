@@ -11,5 +11,8 @@ class WallWidget(AngledColoredWidget):
     def __init__(self, wall, **kwargs):
         self.origin = wall.origin
         self.destination = wall.destination
-        color = self.color_breakable if WallType.breakable in wall.types else self.color_solid
-        super(WallWidget, self).__init__(color=color, **kwargs)
+        self.types = wall.types
+        super(WallWidget, self).__init__(color=self.get_default_color(), **kwargs)
+
+    def get_default_color(self):
+        return self.color_breakable if WallType.breakable in self.types else self.color_solid

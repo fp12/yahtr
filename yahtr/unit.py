@@ -108,8 +108,8 @@ class Unit:
     def shield_targeted(self, shield_index, context):
         self.on_shield_targeted(shield_index)
 
-    def end_targeting(self):
-        self.on_targeted_end()
+    def end_targeting(self, shield_index=None):
+        self.on_targeted_end(shield_index)
 
     def get_shield(self, origin, destination):
         for shape_part_index, shape_part in enumerate(self.current_shape):

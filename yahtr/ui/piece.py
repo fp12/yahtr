@@ -176,12 +176,10 @@ class Piece(HexWidget):
         anim.repeat = True
         anim.start(shield_part)
 
-    def _on_targeted_end_shields(self):
-        for shield_data in self.shields:
-            if shield_data:
-                shield_part = max(shield_data, key=lambda k: shield_data[k][2])
-                Animation.cancel_all(shield_part)
-                shield_part.color = self.get_shield_color(shield_data[shield_part][2])
+    def _on_targeted_end_shields(self, shield_index):
+        shield_part = max(self.shields[shield_index], key=lambda k: self.shields[shield_index][k][2])
+        Animation.cancel_all(shield_part)
+        shield_part.color = self.get_shield_color(self.shields[shield_index][shield_part][2])
 
 #   ##     ##  #######  ##     ## ########
 #   ###   ### ##     ## ##     ## ##
@@ -339,17 +337,18 @@ class Piece(HexWidget):
                 break
 
     def on_unit_targeted(self):
-        self.on_targeted_end()
         duration = 3
         anim = Animation(**c_hit.rgb_dict, duration=duration / 3)
         anim += Animation(r=self.r, g=self.g, b=self.b, duration=duration * 2 / 3)
         anim.repeat = True
         anim.start(self)
 
-    def on_targeted_end(self):
-        Animation.cancel_all(self)
-        self.color = self.unit.color
-        self._on_targeted_end_shields()
+    def on_targeted_end(self, shield_index=None):
+        if shield_index is not None:
+            self._on_targeted_end_shields(shield_index)
+        else:
+            Animation.cancel_all(self)
+            self.color = self.unit.color
 
     def hex_test(self, hex_coords):
         return self.unit.hex_test(hex_coords)

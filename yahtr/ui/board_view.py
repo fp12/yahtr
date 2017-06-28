@@ -55,6 +55,7 @@ class BoardView(ScatterLayout):
             self.walls.append(wall)
 
         game_instance.battle.board.on_wall_hit += self.on_wall_hit
+        game_instance.battle.board.on_wall_targeted += self.on_wall_targeted
         game_instance.battle.board.on_unit_removed += self.on_unit_removed
 
         self.add_widget(self.selector)
@@ -192,6 +193,20 @@ class BoardView(ScatterLayout):
                 if destroyed:
                     self.remove_widget(w)
                     self.walls.remove(w)
+                return
+
+    def on_wall_targeted(self, wall, targeted):
+        for w in self.walls:
+            if w.origin == wall.origin and w.destination == wall.destination or w.origin == wall.destination and w.destination == wall.origin:
+                if targeted:
+                    duration = 3
+                    anim = Animation(**Color.firebrick.rgb_dict, duration=duration / 3)
+                    anim += Animation(r=w.r, g=w.g, b=w.b, duration=duration * 2 / 3)
+                    anim.repeat = True
+                    anim.start(w)
+                else:
+                    Animation.cancel_all(w)
+                    w.color = w.get_default_color()
                 return
 
     def on_mouse_pos(self, *args):

@@ -24,6 +24,7 @@ class Board:
         self.units = []  # ref
 
         self.on_wall_hit = Event('origin', 'destination', 'destroyed')
+        self.on_wall_targeted = Event('wall', 'targeted')
         self.on_unit_removed = Event('unit')
 
     def register_units(self, units: list):
@@ -42,6 +43,12 @@ class Board:
             self.walls.remove(wall)
         else:
             self.on_wall_hit(wall.origin, wall.destination, destroyed=False)
+
+    def wall_targeted(self, wall):
+        self.on_wall_targeted(wall, True)
+
+    def end_targeting(self, wall):
+        self.on_wall_targeted(wall, False)
 
     def get_unit_on(self, hex_coords, include_shape=True):
         for u in self.units:

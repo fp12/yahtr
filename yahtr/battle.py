@@ -33,7 +33,7 @@ class Battle:
         self.ties = []
         self.actions_history = []  # (unit, [ actions ])
         self.thread_event = ()  # (threading.Event, callback)
-        self.targets = []  # list of targeted units, walls...
+        self.targets = []  # list of (target, {args})
 
         # events
         self.on_new_turn = Event('unit')
@@ -227,7 +227,8 @@ class Battle:
                     hitted_wall = self.board.get_wall_between(hitted_tile, origin_tile)
                     if hitted_wall:
                         ctx.targets.append((hitted_wall, Target.wall))
-                        # TODO: WALL HIT
+                        self.board.wall_targeted(hitted_wall)
+                        self.targets.append((self.board, {'wall': hitted_wall}))
                         continue
 
                 hitted_unit = self.board.get_unit_on(hitted_tile)
@@ -240,12 +241,12 @@ class Battle:
                     if shield_index != -1:
                         ctx.targets.append((hitted_unit, Target.shield))
                         hitted_unit.shield_targeted(shield_index, ctx)
-                        self.targets.append(hitted_unit)
+                        self.targets.append((hitted_unit, {'shield_index': shield_index}))
                         continue
 
                 ctx.targets.append((hitted_unit, Target.unit))
                 hitted_unit.unit_targeted(hit_value * (-1 if hit.is_damage else 1), ctx)
-                self.targets.append(hitted_unit)
+                self.targets.append((hitted_unit, {}))
 
             if hun.U:
                 self.get_move_context(ctx, unit, hun.U)
@@ -305,8 +306,8 @@ class Battle:
 
     def clean_targets(self):
         if self.targets:
-            for t in self.targets:
-                t.end_targeting()
+            for t, args in self.targets:
+                t.end_targeting(**args)
             self.targets = []
 
     def set_tie(self, p1, p2, tie_type):
