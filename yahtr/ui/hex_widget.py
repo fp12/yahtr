@@ -28,4 +28,4 @@ class HexWidget(ColoredWidget):
 
     def move_to(self, hex_coords, tile_pos=None, trajectory=None):
         self.hex_coords = hex_coords
-        self.pos = tile_pos or self.hex_layout.hex_to_pixel(self.hex_coords)
+        self.pos = tile_pos or self.hex_layout.hex_to_pixel(self.hex_coords).tup

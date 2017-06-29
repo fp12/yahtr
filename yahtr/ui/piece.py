@@ -19,6 +19,7 @@ from yahtr.ui.shield_widget import ShieldWidget
 from yahtr.ui.contour import Contour
 from yahtr.ui.base_widgets import AngledColoredWidget
 from yahtr.ui.utils import check_root_window
+from yahtr.ui.utils.reachable_pool import reachable_pool, ReachableType
 
 
 c_hit = Color.firebrick
@@ -374,28 +375,15 @@ class Piece(HexWidget):
         self.parent.add_widget(self.skill_widget)
 
     def display_reachable_tiles(self):
-        if not self.reachable_tiles:
-            reachable_hexes = game_instance.battle.board.get_reachable(self.unit)
-            for h in reachable_hexes:
-                tile = Tile(q=h.q, r=h.r,
-                            layout=self.hex_layout,
-                            color=c_reachable_selected if self.selected else c_reachable_not_selected,
-                            radius=self.radius - 2,
-                            size=(self.radius - 2, self.radius - 2))
-                self.parent.add_widget(tile)
-                self.reachable_tiles.append(tile)
+        reachable_type = ReachableType.selected_unit if self.selected else ReachableType.ally_unit
+        self.reachable_tiles = reachable_pool.request_reachables(self.unit, reachable_type)
 
     def clean_reachable_tiles(self):
-        for tile in self.reachable_tiles:
-            self.parent.remove_widget(tile)
+        reachable_pool.release_reachables(self.unit)
         self.reachable_tiles = []
 
     def is_in_move_range(self, hex_coords):
-        if self.reachable_tiles:
-            for tile in self.reachable_tiles:
-                if tile.hex_coords == hex_coords:
-                    return True
-        return False
+        return hex_coords in self.reachable_tiles
 
     def on_action_selected(self, action_type, rk_skill):
         self.clean_skill()

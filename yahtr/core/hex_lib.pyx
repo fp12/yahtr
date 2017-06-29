@@ -241,6 +241,11 @@ cdef class Layout:
         self.orientation = flat_orientation if flat else pointy_orientation
         self.margin = margin
 
+    @property
+    def radius(self):
+        # using the radius is assuming we have a uniform size
+        return self.size.x
+
     cpdef Point hex_to_pixel(self, Hex h):
         cdef double x = (self.orientation.f0 * h.q + self.orientation.f1 * h.r) * (self.size.x + self.margin)
         cdef double y = (self.orientation.f2 * h.q + self.orientation.f3 * h.r) * (self.size.y + self.margin)

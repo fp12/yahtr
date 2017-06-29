@@ -18,6 +18,7 @@ class ColoredWidget(Widget):
     def __init__(self, color=None, **kwargs):
         if color:
             self.color = color
+        self.old_a = self.a
         super(ColoredWidget, self).__init__(**kwargs)
 
     @property
@@ -37,10 +38,12 @@ class ColoredWidget(Widget):
         return self.a == 0
 
     def hide(self, do_hide=True):
-        self.a = 0 if do_hide else 1.
+        if do_hide:
+            self.old_a = self.a
+        self.a = 0 if do_hide else self.old_a
 
     def show(self):
-        self.a = 1.
+        self.a = self.old_a
 
     def on_color_change(self, r, g, b, a):
         pass

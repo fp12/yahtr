@@ -93,6 +93,16 @@ class Color(metaclass=__MetaColor):
     def rgb_dict(self):
         return {'r': self.color[0], 'g': self.color[1], 'b': self.color[2]}
 
+    @staticmethod
+    def merge(colors: list):
+        def mean(numbers):
+            return float(sum(numbers)) / max(len(numbers), 1)
+
+        return Color(mean([c.r for c in colors]),
+                     mean([c.g for c in colors]),
+                     mean([c.b for c in colors]),
+                     mean([c.a for c in colors]))
+
 
 def __add_metacolor_property(name, value):
     def inner(self):

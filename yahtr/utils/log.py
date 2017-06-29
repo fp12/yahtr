@@ -41,10 +41,12 @@ markup_formatter = MarkupFormatter(fmt='[%(module)-12s] %(message)s')
 
 game_console_handler = GameConsoleHandler()
 game_console_handler.setFormatter(markup_formatter)
+game_console_handler.setLevel(logging.INFO)
 
 
 # getting root logger child so it can work along with kivy's logging system
 log_main = logging.getLogger().getChild('MAIN')
+log_main.setLevel(logging.DEBUG)
 log_main.addHandler(main_handler)
 log_main.propagate = False  # don't propagate to kivy's logging system
 

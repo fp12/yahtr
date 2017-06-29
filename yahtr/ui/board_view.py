@@ -1,4 +1,5 @@
 from kivy.uix.scatterlayout import ScatterLayout
+from kivy.uix.widget import Widget
 from kivy.animation import Animation
 from kivy.graphics.transformation import Matrix
 from kivy.clock import Clock
@@ -8,6 +9,7 @@ from yahtr.ui.piece import Piece, Status
 from yahtr.ui.selector import Selector
 from yahtr.ui.trajectory import Trajectory
 from yahtr.ui.wall_widget import WallWidget
+from yahtr.ui.utils.reachable_pool import reachable_pool
 
 from yahtr.core.hex_lib import Layout
 from yahtr.game import game_instance
@@ -23,9 +25,8 @@ logger = create_ui_logger('BoardView')
 class BoardView(ScatterLayout):
     hex_radius = 60
     hex_margin = 3
-    trajectory_color_ok = Color(0, 0.392157, 0, 0.85)
-    trajectory_color_error = Color(0.9, 0.12, 0, 0.85)
-    tile_color = Color(0.8, 0.8, 0.8, 0.4)
+    trajectory_color_ok = Color(10, 214, 126, 255)
+    tile_color = Color(82, 82, 82, 255)
     selector_color = Color.darkseagreen
 
     def __init__(self, **kwargs):
@@ -34,6 +35,7 @@ class BoardView(ScatterLayout):
         self.pieces = []
         self.tiles = []
         self.walls = []
+        self.reachables_layer = Widget()
         self.selector = Selector(q=0, r=0, layout=self.hex_layout, margin=2.5, color=self.selector_color)
         self.trajectory = Trajectory()
         self.current_action = None
@@ -53,6 +55,9 @@ class BoardView(ScatterLayout):
             wall = WallWidget(w, pos=pos.tup, angle=angle, size=(self.hex_radius * 7. / 9., self.hex_margin * 0.9))
             self.add_widget(wall)
             self.walls.append(wall)
+
+        self.add_widget(self.reachables_layer)
+        reachable_pool.setup(self.hex_layout, self.reachables_layer)
 
         game_instance.battle.board.on_wall_hit += self.on_wall_hit
         game_instance.battle.board.on_wall_targeted += self.on_wall_targeted
@@ -111,8 +116,6 @@ class BoardView(ScatterLayout):
                 points.append(pt.y)
             if piece.is_in_move_range(hover_hex):
                 self.trajectory.color = self.trajectory_color_ok
-            else:
-                self.trajectory.color = self.trajectory_color_error
             self.trajectory.set(path, points)
 
     def get_tile_on_hex(self, hex_coords):
