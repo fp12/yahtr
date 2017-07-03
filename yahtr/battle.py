@@ -324,3 +324,7 @@ class Battle:
             if t.has(p1, p2):
                 return t.tie_type
         return TieType.neutral
+
+    def get_tie_with_selected_unit(self, other_unit):
+        current_unit, __ = self.actions_history[-1]
+        return self.get_tie(current_unit.owner, other_unit.owner)

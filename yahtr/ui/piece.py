@@ -10,6 +10,7 @@ from yahtr.data.skill_template import MoveType
 from yahtr.utils import Color
 from yahtr.utils.event import Event
 from yahtr.data.actions import ActionType
+from yahtr.tie import TieType
 
 from yahtr.ui.utils.anim_scheduler import anim_scheduler
 from yahtr.ui.hex_widget import HexWidget
@@ -375,7 +376,10 @@ class Piece(HexWidget):
         self.parent.add_widget(self.skill_widget)
 
     def display_reachable_tiles(self):
-        reachable_type = ReachableType.selected_unit if self.selected else ReachableType.ally_unit
+        reachable_type = ReachableType.selected_unit
+        if not self.selected:
+            tie = game_instance.battle.get_tie_with_selected_unit(self.unit)
+            reachable_type = ReachableType.ally_unit if tie == TieType.ally else ReachableType.ennemy_unit
         self.reachable_tiles = reachable_pool.request_reachables(self.unit, reachable_type)
 
     def clean_reachable_tiles(self):
