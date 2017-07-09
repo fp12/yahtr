@@ -30,6 +30,7 @@ class ReachablePool:
 
     def __init__(self):
         self.pool = []  # (tile, [ReachableOwnerInfo])
+        self.units = []  # Unit
         self.hex_layout = None
         self.parent = None
 
@@ -49,10 +50,14 @@ class ReachablePool:
                     size=(self.hex_layout.radius - self._margin, self.hex_layout.radius - self._margin))
 
     def request_reachables(self, unit, r_type: ReachableType):
+        if unit in self.units:
+            logger.debug(f'Request cancelled - unit already present')
+            return unit.reachables
+
         logger.debug(f'BEFORE request: {len(self.pool)} tiles in pool')
 
         # we get the reachable and we sort them as we sort the pool
-        reachable_hexes = sorted(game_instance.battle.board.get_reachable(unit), key=lambda h: (h.q, h.r))
+        reachable_hexes = unit.reachables or sorted(game_instance.battle.board.get_reachable(unit), key=lambda h: (h.q, h.r))
         logger.debug(f'{len(reachable_hexes)} to process')
 
         pool_index = 0
@@ -86,10 +91,14 @@ class ReachablePool:
                 pool_index += 1
 
         logger.debug(f'AFTER request: {len(self.pool)} tiles in pool')
-
+        self.units.append(unit)
         return reachable_hexes
 
     def release_reachables(self, unit):
+        if unit not in self.units:
+            # legit case for inits, cleanups...
+            return
+
         pool_index = 0
         pool_capacity = len(self.pool)  # won't change during this function
         while pool_index < pool_capacity:
@@ -115,6 +124,7 @@ class ReachablePool:
                     break
             else:
                 pool_index += 1
+        self.units.remove(unit)
 
     def move_available_tile_to(self, tile_index):
         if tile_index >= len(self.pool):
@@ -134,6 +144,10 @@ class ReachablePool:
 
     def assign(self, tile_index, hex_coords, unit, r_type):
         tile, owners = self.pool[tile_index]
+        for owner_info in owners:
+            if owner_info.owner == unit:
+                logger.error('Unit is already present')
+                return
         owners.append(self.ReachableOwnerInfo(unit, r_type))
         tile.move_to(hex_coords)
         tile.color = Color.merge(set(o.reachable_type.value for o in owners))

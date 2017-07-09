@@ -9,6 +9,7 @@ from yahtr.ui.board_view import BoardView
 from yahtr.ui.timed_widget import TimedWidgetBar
 from yahtr.ui.actions_bar import ActionsBar
 from yahtr.ui.game_console import GameConsole
+from yahtr.ui.game_options import GameOptions
 from yahtr.ui.utils.anim_scheduler import anim_scheduler
 
 from yahtr.game import game_instance
@@ -32,6 +33,7 @@ class GameScreen(Screen):
         self.time_bar = None
         self.actions_bar = None
         self.game_console = None
+        self.game_options = None
 
         self.key_binder = {}
         self.update_event = None
@@ -40,17 +42,20 @@ class GameScreen(Screen):
 
     def on_enter(self):
         # prepare UI
-        self.game_console = GameConsole(pos=(10, 10), size_hint=(0.25, 0.25))
-        self.add_widget(self.game_console, 0)
+        self.board_view = BoardView(pos=(0, 0), size_hint=(None, None), size=Window.size, auto_bring_to_front=False)
+        self.add_widget(self.board_view)
 
         self.time_bar = TimedWidgetBar(pos=(-10, 75), pos_hint={'right': 1}, size_hint=(None, None))
-        self.add_widget(self.time_bar, 1)
+        self.add_widget(self.time_bar)
 
         self.actions_bar = ActionsBar(pos=self.time_bar.get_pos_for_actions_bar(), pos_hint={'right': 1}, size_hint=(None, None))
-        self.add_widget(self.actions_bar, 2)
+        self.add_widget(self.actions_bar)
 
-        self.board_view = BoardView(pos=(0, 0), size_hint=(None, None), size=Window.size, auto_bring_to_front=False)
-        self.add_widget(self.board_view, 3)
+        self.game_console = GameConsole(pos=(10, 10), height=200, size_hint=(0.25, None))
+        self.add_widget(self.game_console)
+
+        self.game_options = GameOptions(pos=(10, self.game_console.y + self.game_console.height + 20), size_hint=(None, None))
+        self.add_widget(self.game_options)
 
         # load dynamic setup
         game_instance.load_battle_setup(self.battle_options['setup_name'])
@@ -59,6 +64,7 @@ class GameScreen(Screen):
         # link widgets through events
         self.board_view.on_unit_hovered += self.time_bar.on_unit_hovered_external
         self.time_bar.on_unit_hovered += self.board_view.on_unit_hovered_external
+        self.game_options.on_toggle_reachables += self.board_view.on_toggle_reachables
 
         self.board_view.load_board()
         self.board_view.load_squads()
@@ -100,6 +106,7 @@ class GameScreen(Screen):
 
         self.board_view.on_unit_hovered -= self.time_bar.on_unit_hovered_external
         self.time_bar.on_unit_hovered -= self.board_view.on_unit_hovered_external
+        self.game_options.on_toggle_reachables -= self.board_view.on_toggle_reachables
 
         for child in self.children[:]:
             self.remove_widget(child)

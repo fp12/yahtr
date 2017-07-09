@@ -28,6 +28,8 @@ class Unit:
         self.prev_hex_coords = None
         self.prev_orientation = None
 
+        self.reachables = []
+
         # events
         self.on_health_change = Event('health', 'context')
         self.on_unit_targeted = Event()

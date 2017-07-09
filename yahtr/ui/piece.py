@@ -5,30 +5,24 @@ from kivy.animation import Animation
 
 from yahtr.core.hex_lib import hex_angle, index_of_direction
 
-from yahtr.game import game_instance
 from yahtr.data.skill_template import MoveType
 from yahtr.utils import Color
 from yahtr.utils.event import Event
 from yahtr.data.actions import ActionType
-from yahtr.tie import TieType
 
 from yahtr.ui.utils.anim_scheduler import anim_scheduler
 from yahtr.ui.hex_widget import HexWidget
-from yahtr.ui.tile import Tile
 from yahtr.ui.action_widgets import ActionBuilder
 from yahtr.ui.shield_widget import ShieldWidget
 from yahtr.ui.contour import Contour
 from yahtr.ui.base_widgets import AngledColoredWidget
 from yahtr.ui.utils import check_root_window
-from yahtr.ui.utils.reachable_pool import reachable_pool, ReachableType
 
 
 c_hit = Color.firebrick
 c_heal = Color.lightgreen
 c_contour = Color.forestgreen
 c_contour.a = 0
-c_reachable_selected = Color(113, 20, 204, 128)
-c_reachable_not_selected = Color(94, 9, 78, 128)
 
 
 class Status(Enum):
@@ -57,7 +51,6 @@ class Piece(HexWidget):
         self.skill_widget = None
         self.status = Status.idle
         self.selected = False
-        self.reachable_tiles = []
 
         self.shape_parts = {}
         done_list = []
@@ -91,7 +84,7 @@ class Piece(HexWidget):
         self.update_shields()
 
         # declare events
-        self.on_status_change = Event('new_status')
+        self.on_status_change = Event('piece', 'new_status')
 
         # register to events
         self.unit.on_health_change += self.on_unit_health_change
@@ -106,7 +99,7 @@ class Piece(HexWidget):
         self.update_shields()
 
     def unload(self):
-        self.clean_reachable_tiles()
+        pass
 
     def do_rotate(self):
         self.angle = self.hex_coords.angle_to_neighbour(self.unit.orientation)
@@ -116,7 +109,7 @@ class Piece(HexWidget):
     def change_status(self, new_status):
         if new_status != self.status:
             self.status = new_status
-            self.on_status_change(self.status)
+            self.on_status_change(self, self.status)
 
 #    ######  ##     ## #### ######## ##       ########   ######
 #   ##    ## ##     ##  ##  ##       ##       ##     ## ##    ##
@@ -203,7 +196,6 @@ class Piece(HexWidget):
     def prepare_move(self):
         self.contour.hide()
         self.clean_skill()
-        self.clean_reachable_tiles()
         self.change_status(Status.moving)
 
     def on_unit_skill_move(self, context):
@@ -286,10 +278,10 @@ class Piece(HexWidget):
             super(Piece, self).move_to(hex_coords, tile_pos, trajectory)
 
     def on_finished_moving(self, end_pos, orientation):
-        self.change_status(Status.idle)
         self.hex_coords = end_pos
-        self.contour.show()
         self.unit.move_to(hex_coords=self.hex_coords, orientation=orientation)
+        self.contour.show()
+        self.change_status(Status.idle)
 
     @check_root_window
     def on_pos(self, *args):
@@ -375,36 +367,16 @@ class Piece(HexWidget):
         self.skill_widget = ActionBuilder(rk_skill, self.hex_coords, self.hex_layout, pos=self.pos, angle=self.angle)
         self.parent.add_widget(self.skill_widget)
 
-    def display_reachable_tiles(self):
-        reachable_type = ReachableType.selected_unit
-        if not self.selected:
-            tie = game_instance.battle.get_tie_with_selected_unit(self.unit)
-            reachable_type = ReachableType.ally_unit if tie == TieType.ally else ReachableType.ennemy_unit
-        self.reachable_tiles = reachable_pool.request_reachables(self.unit, reachable_type)
-
-    def clean_reachable_tiles(self):
-        reachable_pool.release_reachables(self.unit)
-        self.reachable_tiles = []
-
-    def is_in_move_range(self, hex_coords):
-        return hex_coords in self.reachable_tiles
-
     def on_action_selected(self, action_type, rk_skill):
         self.clean_skill()
-        if action_type == ActionType.move:
-            self.display_reachable_tiles()
-        else:
-            self.clean_reachable_tiles()
-            if rk_skill:
-                self.load_skill(rk_skill)
+        if action_type != ActionType.move and rk_skill:
+            self.load_skill(rk_skill)
 
     def on_hovered_in(self):
-        if not self.selected:
-            self.display_reachable_tiles()
+        pass
 
     def on_hovered_out(self):
-        if not self.selected:
-            self.clean_reachable_tiles()
+        pass
 
     def on_touched_down(self):
         self.do_select(True)
@@ -414,9 +386,7 @@ class Piece(HexWidget):
         if self.selected != select:
             self.selected = select
             if select:
-                self.display_reachable_tiles()
                 self.contour.show()
             else:
                 self.clean_skill()
-                self.clean_reachable_tiles()
                 self.contour.hide()

@@ -65,10 +65,19 @@ class Battle:
         if unit.ai_controlled:
             unit.owner.start_turn(unit, start_action)
 
+    def clean_all_reachables(self):
+        for __, units in self.squads.items():
+            for u in units:
+                u.reachables = []
+
     def start_turn(self):
         __, __, unit = self.time_bar.current
         logger.info(L_LOG_NEW_TURN.format(unit))
         self.actions_history.append((unit, []))
+
+        # cleanup cached data
+        self.clean_all_reachables()
+
         self.on_new_turn(unit)
         self._load_new_actions(unit, unit.actions_tree)
 
