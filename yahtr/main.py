@@ -1,9 +1,6 @@
 import sys
 import getopt
 
-from yahtr.localization.core import init as init_localization
-init_localization()
-
 from yahtr.ui.yahtr_app import YAHTRApp
 
 

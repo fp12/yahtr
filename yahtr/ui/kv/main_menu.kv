@@ -1,3 +1,11 @@
+#: import L_MENU_CHESS_DEMO yahtr.localization.ids.L_MENU_CHESS_DEMO
+#: import L_MENU_FEATURES_DEMO yahtr.localization.ids.L_MENU_FEATURES_DEMO
+#: import L_MENU_CAMPAIGN yahtr.localization.ids.L_MENU_CAMPAIGN
+#: import L_MENU_EDITOR yahtr.localization.ids.L_MENU_EDITOR
+#: import L_MENU_CREDITS yahtr.localization.ids.L_MENU_CREDITS
+#: import L_MENU_QUIT yahtr.localization.ids.L_MENU_QUIT
+
+
 <MainMenu>:
     FloatLayout:
         Label:
@@ -7,21 +15,21 @@
             halign: 'center'
             font_size: '50sp'
         Button:
-            text: 'Features Demo'
+            text: _(L_MENU_FEATURES_DEMO)
             pos_hint: {'center_x': .3, 'y': .5}
             size: 150, 40
             size_hint: None, None
             halign: 'center'
             on_press: app.go_to_features_demo()
         Button:
-            text: 'Chess Demo'
+            text: _(L_MENU_CHESS_DEMO)
             pos_hint: {'center_x': .5, 'y': .5}
             size: 150, 40
             size_hint: None, None
             halign: 'center'
             on_press: app.go_to_chess_demo()
         Button:
-            text: 'Campaign'
+            text: _(L_MENU_CAMPAIGN)
             pos_hint: {'center_x': .7, 'y': .5}
             size: 150, 40
             size_hint: None, None
@@ -29,7 +37,7 @@
             disabled: True
             #on_press: app.go_to_chess_demo()
         Button:
-            text: 'Editor'
+            text: _(L_MENU_EDITOR)
             size: 120, 25
             pos: 0, 30
             pos_hint: {'right': 1}
@@ -37,14 +45,14 @@
             halign: 'center'
             on_press: app.go_to_editor()
         Button:
-            text: 'Credits'
+            text: _(L_MENU_CREDITS)
             pos_hint: {'right': 1, 'y': 0}
             size: 120, 25
             size_hint: None, None
             halign: 'center'
             on_press: app.go_to_credits()
         Button:
-            text: 'Quit'
+            text: _(L_MENU_QUIT)
             on_press: app.stop()
             pos: -50, -50
             pos_hint: {'right': 1, 'top': 1}

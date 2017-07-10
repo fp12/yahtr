@@ -73,7 +73,7 @@ class ActionsBar(RelativeLayout):
         for a in action_node:
             if a.data in [ActionType.weapon, ActionType.skill]:
                 for rk_skill in unit.get_skills(a.data):
-                    widget_data.append((index, a.data, _(rk_skill.skill.name), rk_skill))
+                    widget_data.append((index, a.data, str(rk_skill.skill.name), rk_skill))
                     index += 1
             elif a.data != ActionType.end_turn:
                 widget_data.append((index, a.data, str(a.data), None))

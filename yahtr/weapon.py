@@ -16,7 +16,7 @@ class Weapon:
         return self.template.skills
 
     def __repr__(self):
-        return f'Wp<{self.template.name}>'
+        return f'Wp<{self.template.name!s}>'
 
 
 class RankedWeapon:
@@ -28,4 +28,4 @@ class RankedWeapon:
         self.skills = [RankedSkill(s, rank) for s in self.weapon.skills]
 
     def __repr__(self):
-        return f'RkWp<{self.weapon.template.name}:{self.rank.name}>'
+        return f'RkWp<{self.weapon.template.name!s}:{self.rank.name}>'

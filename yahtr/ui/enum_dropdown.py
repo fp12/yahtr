@@ -17,7 +17,7 @@ class EnumDropDown(Widget):
             # When adding widgets, we need to specify the height manually
             # (disabling the size_hint_y) so the dropdown can calculate
             # the area it needs.
-            btn = Button(text=f'Value {data.name}', size_hint_y=None, height=44)
+            btn = Button(text=f'Value {data.name!s}', size_hint_y=None, height=44)
 
             # for each button, attach a callback that will call the select() method
             # on the dropdown. We'll pass the text of the button as the data of the

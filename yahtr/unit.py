@@ -40,7 +40,7 @@ class Unit:
         self.on_skill_move = Event('context', 'unit')
 
     def __repr__(self):
-        return f'U<{self.template.name}>'
+        return f'U<{self.template.name!s}>'
 
     @property
     def ai_controlled(self):

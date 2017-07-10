@@ -1,12 +1,15 @@
+#: import L_UI_TOGGLE_SELECTED_REACHABLES yahtr.localization.ids.L_UI_TOGGLE_SELECTED_REACHABLES
+#: import L_UI_TOGGLE_OTHERS_REACHABLES yahtr.localization.ids.L_UI_TOGGLE_OTHERS_REACHABLES
+
 <GameOptions>:
 	Button:
-        text: 'Toggle Current Reachables'
+        text: _(L_UI_TOGGLE_SELECTED_REACHABLES)
         size: 200, 25
         size_hint: (None, None)
         on_press: root.on_toggle_player_reachables()
 
     Button:
-        text: 'Toggle Others Reachables'
+        text: _(L_UI_TOGGLE_OTHERS_REACHABLES)
         size: 200, 25
         size_hint: (None, None)
         pos: 0, 27

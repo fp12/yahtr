@@ -1,5 +1,6 @@
 from yahtr.core.hex_lib import Hex
 from yahtr.data.core import DataTemplate
+from yahtr.localization.core import LocStr
 from yahtr.utils import attr
 from yahtr.rank import Rank
 from yahtr.skill import RankedSkill
@@ -11,7 +12,7 @@ class UnitTemplate(DataTemplate):
     __path = 'data/templates/units/'
     __ext = '.json'
 
-    __attributes = ['name', 'description', 'move', 'initiative', 'speed', 'shields', 'color', 'weapons', 'health']
+    __attributes = ['move', 'initiative', 'speed', 'shields', 'color', 'weapons', 'health']
 
     def __init__(self, file_id, data, get_skill, get_actions_tree, **kwargs):
         super(UnitTemplate, self).__init__(file_id, **kwargs)
@@ -26,6 +27,17 @@ class UnitTemplate(DataTemplate):
             shape_def = data['shape']
             for index in range(0, len(shape_def), 2):
                 self.shape.append(Hex(q=shape_def[index], r=shape_def[index + 1]))
+
+        self.name = LocStr(self.loc_key_name)
+        self.description = LocStr(self.loc_key_desc)
+
+    @property
+    def loc_key_name(self):
+        return 'L_UNIT_NAME/{0}'.format(self.file_id.replace('\\', '/'))
+
+    @property
+    def loc_key_desc(self):
+        return 'L_UNIT_DESC/{0}'.format(self.file_id.replace('\\', '/'))
 
     @staticmethod
     def load_all(get_skill, get_actions_tree, **kwargs):

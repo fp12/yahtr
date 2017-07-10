@@ -1,87 +1,43 @@
-# Yet Another Tactical RPG (yahtr)
-# Copyright (C) 2017
-# Fabien Poupineau, 2017.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-07-09 22:28-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=cp1252\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: pygettext.py 1.5\n"
-
-
-#: yahtr\localization\ids.py:4
-msgid "move"
-msgstr ""
-
-#: yahtr\localization\ids.py:5
-msgid "rotate"
-msgstr ""
-
-#: yahtr\localization\ids.py:6
-msgid "end_turn"
-msgstr ""
-
-#: yahtr\localization\ids.py:7
-msgid "undo_move"
-msgstr ""
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: yahtr\n"
+"Language: en\n"
 
 #: yahtr\localization\ids.py:11
 msgid "Battle Started"
-msgstr ""
+msgstr "Battle Started"
 
 #: yahtr\localization\ids.py:12
 msgid "New turn started [{}]"
-msgstr ""
+msgstr "New turn started [{}]"
 
 #: yahtr\localization\ids.py:13
 msgid "Action: {} {}"
-msgstr ""
+msgstr "Action: {} {}"
 
-#: yahtr\localization\ids.py:17
-msgid "L_UI_TOGGLE_SELECTED_REACHABLES"
-msgstr ""
+#: yahtr\localization\ids.py:4
+msgid "move"
+msgstr "move"
 
-#: yahtr\localization\ids.py:18
-msgid "L_UI_TOGGLE_OTHERS_REACHABLES"
-msgstr ""
+#: yahtr\localization\ids.py:5
+msgid "rotate"
+msgstr "rotate"
 
-#: yahtr\localization\ids.py:22
-msgid "L_MENU_MAIN_MENU"
-msgstr ""
+#: yahtr\localization\ids.py:6
+msgid "end_turn"
+msgstr "end turn"
 
-#: yahtr\localization\ids.py:23
-msgid "L_MENU_CHESS_DEMO"
-msgstr ""
-
-#: yahtr\localization\ids.py:24
-msgid "L_MENU_FEATURES_DEMO"
-msgstr ""
-
-#: yahtr\localization\ids.py:25
-msgid "L_MENU_CAMPAIGN"
-msgstr ""
-
-#: yahtr\localization\ids.py:26
-msgid "L_MENU_EDITOR"
-msgstr ""
-
-#: yahtr\localization\ids.py:27
-msgid "L_MENU_CREDITS"
-msgstr ""
-
-#: yahtr\localization\ids.py:28
-msgid "L_MENU_QUIT"
-msgstr ""
+#: yahtr\localization\ids.py:7
+msgid "undo_move"
+msgstr "undo move"
 
 #: data/skill/bash:name
 msgid "L_SKILL_NAME/bash"
-msgstr ""
+msgstr "Bash"
 
 #: data/skill/bash:description
 msgid "L_SKILL_DESC/bash"
@@ -89,7 +45,7 @@ msgstr ""
 
 #: data/skill/blink_stab:name
 msgid "L_SKILL_NAME/blink_stab"
-msgstr ""
+msgstr "Blink Stab"
 
 #: data/skill/blink_stab:description
 msgid "L_SKILL_DESC/blink_stab"
@@ -97,7 +53,7 @@ msgstr ""
 
 #: data/skill/daggers:name
 msgid "L_SKILL_NAME/daggers"
-msgstr ""
+msgstr "Daggers"
 
 #: data/skill/daggers:description
 msgid "L_SKILL_DESC/daggers"
@@ -105,7 +61,7 @@ msgstr ""
 
 #: data/skill/heal:name
 msgid "L_SKILL_NAME/heal"
-msgstr ""
+msgstr "Heal"
 
 #: data/skill/heal:description
 msgid "L_SKILL_DESC/heal"
@@ -113,7 +69,7 @@ msgstr ""
 
 #: data/skill/hop_over_ally:name
 msgid "L_SKILL_NAME/hop_over_ally"
-msgstr ""
+msgstr "Hop 1"
 
 #: data/skill/hop_over_ally:description
 msgid "L_SKILL_DESC/hop_over_ally"
@@ -121,7 +77,7 @@ msgstr ""
 
 #: data/skill/hop_over_hole:name
 msgid "L_SKILL_NAME/hop_over_hole"
-msgstr ""
+msgstr "Hop 12"
 
 #: data/skill/hop_over_hole:description
 msgid "L_SKILL_DESC/hop_over_hole"
@@ -129,7 +85,7 @@ msgstr ""
 
 #: data/skill/scythe:name
 msgid "L_SKILL_NAME/scythe"
-msgstr ""
+msgstr "Scythe"
 
 #: data/skill/scythe:description
 msgid "L_SKILL_DESC/scythe"
@@ -137,7 +93,7 @@ msgstr ""
 
 #: data/skill/scythe_sweep:name
 msgid "L_SKILL_NAME/scythe_sweep"
-msgstr ""
+msgstr "Scythe Sweep"
 
 #: data/skill/scythe_sweep:description
 msgid "L_SKILL_DESC/scythe_sweep"
@@ -145,7 +101,7 @@ msgstr ""
 
 #: data/skill/slash:name
 msgid "L_SKILL_NAME/slash"
-msgstr ""
+msgstr "Slash"
 
 #: data/skill/slash:description
 msgid "L_SKILL_DESC/slash"
@@ -153,7 +109,7 @@ msgstr ""
 
 #: data/skill/spear:name
 msgid "L_SKILL_NAME/spear"
-msgstr ""
+msgstr "Spear"
 
 #: data/skill/spear:description
 msgid "L_SKILL_DESC/spear"
@@ -161,7 +117,7 @@ msgstr ""
 
 #: data/skill/sword:name
 msgid "L_SKILL_NAME/sword"
-msgstr ""
+msgstr "Sword"
 
 #: data/skill/sword:description
 msgid "L_SKILL_DESC/sword"
@@ -169,7 +125,7 @@ msgstr ""
 
 #: data/skill/chess_demo/bash:name
 msgid "L_SKILL_NAME/chess_demo/bash"
-msgstr ""
+msgstr "Bash"
 
 #: data/skill/chess_demo/bash:description
 msgid "L_SKILL_DESC/chess_demo/bash"
@@ -177,7 +133,7 @@ msgstr ""
 
 #: data/skill/chess_demo/daggers:name
 msgid "L_SKILL_NAME/chess_demo/daggers"
-msgstr ""
+msgstr "Daggers"
 
 #: data/skill/chess_demo/daggers:description
 msgid "L_SKILL_DESC/chess_demo/daggers"
@@ -185,7 +141,7 @@ msgstr ""
 
 #: data/skill/chess_demo/knight_charge:name
 msgid "L_SKILL_NAME/chess_demo/knight_charge"
-msgstr ""
+msgstr "Knight Charge"
 
 #: data/skill/chess_demo/knight_charge:description
 msgid "L_SKILL_DESC/chess_demo/knight_charge"
@@ -193,7 +149,7 @@ msgstr ""
 
 #: data/skill/chess_demo/knight_sword:name
 msgid "L_SKILL_NAME/chess_demo/knight_sword"
-msgstr ""
+msgstr "Knight Sword"
 
 #: data/skill/chess_demo/knight_sword:description
 msgid "L_SKILL_DESC/chess_demo/knight_sword"
@@ -201,7 +157,7 @@ msgstr ""
 
 #: data/skill/chess_demo/queen_stab:name
 msgid "L_SKILL_NAME/chess_demo/queen_stab"
-msgstr ""
+msgstr "Queen Stab"
 
 #: data/skill/chess_demo/queen_stab:description
 msgid "L_SKILL_DESC/chess_demo/queen_stab"
@@ -209,7 +165,7 @@ msgstr ""
 
 #: data/skill/chess_demo/slash:name
 msgid "L_SKILL_NAME/chess_demo/slash"
-msgstr ""
+msgstr "Slash"
 
 #: data/skill/chess_demo/slash:description
 msgid "L_SKILL_DESC/chess_demo/slash"
@@ -217,7 +173,7 @@ msgstr ""
 
 #: data/skill/chess_demo/spear:name
 msgid "L_SKILL_NAME/chess_demo/spear"
-msgstr ""
+msgstr "Spear"
 
 #: data/skill/chess_demo/spear:description
 msgid "L_SKILL_DESC/chess_demo/spear"
@@ -225,7 +181,7 @@ msgstr ""
 
 #: data/skill/chess_demo/sword:name
 msgid "L_SKILL_NAME/chess_demo/sword"
-msgstr ""
+msgstr "Sword"
 
 #: data/skill/chess_demo/sword:description
 msgid "L_SKILL_DESC/chess_demo/sword"
@@ -233,7 +189,7 @@ msgstr ""
 
 #: data/weapon/default_daggers:name
 msgid "L_WEAPON_NAME/default_daggers"
-msgstr ""
+msgstr "Daggers"
 
 #: data/weapon/default_daggers:description
 msgid "L_WEAPON_DESC/default_daggers"
@@ -241,7 +197,7 @@ msgstr ""
 
 #: data/weapon/default_grimoire:name
 msgid "L_WEAPON_NAME/default_grimoire"
-msgstr ""
+msgstr "Grimoire"
 
 #: data/weapon/default_grimoire:description
 msgid "L_WEAPON_DESC/default_grimoire"
@@ -249,7 +205,7 @@ msgstr ""
 
 #: data/weapon/default_scythe:name
 msgid "L_WEAPON_NAME/default_scythe"
-msgstr ""
+msgstr "Scythe"
 
 #: data/weapon/default_scythe:description
 msgid "L_WEAPON_DESC/default_scythe"
@@ -257,7 +213,7 @@ msgstr ""
 
 #: data/weapon/default_spear:name
 msgid "L_WEAPON_NAME/default_spear"
-msgstr ""
+msgstr "Spear"
 
 #: data/weapon/default_spear:description
 msgid "L_WEAPON_DESC/default_spear"
@@ -265,7 +221,7 @@ msgstr ""
 
 #: data/weapon/default_sword:name
 msgid "L_WEAPON_NAME/default_sword"
-msgstr ""
+msgstr "Sword"
 
 #: data/weapon/default_sword:description
 msgid "L_WEAPON_DESC/default_sword"
@@ -273,7 +229,7 @@ msgstr ""
 
 #: data/weapon/chess_demo/king_sword:name
 msgid "L_WEAPON_NAME/chess_demo/king_sword"
-msgstr ""
+msgstr "King Sword"
 
 #: data/weapon/chess_demo/king_sword:description
 msgid "L_WEAPON_DESC/chess_demo/king_sword"
@@ -281,7 +237,7 @@ msgstr ""
 
 #: data/weapon/chess_demo/knight_sword:name
 msgid "L_WEAPON_NAME/chess_demo/knight_sword"
-msgstr ""
+msgstr "Knight Sword"
 
 #: data/weapon/chess_demo/knight_sword:description
 msgid "L_WEAPON_DESC/chess_demo/knight_sword"
@@ -289,7 +245,7 @@ msgstr ""
 
 #: data/weapon/chess_demo/queen_daggers:name
 msgid "L_WEAPON_NAME/chess_demo/queen_daggers"
-msgstr ""
+msgstr "Queen Daggers"
 
 #: data/weapon/chess_demo/queen_daggers:description
 msgid "L_WEAPON_DESC/chess_demo/queen_daggers"
@@ -297,7 +253,7 @@ msgstr ""
 
 #: data/weapon/chess_demo/spear:name
 msgid "L_WEAPON_NAME/chess_demo/spear"
-msgstr ""
+msgstr "Spear"
 
 #: data/weapon/chess_demo/spear:description
 msgid "L_WEAPON_DESC/chess_demo/spear"
@@ -305,7 +261,7 @@ msgstr ""
 
 #: data/weapon/chess_demo/sword:name
 msgid "L_WEAPON_NAME/chess_demo/sword"
-msgstr ""
+msgstr "Sword"
 
 #: data/weapon/chess_demo/sword:description
 msgid "L_WEAPON_DESC/chess_demo/sword"
@@ -313,7 +269,7 @@ msgstr ""
 
 #: data/unit/boss:name
 msgid "L_UNIT_NAME/boss"
-msgstr ""
+msgstr "Boss"
 
 #: data/unit/boss:description
 msgid "L_UNIT_DESC/boss"
@@ -321,7 +277,7 @@ msgstr ""
 
 #: data/unit/guard:name
 msgid "L_UNIT_NAME/guard"
-msgstr ""
+msgstr "Guard"
 
 #: data/unit/guard:description
 msgid "L_UNIT_DESC/guard"
@@ -329,7 +285,7 @@ msgstr ""
 
 #: data/unit/lancer:name
 msgid "L_UNIT_NAME/lancer"
-msgstr ""
+msgstr "Lancer"
 
 #: data/unit/lancer:description
 msgid "L_UNIT_DESC/lancer"
@@ -337,7 +293,7 @@ msgstr ""
 
 #: data/unit/mounted_knight:name
 msgid "L_UNIT_NAME/mounted_knight"
-msgstr ""
+msgstr "Mounted Knight"
 
 #: data/unit/mounted_knight:description
 msgid "L_UNIT_DESC/mounted_knight"
@@ -345,7 +301,7 @@ msgstr ""
 
 #: data/unit/reaper:name
 msgid "L_UNIT_NAME/reaper"
-msgstr ""
+msgstr "Reaper"
 
 #: data/unit/reaper:description
 msgid "L_UNIT_DESC/reaper"
@@ -353,7 +309,7 @@ msgstr ""
 
 #: data/unit/rogue:name
 msgid "L_UNIT_NAME/rogue"
-msgstr ""
+msgstr "Rogue"
 
 #: data/unit/rogue:description
 msgid "L_UNIT_DESC/rogue"
@@ -361,7 +317,7 @@ msgstr ""
 
 #: data/unit/test:name
 msgid "L_UNIT_NAME/test"
-msgstr ""
+msgstr "Test"
 
 #: data/unit/test:description
 msgid "L_UNIT_DESC/test"
@@ -369,7 +325,7 @@ msgstr ""
 
 #: data/unit/warrior:name
 msgid "L_UNIT_NAME/warrior"
-msgstr ""
+msgstr "Warrior"
 
 #: data/unit/warrior:description
 msgid "L_UNIT_DESC/warrior"
@@ -377,7 +333,7 @@ msgstr ""
 
 #: data/unit/white_mage:name
 msgid "L_UNIT_NAME/white_mage"
-msgstr ""
+msgstr "White Mage"
 
 #: data/unit/white_mage:description
 msgid "L_UNIT_DESC/white_mage"
@@ -385,7 +341,7 @@ msgstr ""
 
 #: data/unit/chess_demo/king:name
 msgid "L_UNIT_NAME/chess_demo/king"
-msgstr ""
+msgstr "King"
 
 #: data/unit/chess_demo/king:description
 msgid "L_UNIT_DESC/chess_demo/king"
@@ -393,7 +349,7 @@ msgstr ""
 
 #: data/unit/chess_demo/knight:name
 msgid "L_UNIT_NAME/chess_demo/knight"
-msgstr ""
+msgstr "Knight"
 
 #: data/unit/chess_demo/knight:description
 msgid "L_UNIT_DESC/chess_demo/knight"
@@ -401,7 +357,7 @@ msgstr ""
 
 #: data/unit/chess_demo/lancer:name
 msgid "L_UNIT_NAME/chess_demo/lancer"
-msgstr ""
+msgstr "Lancer"
 
 #: data/unit/chess_demo/lancer:description
 msgid "L_UNIT_DESC/chess_demo/lancer"
@@ -409,7 +365,7 @@ msgstr ""
 
 #: data/unit/chess_demo/queen:name
 msgid "L_UNIT_NAME/chess_demo/queen"
-msgstr ""
+msgstr "Queen"
 
 #: data/unit/chess_demo/queen:description
 msgid "L_UNIT_DESC/chess_demo/queen"
@@ -417,7 +373,7 @@ msgstr ""
 
 #: data/unit/chess_demo/royal_guard:name
 msgid "L_UNIT_NAME/chess_demo/royal_guard"
-msgstr ""
+msgstr "Royal Guard"
 
 #: data/unit/chess_demo/royal_guard:description
 msgid "L_UNIT_DESC/chess_demo/royal_guard"
@@ -425,9 +381,13 @@ msgstr ""
 
 #: data/unit/chess_demo/soldier:name
 msgid "L_UNIT_NAME/chess_demo/soldier"
-msgstr ""
+msgstr "Soldier"
 
 #: data/unit/chess_demo/soldier:description
 msgid "L_UNIT_DESC/chess_demo/soldier"
 msgstr ""
+
+#: yahtr\localization\ids.py:17
+msgid "L_MENU_MAIN_MENU"
+msgstr "Main Menu"
 

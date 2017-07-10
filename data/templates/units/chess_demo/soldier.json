@@ -1,6 +1,4 @@
 {
-	"name": "Soldier",
-	"description": "",
 	"move": 4,
 	"initiative" : 50,
 	"speed": 100,

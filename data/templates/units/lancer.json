@@ -1,6 +1,4 @@
 {
-	"name": "Lancer",
-	"description": "",
 	"move": 4,
 	"initiative" : 8,
 	"speed": 6,

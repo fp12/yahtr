@@ -1,8 +1,9 @@
 from enum import Enum
 
+from yahtr.data.core import DataTemplate
+from yahtr.localization.core import LocStr
 from yahtr.core.hex_lib import HexDir
 from yahtr.utils import attr
-from yahtr.data.core import DataTemplate
 
 
 class Effect(Enum):
@@ -112,15 +113,25 @@ class SkillTemplate(DataTemplate):
     __path = 'data/skills/'
     __ext = '.json'
 
-    __attributes = ['name', 'description']
+    __attributes = []
 
     def __init__(self, file_id, data, **kwargs):
         super(SkillTemplate, self).__init__(file_id, **kwargs)
         attr.get_from_dict(self, data, *SkillTemplate.__attributes)
         self.huns = [HUN(hun) for hun in data['HUN']] if 'HUN' in data else []
+        self.name = LocStr(self.loc_key_name)
+        self.description = LocStr(self.loc_key_desc)
 
     def __repr__(self):
-        return 'Sk<{0}>\n\t{1}'.format(self.name, '\n\t'.join(map(repr, self.huns)))
+        return 'Sk<{0!s}>\n\t{1}'.format(self.name, '\n\t'.join(map(repr, self.huns)))
+
+    @property
+    def loc_key_name(self):
+        return 'L_SKILL_NAME/{0}'.format(self.file_id.replace('\\', '/'))
+
+    @property
+    def loc_key_desc(self):
+        return 'L_SKILL_DESC/{0}'.format(self.file_id.replace('\\', '/'))
 
     @staticmethod
     def load_all(**kwargs):

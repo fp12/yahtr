@@ -1,4 +1,5 @@
 ##:include yahtr/ui/kv/debug.kv
+#: import L_MENU_MAIN_MENU yahtr.localization.ids.L_MENU_MAIN_MENU
 
 <Credits>:
     FloatLayout:
@@ -18,7 +19,7 @@
                 import webbrowser
                 webbrowser.open(args[1])
         Button:
-            text: 'Main Menu'
+            text: _(L_MENU_MAIN_MENU)
             on_press: app.go_to_main_menu()
             pos: -50, -50
             pos_hint: {'right': 1, 'top': 1}

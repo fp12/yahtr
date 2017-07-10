@@ -6,10 +6,11 @@
 #:include yahtr/ui/kv/game_console.kv
 #:include yahtr/ui/kv/game_options.kv
 #:include yahtr/ui/kv/selector.kv
+#: import L_MENU_MAIN_MENU yahtr.localization.ids.L_MENU_MAIN_MENU
 
 <GameScreen>:
     Button:
-        text: 'Main Menu'
+        text: _(L_MENU_MAIN_MENU)
         on_press: app.go_to_main_menu()
         pos: -50, -50
         pos_hint: {'right': 1, 'top': 1}

@@ -1,6 +1,4 @@
 {
-	"name": "White Mage",
-	"description": "",
 	"move": 4,
 	"initiative" : 11,
 	"speed": 8,

@@ -1,5 +1,6 @@
 #:include yahtr/ui/kv/selectable_label.kv
 #:include yahtr/ui/kv/board_editor.kv
+#: import L_MENU_MAIN_MENU yahtr.localization.ids.L_MENU_MAIN_MENU
 
 
 <ActionsTreesTPI@TabbedPanelItem>
@@ -56,7 +57,7 @@
     tp: tp
 
     Button:
-        text: 'Main Menu'
+        text: _(L_MENU_MAIN_MENU)
         on_press: app.go_to_main_menu()
         pos_hint: {'right': 1, 'top': 1}
         size: 100, 25
@@ -84,4 +85,3 @@
         do_default_tab: False
 
         on_current_tab: self.parent.on_tab_change(self.current_tab)
-            

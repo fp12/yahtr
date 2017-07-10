@@ -1,6 +1,4 @@
 {
-	"name": "Knight",
-	"description": "",
 	"move": 6,
 	"initiative" : 120,
 	"speed": 100,

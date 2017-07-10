@@ -6,7 +6,7 @@ class RankedSkill:
         self.rank = rank
 
     def __repr__(self):
-        return f'RkSk<{self.skill.name}:{self.rank.name}>'
+        return f'RkSk<{self.skill.name!s}:{self.rank.name}>'
 
     def hit_value(self, hit):
         return hit.values[self.rank.value]

@@ -177,9 +177,9 @@ EMPTYSTRING = ''
 # The normal pot-file header. msgmerge and Emacs's po-mode work better if it's
 # there.
 pot_header = _('''\
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Yet Another Tactical RPG (yahtr)
+# Copyright (C) 2017
+# Fabien Poupineau, 2017.
 #
 msgid ""
 msgstr ""
