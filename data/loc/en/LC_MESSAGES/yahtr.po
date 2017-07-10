@@ -387,7 +387,39 @@ msgstr "Soldier"
 msgid "L_UNIT_DESC/chess_demo/soldier"
 msgstr ""
 
-#: yahtr\localization\ids.py:17
+#: yahtr\localization\ids.py:22
 msgid "L_MENU_MAIN_MENU"
 msgstr "Main Menu"
+
+#: yahtr\localization\ids.py:17
+msgid "L_UI_TOGGLE_SELECTED_REACHABLES"
+msgstr "Toggle Current Unit Reachables"
+
+#: yahtr\localization\ids.py:18
+msgid "L_UI_TOGGLE_OTHERS_REACHABLES"
+msgstr "Cycle Others Reachables"
+
+#: yahtr\localization\ids.py:23
+msgid "L_MENU_CHESS_DEMO"
+msgstr "Chess Demo"
+
+#: yahtr\localization\ids.py:24
+msgid "L_MENU_FEATURES_DEMO"
+msgstr "Features Demo"
+
+#: yahtr\localization\ids.py:25
+msgid "L_MENU_CAMPAIGN"
+msgstr "Campaign"
+
+#: yahtr\localization\ids.py:26
+msgid "L_MENU_EDITOR"
+msgstr "Editor"
+
+#: yahtr\localization\ids.py:27
+msgid "L_MENU_CREDITS"
+msgstr "Credits"
+
+#: yahtr\localization\ids.py:28
+msgid "L_MENU_QUIT"
+msgstr "Quit"
 
